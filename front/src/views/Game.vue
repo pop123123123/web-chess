@@ -19,14 +19,14 @@ export default defineComponent({
     return {
       state: {
         board: [
-          ['rd', 'kd', 'bd', 'qd', 'kd', 'bd', 'kd', 'rd'],
+          ['rd', 'nd', 'bd', 'qd', 'kd', 'bd', 'nd', 'rd'],
           ['pd', 'pd', 'pd', 'pd', 'pd', 'pd', 'pd', 'pd'],
           ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
           ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
           ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
           ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
           ['pl', 'pl', 'pl', 'pl', 'pl', 'pl', 'pl', 'pl'],
-          ['rl', 'kl', 'bl', 'ql', 'kl', 'bl', 'kl', 'rl'],
+          ['rl', 'nl', 'bl', 'ql', 'kl', 'bl', 'nl', 'rl'],
         ],
       },
     };
