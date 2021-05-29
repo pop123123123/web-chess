@@ -1,28 +1,30 @@
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_files::{Files, NamedFile};
+use actix_web::{dev, get, App, HttpResponse, HttpServer, Responder};
 
-#[get("/")]
+const FRONTEND_PATH: &str = "./front/dist/";
+
+#[get("/message")]
 async fn hello() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
-}
-
-#[post("/echo")]
-async fn echo(req_body: String) -> impl Responder {
-    HttpResponse::Ok().body(req_body)
-}
-
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
-        App::new()
-            .service(hello)
-            .service(echo)
-            .route("/hey", web::get().to(manual_hello))
+        App::new().service(hello).service(
+            Files::new("/", FRONTEND_PATH)
+                .index_file("index.html")
+                .default_handler(|req: dev::ServiceRequest| {
+                    let (http_req, _payload) = req.into_parts();
+                    async {
+                        let response =
+                            NamedFile::open("./front/dist/index.html")?.into_response(&http_req)?;
+                        Ok(dev::ServiceResponse::new(http_req, response))
+                    }
+                }),
+        )
     })
-    .bind("127.0.0.1:8080")?
+    .bind("127.0.0.1:3333")?
     .run()
     .await
 }
