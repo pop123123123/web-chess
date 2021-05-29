@@ -1,5 +1,5 @@
 use actix_files::{Files, NamedFile};
-use actix_web::{dev, get, App, HttpResponse, HttpServer, Responder};
+use actix_web::{dev, get, middleware, App, HttpResponse, HttpServer, Responder};
 
 const FRONTEND_PATH: &str = "./front/dist/";
 
@@ -11,18 +11,21 @@ async fn hello() -> impl Responder {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
-        App::new().service(hello).service(
-            Files::new("/", FRONTEND_PATH)
-                .index_file("index.html")
-                .default_handler(|req: dev::ServiceRequest| {
-                    let (http_req, _payload) = req.into_parts();
-                    async {
-                        let response =
-                            NamedFile::open("./front/dist/index.html")?.into_response(&http_req)?;
-                        Ok(dev::ServiceResponse::new(http_req, response))
-                    }
-                }),
-        )
+        App::new()
+            .wrap(middleware::Compress::default())
+            .service(hello)
+            .service(
+                Files::new("/", FRONTEND_PATH)
+                    .index_file("index.html")
+                    .default_handler(|req: dev::ServiceRequest| {
+                        let (http_req, _payload) = req.into_parts();
+                        async {
+                            let response = NamedFile::open("./front/dist/index.html")?
+                                .into_response(&http_req)?;
+                            Ok(dev::ServiceResponse::new(http_req, response))
+                        }
+                    }),
+            )
     })
     .bind("127.0.0.1:3333")?
     .run()
