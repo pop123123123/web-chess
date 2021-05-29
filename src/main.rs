@@ -3,7 +3,7 @@ use actix_web::{dev, get, App, HttpResponse, HttpServer, Responder};
 
 const FRONTEND_PATH: &str = "./front/dist/";
 
-#[get("/hello")]
+#[get("/message")]
 async fn hello() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
 }
@@ -24,7 +24,7 @@ async fn main() -> std::io::Result<()> {
                 }),
         )
     })
-    .bind("127.0.0.1:8080")?
+    .bind("127.0.0.1:3333")?
     .run()
     .await
 }
