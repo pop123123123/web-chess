@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="view home">
     <h1>Web-chess</h1>
     <p>{{message}}</p>
   </div>

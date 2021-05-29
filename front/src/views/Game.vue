@@ -1,6 +1,5 @@
 <template>
-  <div class="game">
-    <h1>Game</h1>
+  <div class="view game">
     <Board :state="state.board" />
   </div>
 </template>
@@ -32,3 +31,12 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss">
+.game {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>

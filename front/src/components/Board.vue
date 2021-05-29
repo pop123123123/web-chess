@@ -50,26 +50,20 @@ export default defineComponent({
   grid-template-rows: repeat(8, 1fr);
   background: black;
   overflow: hidden;
+  border: 10px solid black;
 
   .row {
     display: grid;
     height: 64px;
     grid-template-columns: repeat(8, 1fr);
 
-    &:nth-child(2n) {
-      .square:nth-child(2n) {
-        background: lightgray;
-      }
-    }
-
-    &:nth-child(2n+1) {
-      .square:nth-child(2n+1) {
-        background: lightgray;
-      }
+    &:nth-child(2n) .square:nth-child(2n),
+    &:nth-child(2n+1) .square:nth-child(2n+1) {
+      background: wheat;
     }
 
     .square {
-      background: gray;
+      background: peru;
       overflow: hidden;
 
       img {
