@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+
+echo '+cargo test'
+cargo test
+echo '+cargo clippy -- -D warnings'
+cargo clippy -- -D warnings
+echo '+cargo fmt -- --check'
+cargo fmt -- --check
+
+cd front
+
+node "./node_modules/yorkie/src/runner.js" pre-commit || {
+  echo
+  echo "pre-commit hook failed (add --no-verify to bypass)"
+  exit 1
+}
+cd ..
