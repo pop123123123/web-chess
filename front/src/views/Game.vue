@@ -2,6 +2,7 @@
   <div class="game">
     <h1>Game</h1>
     <Board :state="state.board" />
+    <p><a href="https://commons.wikimedia.org/wiki/File:Chess_Pieces_Sprite.svg">Chess pieces by Cburnett</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>, via Wikimedia Commons</p>
   </div>
 </template>
 
@@ -20,8 +21,6 @@ export default defineComponent({
         board: [
           ['rd', 'kd', 'bd', 'qd', 'kd', 'bd', 'kd', 'rd'],
           ['pd', 'pd', 'pd', 'pd', 'pd', 'pd', 'pd', 'pd'],
-          ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-          ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
           ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
           ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
           ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],

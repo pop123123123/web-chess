@@ -9,7 +9,7 @@
         class="square"
         v-for="(square, index) in row"
         :key="index"
-      >{{ square }}</div>
+      ><img :src="getSquareImage(square)" :alt="square"></div>
     </div>
   </div>
 </template>
@@ -30,16 +30,32 @@ export default defineComponent({
       return this.state;
     },
   },
+  methods: {
+    getSquareImage(square: string) {
+      const images = require.context('../assets/pieces/', false, /\.svg$/);
+      if (square.match(/[bknpqr][dl]/)) {
+        return images(`./${square}.svg`);
+      }
+      return images('./empty.svg');
+    },
+  },
 });
 </script>
 
 <style scoped lang="scss">
 .board {
-  width: 256px;
-  height: 256px;
+  display: grid;
+  width: 512px;
+  height: 512px;
+  grid-template-rows: repeat(8, 1fr);
   background: black;
+  overflow: hidden;
 
   .row {
+    display: grid;
+    height: 64px;
+    grid-template-columns: repeat(8, 1fr);
+
     &:nth-child(2n) {
       .square:nth-child(2n) {
         background: lightgray;
@@ -53,10 +69,12 @@ export default defineComponent({
     }
 
     .square {
-      float: left;
-      width: 32px;
-      height: 32px;
       background: gray;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+      }
     }
   }
 }
