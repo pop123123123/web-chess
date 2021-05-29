@@ -20,12 +20,12 @@ body {
   flex-direction: column;
   flex: 1;
   margin: 0;
-  color: wheat;
+  color: #fdf1db;
   font-family: sans-serif;
 }
 
 #nav {
-  background: wheat;
+  background: #fdf1db;
   color: black;
   padding: 1em;
 
