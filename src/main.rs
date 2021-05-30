@@ -1,5 +1,13 @@
+extern crate chashmap;
+extern crate rand;
+
 use actix_files::{Files, NamedFile};
-use actix_web::{dev, get, middleware, App, HttpResponse, HttpServer, Responder};
+use actix_web::{dev, get, middleware, web, App, HttpResponse, HttpServer, Responder};
+
+mod api;
+mod data;
+use api::{add_game, create_game, get_game_info};
+use data::GameData;
 
 const FRONTEND_PATH: &str = "./front/dist/";
 
@@ -10,10 +18,18 @@ async fn hello() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
+    let data = web::Data::new(GameData::new());
+    HttpServer::new(move || {
         App::new()
+            .app_data(data.clone())
             .wrap(middleware::Compress::default())
             .service(hello)
+            .service(
+                web::scope("/api")
+                    .service(get_game_info)
+                    .service(create_game)
+                    .service(add_game),
+            )
             .service(
                 Files::new("/", FRONTEND_PATH)
                     .index_file("index.html")

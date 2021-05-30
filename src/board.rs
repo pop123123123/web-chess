@@ -1,3 +1,4 @@
+use serde::Serialize;
 use std::vec::Vec;
 
 pub enum Error {
@@ -9,7 +10,7 @@ pub enum Color {
     Black,
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Serialize)]
 pub struct Cell {
     pub row: u8,
     pub column: u8,
@@ -197,16 +198,29 @@ const INITIAL_BOARD: [[Option<BoardPiece>; 8]; 8] = [
     ],
 ];
 
+#[derive(Serialize)]
 pub struct Action {
     pub from: Cell,
     pub to: Cell,
 }
 
+#[derive(Serialize)]
 pub struct Game {
     pub history: Vec<Action>,
 }
 
+impl Default for Game {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Game {
+    pub fn new() -> Self {
+        Game {
+            history: Vec::new(),
+        }
+    }
     pub fn is_move_valid(planned_action: Action, history: &[Action]) -> Result<(), InvalidMove> {
         let origin_cell = history
             .iter()
