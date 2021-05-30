@@ -1,6 +1,10 @@
 use std::result::Result;
 use std::vec::Vec;
 
+pub enum Error {
+    CellWrongArguments,
+}
+
 pub enum Color {
     White,
     Black,
@@ -12,9 +16,9 @@ pub struct Cell {
 }
 
 impl Cell {
-    pub fn new(row: u8, column: u8) -> std::result::Result<Cell, &'static str> {
+    pub fn new(row: u8, column: u8) -> std::result::Result<Cell, Error> {
         if row > 7 || column > 7 {
-            Result::Err("Row and column must be inferior to 7")
+            Result::Err(Error::CellWrongArguments)
         } else {
             Result::Ok(Cell { row, column })
         }
