@@ -1,5 +1,3 @@
-use std::option::Option;
-use std::result::Result;
 use std::vec::Vec;
 
 pub enum Error {
@@ -24,11 +22,11 @@ impl PartialEq for Cell {
 }
 
 impl Cell {
-    pub fn new(row: u8, column: u8) -> std::result::Result<Cell, Error> {
+    pub fn new(row: u8, column: u8) -> Result<Cell, Error> {
         if row > 7 || column > 7 {
-            Result::Err(Error::CellWrongArguments)
+            Err(Error::CellWrongArguments)
         } else {
-            Result::Ok(Cell { row, column })
+            Ok(Cell { row, column })
         }
     }
 }
@@ -58,177 +56,141 @@ pub enum InvalidMove {
 
 const INITIAL_BOARD: [[Option<BoardPiece>; 8]; 8] = [
     [
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::Rook,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::Knight,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::Bishop,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::Queen,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::King,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::Bishop,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::Knight,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::Rook,
         }),
     ],
     [
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::Poon,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::Poon,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::Poon,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::Poon,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::Poon,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::Poon,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::Poon,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::White,
             piece: Piece::Poon,
         }),
     ],
+    [None, None, None, None, None, None, None, None],
+    [None, None, None, None, None, None, None, None],
+    [None, None, None, None, None, None, None, None],
+    [None, None, None, None, None, None, None, None],
     [
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-    ],
-    [
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-    ],
-    [
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-    ],
-    [
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-        Option::None,
-    ],
-    [
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::Poon,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::Poon,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::Poon,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::Poon,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::Poon,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::Poon,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::Poon,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::Poon,
         }),
     ],
     [
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::Rook,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::Knight,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::Bishop,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::Queen,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::King,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::Bishop,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::Knight,
         }),
-        Option::Some(BoardPiece {
+        Some(BoardPiece {
             color: Color::Black,
             piece: Piece::Rook,
         }),
@@ -258,10 +220,10 @@ impl Game {
             });
 
         let original_piece = &INITIAL_BOARD[origin_cell.row as usize][origin_cell.column as usize];
-        if original_piece.is_none() {
-            return Result::Err(InvalidMove::EmptySourceCell);
-        }
 
-        Result::Ok(())
+        match original_piece {
+            Some(_) => Ok(()),
+            None => Err(InvalidMove::EmptySourceCell),
+        }
     }
 }
