@@ -6,11 +6,11 @@ use serde::Serialize;
 #[get("/game/{game_id}")]
 pub async fn get_game_info(
     data: web::Data<GameData>,
-    web::Path(user_id): web::Path<Id>,
+    web::Path(game_id): web::Path<Id>,
 ) -> impl Responder {
-    let game_option = data.get(&user_id);
+    let game_option = data.get(&game_id);
     let response_option = game_option.map(|b| HttpResponse::Ok().json(&(*b)));
-    response_option.unwrap_or_else(|| HttpResponse::NotFound().body(""))
+    response_option.unwrap_or_else(|| HttpResponse::NotFound().finish())
 }
 
 #[derive(Serialize)]
