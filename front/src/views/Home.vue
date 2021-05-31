@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import axios from 'axios';
+import api from '@/api';
 
 export default defineComponent({
   name: 'Home',
@@ -15,7 +15,7 @@ export default defineComponent({
     message: '',
   }),
   async mounted() {
-    const message = (await axios.get('/message')).data;
+    const message = await api.getMessage();
     this.message = message;
   },
 });
