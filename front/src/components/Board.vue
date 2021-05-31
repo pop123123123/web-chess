@@ -2,13 +2,15 @@
   <div class="board">
     <div
       class="row"
-      v-for="(row, index) in rows"
-      :key="index"
+      v-for="(row, rowIndex) in rows"
+      :key="rowIndex"
     >
       <div
         class="square"
-        v-for="(square, index) in row"
-        :key="index"
+        v-for="(square, colIndex) in row"
+        :key="colIndex"
+        @click="clickSquare(rowIndex, colIndex)"
+        :class="{ selected: isSquareSelected(rowIndex, colIndex) }"
       ><img :src="getSquareImage(square)" :alt="square"></div>
     </div>
   </div>
@@ -16,9 +18,15 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
+import Cell from '@/common/Cell';
 
 export default defineComponent({
   name: 'Board',
+  data() {
+    return {
+      selectedSquare: undefined as Cell | undefined,
+    };
+  },
   props: {
     state: {
       type: Array as PropType<Array<Array<string>>>,
@@ -37,6 +45,26 @@ export default defineComponent({
         return images(`./${square}.svg`);
       }
       return images('./empty.svg');
+    },
+    clickSquare(row: number, column: number) {
+      const cell = { row, column } as Cell;
+      if (this.selectedSquare === undefined) {
+        // select piece
+        this.selectedSquare = cell;
+      } else if (cell.row === this.selectedSquare.row
+      && cell.column === this.selectedSquare.column) {
+        // unselect piece
+        this.selectedSquare = undefined;
+      } else {
+        // move selected piece to position
+        // TODO: send action
+
+        // unselect piece
+        this.selectedSquare = undefined;
+      }
+    },
+    isSquareSelected(row: number, column: number) {
+      return row === this.selectedSquare?.row && column === this.selectedSquare?.column;
     },
   },
 });
@@ -63,11 +91,23 @@ export default defineComponent({
     }
 
     .square {
+      position: relative;
       background: peru;
-      overflow: hidden;
 
       img {
         width: 100%;
+      }
+
+      &.selected::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        height: 64px;
+        z-index: 1;
+        background: #11ee1166;
       }
     }
   }
