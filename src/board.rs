@@ -1,4 +1,4 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::vec::Vec;
 
 pub enum Error {
@@ -10,7 +10,7 @@ pub enum Color {
     Black,
 }
 
-#[derive(Copy, Clone, Serialize)]
+#[derive(Copy, Clone, Serialize, Deserialize)]
 pub struct Cell {
     pub row: u8,
     pub column: u8,
@@ -47,6 +47,7 @@ pub struct BoardPiece {
 }
 
 pub enum InvalidMove {
+    WrongTurn,
     EmptySourceCell,
     OutOfBounds,
     OutOfRange,
@@ -198,15 +199,15 @@ const INITIAL_BOARD: [[Option<BoardPiece>; 8]; 8] = [
     ],
 ];
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Action {
     pub from: Cell,
     pub to: Cell,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Game {
-    pub history: Vec<Action>,
+    history: Vec<Action>,
 }
 
 impl Default for Game {
@@ -221,7 +222,7 @@ impl Game {
             history: Vec::new(),
         }
     }
-    pub fn is_move_valid(planned_action: Action, history: &[Action]) -> Result<(), InvalidMove> {
+    pub fn is_move_valid(planned_action: &Action, history: &[Action]) -> Result<(), InvalidMove> {
         let origin_cell = history
             .iter()
             .rev()
@@ -239,5 +240,12 @@ impl Game {
             Some(_) => Ok(()),
             None => Err(InvalidMove::EmptySourceCell),
         }
+    }
+    pub fn push_move(&mut self, planned_action: Action) -> Result<(), InvalidMove> {
+        let res = Self::is_move_valid(&planned_action, &self.history);
+        if res.is_ok() {
+            self.history.push(planned_action);
+        }
+        res
     }
 }
