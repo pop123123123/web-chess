@@ -19,16 +19,21 @@ struct CreateResponse {
     id: u32,
 }
 
-// Responder
-impl Responder for CreateResponse {
-    type Error = Error;
-    type Future = Ready<Result<HttpResponse, Error>>;
+macro_rules! impl_respond {
+    ($stru: ident) => {
+        impl Responder for $stru {
+            type Error = Error;
+            type Future = Ready<Result<HttpResponse, Error>>;
 
-    fn respond_to(self, _req: &HttpRequest) -> Self::Future {
-        // Create response and set content type
-        ready(Ok(HttpResponse::Ok().json(&self)))
-    }
+            fn respond_to(self, _req: &HttpRequest) -> Self::Future {
+                // Create response and set content type
+                ready(Ok(HttpResponse::Ok().json(&self)))
+            }
+        }
+    };
 }
+
+impl_respond!(CreateResponse);
 
 #[post("/game")]
 pub async fn create_game(data: web::Data<GameData>) -> impl Responder {
