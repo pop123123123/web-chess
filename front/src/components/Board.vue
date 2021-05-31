@@ -98,7 +98,7 @@ export default defineComponent({
         width: 100%;
       }
 
-      &.selected::after {
+      &::after {
         content: '';
         position: absolute;
         left: 0;
@@ -107,6 +107,16 @@ export default defineComponent({
         bottom: 0;
         height: 64px;
         z-index: 1;
+        display: none;
+      }
+
+      &:hover::after {
+        display: block;
+        background: #1199dd33;
+      }
+
+      &.selected::after {
+        display: block;
         background: #11ee1166;
       }
     }

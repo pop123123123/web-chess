@@ -38,5 +38,6 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
 }
 </style>
