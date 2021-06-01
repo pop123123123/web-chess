@@ -1,7 +1,7 @@
 <template>
   <div class="view game">
     <Board
-      :state="state.board"
+      :pieces="state.pieces"
       @movePiece="sendAction"
     />
   </div>
@@ -15,7 +15,8 @@ import { defineComponent } from 'vue';
 import Board from '@/components/Board.vue';
 import Copy from '@/components/Copy.vue';
 import Action from '@/common/Action';
-import Game, { EMPTY_BOARD } from '@/common/Game';
+import Game from '@/common/Game';
+import Piece from '@/common/Piece';
 import api from '@/api';
 
 export default defineComponent({
@@ -31,7 +32,7 @@ export default defineComponent({
     return {
       polling: 0,
       state: {
-        board: EMPTY_BOARD,
+        pieces: [] as Piece[],
       },
       game: undefined as Game | undefined,
     };
@@ -46,7 +47,7 @@ export default defineComponent({
       const gameId = this.game?.id ?? parseInt(this.$route.params.id as string, 10);
       try {
         this.game = await api.getGame(gameId);
-        this.state.board = this.game.getBoard();
+        this.state.pieces = this.game.getPieces();
       } catch (error) {
         if (error.response.status === 404) {
           this.stopPolling();

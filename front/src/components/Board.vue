@@ -1,17 +1,27 @@
 <template>
   <div class="board">
-    <div
-      class="row"
-      v-for="(row, rowIndex) in rows"
-      :key="rowIndex"
-    >
+    <div class="background">
       <div
-        class="square"
-        v-for="(square, colIndex) in row"
-        :key="colIndex"
-        @click="clickSquare(rowIndex, colIndex)"
-        :class="{ selected: isSquareSelected(rowIndex, colIndex) }"
-      ><img :src="getSquareImage(square)" :alt="square"></div>
+        class="row"
+        v-for="row in 8"
+        :key="row"
+      >
+        <div
+          class="square"
+          v-for="col in 8"
+          :key="col"
+          @click="clickSquare(row - 1, col - 1)"
+          :class="{ selected: isSquareSelected(row - 1, col - 1) }"
+        ></div>
+      </div>
+    </div>
+    <div class="pieces">
+      <div
+        class="piece"
+        v-for="(piece, pieceIndex) in pieces"
+        :key="pieceIndex"
+        :class="`row-${piece.row} col-${piece.column}`"
+      ><img :src="getSquareImage(piece.type + piece.color)" :alt="piece.type + piece.color"></div>
     </div>
   </div>
 </template>
@@ -20,6 +30,7 @@
 import { defineComponent, PropType } from 'vue';
 import Cell from '@/common/Cell';
 import Action from '@/common/Action';
+import Piece from '@/common/Piece';
 
 export default defineComponent({
   name: 'Board',
@@ -29,14 +40,9 @@ export default defineComponent({
     };
   },
   props: {
-    state: {
-      type: Array as PropType<Array<Array<string>>>,
+    pieces: {
+      type: Array as PropType<Array<Piece>>,
       required: true,
-    },
-  },
-  computed: {
-    rows(): Array<Array<string>> {
-      return this.state;
     },
   },
   methods: {
@@ -45,13 +51,15 @@ export default defineComponent({
       if (square.match(/[bknpqr][dl]/)) {
         return images(`./${square}.svg`);
       }
-      return images('./empty.svg');
+      return null;
     },
     clickSquare(row: number, column: number) {
       const cell = { row, column } as Cell;
       if (this.selectedSquare === undefined) {
         // select piece
-        if (this.state[row][column] !== '  ') {
+        if (this.pieces.find(
+          (piece) => piece.row === cell.row && piece.column === cell.column,
+        ) !== undefined) {
           this.selectedSquare = cell;
         }
       } else if (cell.row === this.selectedSquare.row
@@ -75,53 +83,78 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+$squareSize: 64px;
+
 .board {
-  display: grid;
-  width: 512px;
-  height: 512px;
-  grid-template-rows: repeat(8, 1fr);
-  background: black;
+  position: relative;
+  width: $squareSize * 8;
+  height: $squareSize * 8;
   overflow: hidden;
   border: 10px solid black;
 
-  .row {
+  .background {
     display: grid;
-    height: 64px;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
 
-    &:nth-child(2n) .square:nth-child(2n),
-    &:nth-child(2n+1) .square:nth-child(2n+1) {
-      background: wheat;
+    .row {
+      display: grid;
+      height: $squareSize;
+      grid-template-columns: repeat(8, 1fr);
+
+      &:nth-child(2n) .square:nth-child(2n),
+      &:nth-child(2n+1) .square:nth-child(2n+1) {
+        background: wheat;
+      }
+
+      .square {
+        position: relative;
+        background: peru;
+
+        &::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          height: $squareSize;
+          z-index: 1;
+          display: none;
+        }
+
+        &:hover::after {
+          display: block;
+          background: #1199dd33;
+        }
+
+        &.selected::after {
+          display: block;
+          background: #11ee1166;
+        }
+      }
     }
+  }
 
-    .square {
-      position: relative;
-      background: peru;
+  .pieces {
+    pointer-events : none;
+
+    .piece {
+      position: absolute;
+      width: $squareSize;
+      height: $squareSize;
+
+      @for $i from 0 through 7 {
+        &.row-#{$i} {
+          top: $i * $squareSize;
+        }
+
+        &.col-#{$i} {
+          left: $i * $squareSize;
+        }
+      }
 
       img {
         width: 100%;
-      }
-
-      &::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        height: 64px;
-        z-index: 1;
-        display: none;
-      }
-
-      &:hover::after {
-        display: block;
-        background: #1199dd33;
-      }
-
-      &.selected::after {
-        display: block;
-        background: #11ee1166;
       }
     }
   }

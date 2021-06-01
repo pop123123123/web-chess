@@ -1,17 +1,7 @@
 import Action from './Action';
+import Piece, { PieceColor, PieceType } from './Piece';
 
 export type GameId = number;
-
-export const EMPTY_BOARD = [
-  ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-  ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-  ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-  ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-  ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-  ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-  ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-  ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-];
 
 export const INITIAL_BOARD = [
   ['rl', 'nl', 'bl', 'ql', 'kl', 'bl', 'nl', 'rl'],
@@ -34,7 +24,7 @@ export default class Game {
       this.history = history;
     }
 
-    getBoard(): Array<Array<string>> {
+    getBoard(): string[][] {
       // copy initial board
       const board = JSON.parse(JSON.stringify(INITIAL_BOARD));
 
@@ -46,5 +36,22 @@ export default class Game {
       });
 
       return board;
+    }
+
+    getPieces(): Piece[] {
+      const pieces = [] as Piece[];
+      this.getBoard().forEach((row, rowIndex) => {
+        row.forEach((square, colIndex) => {
+          if (square.match(/[bknpqr][dl]/)) {
+            pieces.push({
+              type: square[0] as PieceType,
+              color: square[1] as PieceColor,
+              row: rowIndex,
+              column: colIndex,
+            });
+          }
+        });
+      });
+      return pieces;
     }
 }
