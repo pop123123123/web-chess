@@ -33,8 +33,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:math';
+
 div {
-  cursor: pointer;
   position: relative;
   display: inline-block;
   input {
@@ -42,14 +43,14 @@ div {
   }
   &::after {
     $h: 2em;
-    content: 'Copied !';
+    content: 'Copied!';
     position: absolute;
     top: -50%;
     left: 50%;
     padding: .7em;
     height: $h;
     line-height: $h;
-    transform: translate(-50%, $h/2);
+    transform: translate(-50%, math.div($h, 2));
     background: gray;
     border: 2px solid darkgray;
     opacity: 0;
