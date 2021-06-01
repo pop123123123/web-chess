@@ -120,6 +120,7 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   user-select: none;
+  overflow: hidden;
 }
 footer {
   $h: 3rem;
