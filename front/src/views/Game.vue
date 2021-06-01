@@ -1,6 +1,9 @@
 <template>
   <div class="view game">
-    <Board :state="state.board" />
+    <Board
+      :state="state.board"
+      @movePiece="sendAction"
+    />
   </div>
   <footer>
     <p>Share this game: <Copy :text="url"/></p>
@@ -11,6 +14,9 @@
 import { defineComponent } from 'vue';
 import Board from '@/components/Board.vue';
 import Copy from '@/components/Copy.vue';
+import Action from '@/common/Action';
+import Game, { EMPTY_BOARD } from '@/common/Game';
+import api from '@/api';
 
 export default defineComponent({
   name: 'Game',
@@ -24,23 +30,30 @@ export default defineComponent({
   data() {
     return {
       state: {
-        board: [
-          ['rd', 'nd', 'bd', 'qd', 'kd', 'bd', 'nd', 'rd'],
-          ['pd', 'pd', 'pd', 'pd', 'pd', 'pd', 'pd', 'pd'],
-          ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-          ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-          ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-          ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-          ['pl', 'pl', 'pl', 'pl', 'pl', 'pl', 'pl', 'pl'],
-          ['rl', 'nl', 'bl', 'ql', 'kl', 'bl', 'nl', 'rl'],
-        ],
+        board: EMPTY_BOARD,
       },
+      game: undefined as Game | undefined,
     };
   },
   computed: {
     url() {
       return window.location.href;
     },
+  },
+  methods: {
+    async updateBoard() {
+      const gameId = this.game?.id ?? parseInt(this.$route.params.id as string, 10);
+      this.game = await api.getGame(gameId);
+      this.state.board = this.game.getBoard();
+    },
+    async sendAction(action: Action) {
+      if (this.game === undefined) { return; }
+      await api.sendAction(this.game.id, action);
+      await this.updateBoard();
+    },
+  },
+  async mounted() {
+    await this.updateBoard();
   },
 });
 </script>

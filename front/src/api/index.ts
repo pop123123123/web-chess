@@ -11,7 +11,7 @@ export default {
   },
 
   async getGame(gameId: GameId): Promise<Game> {
-    return (await apisator.get(`/game/${gameId}`)).data;
+    return new Game(gameId, (await apisator.get(`/game/${gameId}`)).data.history);
   },
 
   async createGame(): Promise<GameId> {

@@ -19,6 +19,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import Cell from '@/common/Cell';
+import Action from '@/common/Action';
 
 export default defineComponent({
   name: 'Board',
@@ -57,7 +58,8 @@ export default defineComponent({
         this.selectedSquare = undefined;
       } else {
         // move selected piece to position
-        // TODO: send action
+        const action: Action = { from: this.selectedSquare, to: cell };
+        this.$emit('movePiece', action);
 
         // unselect piece
         this.selectedSquare = undefined;
