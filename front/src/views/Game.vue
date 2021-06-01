@@ -29,7 +29,7 @@ export default defineComponent({
   },
   data() {
     return {
-      polling: undefined as number | undefined,
+      polling: 0,
       state: {
         board: EMPTY_BOARD,
       },
@@ -44,23 +44,66 @@ export default defineComponent({
   methods: {
     async updateBoard() {
       const gameId = this.game?.id ?? parseInt(this.$route.params.id as string, 10);
-      this.game = await api.getGame(gameId);
-      this.state.board = this.game.getBoard();
+      try {
+        this.game = await api.getGame(gameId);
+        this.state.board = this.game.getBoard();
+      } catch (error) {
+        if (error.response.status === 404) {
+          this.stopPolling();
+          this.$notify({
+            title: 'Invalid game',
+            type: 'error',
+          });
+        } else {
+          this.$notify({
+            title: 'Unknown error',
+            type: 'error',
+          });
+        }
+      }
     },
     async sendAction(action: Action) {
       if (this.game === undefined) { return; }
-      await api.sendAction(this.game.id, action);
-      await this.updateBoard();
+      try {
+        await api.sendAction(this.game.id, action);
+        await this.updateBoard();
+      } catch (error) {
+        if (error.response.status === 400) {
+          this.$notify({
+            title: 'Invalid request',
+            type: 'error',
+          });
+        } else if (error.response.status === 403) {
+          this.$notify({
+            title: 'Invalid move',
+            type: 'warn',
+          });
+        } else {
+          this.$notify({
+            title: 'Unknown error',
+            type: 'error',
+          });
+        }
+      }
+    },
+    startPolling() {
+      this.polling = setInterval(() => {
+        if (this.polling) {
+          this.updateBoard();
+        }
+      }, 1000);
+    },
+    stopPolling() {
+      clearInterval(this.polling);
+      this.polling = 0;
     },
   },
   async mounted() {
+    this.startPolling();
     await this.updateBoard();
-    this.polling = setInterval(() => {
-      this.updateBoard();
-    }, 1000);
   },
   unmounted() {
-    clearInterval(this.polling);
+    this.stopPolling();
   },
 });
 </script>
