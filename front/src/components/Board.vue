@@ -51,7 +51,9 @@ export default defineComponent({
       const cell = { row, column } as Cell;
       if (this.selectedSquare === undefined) {
         // select piece
-        this.selectedSquare = cell;
+        if (this.state[row][column] !== '  ') {
+          this.selectedSquare = cell;
+        }
       } else if (cell.row === this.selectedSquare.row
       && cell.column === this.selectedSquare.column) {
         // unselect piece
