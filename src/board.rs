@@ -60,6 +60,7 @@ pub enum InvalidMove {
     OutOfSight,
     ProvokeCheck,
     FriendlyFire,
+    PieceMoveNotImplemented,
 }
 
 const INITIAL_BOARD: [[Option<BoardPiece>; 8]; 8] = [
@@ -248,20 +249,46 @@ impl Game {
                 }
             });
 
-        let original_piece = &INITIAL_BOARD[u8::from(origin_cell.row) as usize]
+        let original_piece_result = &INITIAL_BOARD[u8::from(origin_cell.row) as usize]
             [u8::from(origin_cell.column) as usize];
 
-        match original_piece {
+        let original_piece: &BoardPiece;
+
+        match original_piece_result {
             Some(p) => {
-                if p.color == self.get_turn() {
-                    Ok(())
+                if p.color != self.get_turn() {
+                    return Err(InvalidMove::WrongTurn);
                 } else {
-                    Err(InvalidMove::WrongTurn)
+                    original_piece = p;
                 }
             }
-            None => Err(InvalidMove::EmptySourceCell),
+            None => {
+                return Err(InvalidMove::EmptySourceCell);
+            }
         }
+
+        match &original_piece.piece {
+            Piece::Knight => {
+                let row_distance = ((u8::from(planned_action.to.row) as i8)
+                    - (u8::from(planned_action.from.row) as i8))
+                    .abs();
+                let column_distance = ((u8::from(planned_action.to.column) as i8)
+                    - (u8::from(planned_action.from.column) as i8))
+                    .abs();
+
+                if !((row_distance == 2 && column_distance == 1)
+                    || (row_distance == 1 && column_distance == 2))
+                {
+                    return Err(InvalidMove::OutOfRange);
+                }
+            }
+            _ => {
+                return Err(InvalidMove::PieceMoveNotImplemented);
+            }
+        }
+        Ok(())
     }
+
     pub fn push_move(&mut self, planned_action: Action) -> Result<(), InvalidMove> {
         let res = self.is_move_valid(&planned_action);
         if res.is_ok() {
