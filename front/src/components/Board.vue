@@ -1,5 +1,5 @@
 <template>
-  <div class="board">
+  <div class="board" :class="{ 'rotated': rotated }">
     <div class="background">
       <div
         class="row"
@@ -43,6 +43,10 @@ export default defineComponent({
     pieces: {
       type: Array as PropType<Array<Piece>>,
       required: true,
+    },
+    rotated: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {
@@ -91,6 +95,15 @@ $squareSize: 64px;
   height: $squareSize * 8;
   overflow: hidden;
   border: 10px solid black;
+  transition: transform 2s;
+
+  &.rotated {
+    transform: rotate(180deg);
+
+    .piece img {
+      transform: rotate(-180deg);
+    }
+  }
 
   .background {
     display: grid;
@@ -166,6 +179,7 @@ $squareSize: 64px;
 
       img {
         width: 100%;
+        transition: transform 2s;
       }
     }
   }

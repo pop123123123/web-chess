@@ -1,7 +1,9 @@
 <template>
   <div class="view game">
+    <p><label><input type="checkbox" v-model="rotatedBoard">Rotate board</label></p>
     <Board
       :pieces="state.pieces"
+      :rotated="rotatedBoard"
       @movePiece="sendAction"
     />
   </div>
@@ -35,6 +37,7 @@ export default defineComponent({
         pieces: [] as Piece[],
       },
       game: undefined as Game | undefined,
+      rotatedBoard: false,
     };
   },
   computed: {
@@ -113,6 +116,7 @@ export default defineComponent({
 .game {
   flex: 1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   user-select: none;
