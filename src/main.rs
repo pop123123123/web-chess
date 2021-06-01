@@ -18,6 +18,11 @@ async fn hello() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    let port = std::env::var("PORT")
+        .unwrap_or_else(|_| "3333".to_string())
+        .parse()
+        .expect("PORT must be a number");
+
     let data = web::Data::new(GameData::new());
     HttpServer::new(move || {
         App::new()
@@ -43,7 +48,7 @@ async fn main() -> std::io::Result<()> {
                     }),
             )
     })
-    .bind("127.0.0.1:3333")?
+    .bind(("0.0.0.0", port))?
     .run()
     .await
 }
