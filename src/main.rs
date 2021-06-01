@@ -13,7 +13,7 @@ const FRONTEND_PATH: &str = "./front/dist/";
 
 #[get("/message")]
 async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
+    HttpResponse::Ok().json("Hello world!")
 }
 
 #[actix_web::main]
@@ -23,9 +23,9 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(data.clone())
             .wrap(middleware::Compress::default())
-            .service(hello)
             .service(
                 web::scope("/api")
+                    .service(hello)
                     .service(get_game_info)
                     .service(create_game)
                     .service(add_game),

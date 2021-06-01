@@ -10,6 +10,9 @@ import Board from '@/components/Board.vue';
 
 export default defineComponent({
   name: 'Game',
+  props: {
+    id: Number,
+  },
   components: {
     Board,
   },

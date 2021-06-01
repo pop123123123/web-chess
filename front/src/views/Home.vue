@@ -2,6 +2,7 @@
   <div class="view home">
     <h1>Web-chess</h1>
     <p>{{message}}</p>
+    <button @click="newGame">New game</button>
   </div>
 </template>
 
@@ -15,8 +16,14 @@ export default defineComponent({
     message: '',
   }),
   async mounted() {
-    const message = await api.getMessage();
+    const message : string = await api.getMessage();
     this.message = message;
+  },
+  methods: {
+    async newGame() {
+      const id : number = await api.createGame();
+      this.$router.push(`/game/${id}`);
+    },
   },
 });
 </script>
