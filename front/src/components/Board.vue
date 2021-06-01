@@ -152,9 +152,16 @@ $squareSize: 64px;
         }
       }
 
+      @keyframes raisePiece {
+        0%   { transform: scale(1); }
+        50%  { transform: scale(1.2); }
+        100% { transform: scale(1); }
+      }
+
       &.moving {
         transition: 1s;
         z-index: 1;
+        animation: raisePiece 1s;
       }
 
       img {
