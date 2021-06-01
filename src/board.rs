@@ -6,6 +6,7 @@ pub enum Error {
     CellWrongArguments,
 }
 
+#[derive(PartialEq)]
 pub enum Color {
     White,
     Black,
@@ -227,8 +228,16 @@ impl Game {
             history: Vec::new(),
         }
     }
-    pub fn is_move_valid(planned_action: &Action, history: &[Action]) -> Result<(), InvalidMove> {
-        let origin_cell = history
+    pub fn get_turn(&self) -> Color {
+        if self.history.len() % 2 == 0 {
+            Color::White
+        } else {
+            Color::Black
+        }
+    }
+    pub fn is_move_valid(&self, planned_action: &Action) -> Result<(), InvalidMove> {
+        let origin_cell = self
+            .history
             .iter()
             .rev()
             .fold(planned_action.from, |cell, action| {
@@ -243,12 +252,18 @@ impl Game {
             [u8::from(origin_cell.column) as usize];
 
         match original_piece {
-            Some(_) => Ok(()),
+            Some(p) => {
+                if p.color == self.get_turn() {
+                    Ok(())
+                } else {
+                    Err(InvalidMove::WrongTurn)
+                }
+            }
             None => Err(InvalidMove::EmptySourceCell),
         }
     }
     pub fn push_move(&mut self, planned_action: Action) -> Result<(), InvalidMove> {
-        let res = Self::is_move_valid(&planned_action, &self.history);
+        let res = self.is_move_valid(&planned_action);
         if res.is_ok() {
             self.history.push(planned_action);
         }
