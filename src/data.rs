@@ -7,8 +7,13 @@ pub type GameData = CHashMap<u32, Game>;
 
 pub fn create(data: &GameData) -> u32 {
     let mut rng = rand::thread_rng();
-    let num: u32 = rng.next_u32();
-    // while exists
+    // generate a random number not present in hashmap
+    let num: u32 = loop {
+        let x = rng.next_u32();
+        if !data.contains_key(&x) {
+            break x;
+        }
+    };
     data.insert(num, Game::new());
     num
 }
