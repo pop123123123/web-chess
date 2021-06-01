@@ -18,8 +18,8 @@
     <div class="pieces">
       <div
         class="piece"
-        v-for="(piece, pieceIndex) in pieces"
-        :key="pieceIndex"
+        v-for="piece in pieces"
+        :key="piece.id"
         :class="`row-${piece.row} col-${piece.column}`"
       ><img :src="getSquareImage(piece.type + piece.color)" :alt="piece.type + piece.color"></div>
     </div>
@@ -152,6 +152,8 @@ $squareSize: 64px;
           left: $i * $squareSize;
         }
       }
+
+      transition: 1s;
 
       img {
         width: 100%;

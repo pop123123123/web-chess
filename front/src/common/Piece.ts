@@ -13,6 +13,7 @@ export enum PieceColor {
 }
 
 export default interface Piece {
+  id: string
   type: PieceType
   color: PieceColor
   row: number

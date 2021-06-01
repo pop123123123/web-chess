@@ -4,14 +4,14 @@ import Piece, { PieceColor, PieceType } from './Piece';
 export type GameId = number;
 
 export const INITIAL_BOARD = [
-  ['rl', 'nl', 'bl', 'ql', 'kl', 'bl', 'nl', 'rl'],
-  ['pl', 'pl', 'pl', 'pl', 'pl', 'pl', 'pl', 'pl'],
-  ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-  ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-  ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-  ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-  ['pd', 'pd', 'pd', 'pd', 'pd', 'pd', 'pd', 'pd'],
-  ['rd', 'nd', 'bd', 'qd', 'kd', 'bd', 'nd', 'rd'],
+  ['rl0', 'nl0', 'bl0', 'ql0', 'kl0', 'bl1', 'nl1', 'rl1'],
+  ['pl0', 'pl1', 'pl2', 'pl3', 'pl4', 'pl5', 'pl6', 'pl7'],
+  ['   ', '   ', '   ', '   ', '   ', '   ', '   ', '   '],
+  ['   ', '   ', '   ', '   ', '   ', '   ', '   ', '   '],
+  ['   ', '   ', '   ', '   ', '   ', '   ', '   ', '   '],
+  ['   ', '   ', '   ', '   ', '   ', '   ', '   ', '   '],
+  ['pd0', 'pd1', 'pd2', 'pd3', 'pd4', 'pd5', 'pd6', 'pd7'],
+  ['rd0', 'nd0', 'bd0', 'qd0', 'kd0', 'bd1', 'nd1', 'rd1'],
 ];
 
 export default class Game {
@@ -32,7 +32,7 @@ export default class Game {
       this.history.forEach((action) => {
         const piece = board[action.from.row][action.from.column];
         board[action.to.row][action.to.column] = piece;
-        board[action.from.row][action.from.column] = '  ';
+        board[action.from.row][action.from.column] = '   ';
       });
 
       return board;
@@ -42,8 +42,9 @@ export default class Game {
       const pieces = [] as Piece[];
       this.getBoard().forEach((row, rowIndex) => {
         row.forEach((square, colIndex) => {
-          if (square.match(/[bknpqr][dl]/)) {
+          if (/^[bknpqr][dl]/.test(square)) {
             pieces.push({
+              id: square,
               type: square[0] as PieceType,
               color: square[1] as PieceColor,
               row: rowIndex,
@@ -52,6 +53,6 @@ export default class Game {
           }
         });
       });
-      return pieces;
+      return pieces.sort((a, b) => a.id.localeCompare(b.id));
     }
 }
