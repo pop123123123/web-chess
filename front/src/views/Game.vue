@@ -57,7 +57,7 @@ export default defineComponent({
     await this.updateBoard();
     this.polling = setInterval(() => {
       this.updateBoard();
-    }, 500);
+    }, 1000);
   },
   unmounted() {
     clearInterval(this.polling);
