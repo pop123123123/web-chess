@@ -29,6 +29,7 @@ export default defineComponent({
   },
   data() {
     return {
+      polling: undefined as number | undefined,
       state: {
         board: EMPTY_BOARD,
       },
@@ -54,6 +55,12 @@ export default defineComponent({
   },
   async mounted() {
     await this.updateBoard();
+    this.polling = setInterval(() => {
+      this.updateBoard();
+    }, 500);
+  },
+  unmounted() {
+    clearInterval(this.polling);
   },
 });
 </script>
