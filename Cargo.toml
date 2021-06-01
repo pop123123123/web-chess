@@ -13,6 +13,7 @@ rand = "0.8.0"
 chashmap = "*"
 futures = "0.3.15"
 serde = "1.0.126"
+packed_struct = { version = "0.5.0", features = ["std", "use_serde"] }
 
 [dev-dependencies.cargo-husky]
 version = "1"

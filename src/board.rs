@@ -1,3 +1,4 @@
+use packed_struct::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::vec::Vec;
 
@@ -10,10 +11,13 @@ pub enum Color {
     Black,
 }
 
-#[derive(Copy, Clone, Serialize, Deserialize)]
+#[derive(Copy, Clone, Serialize, Deserialize, PackedStruct)]
+#[packed_struct(bit_numbering = "msb0")]
 pub struct Cell {
-    pub row: u8,
-    pub column: u8,
+    #[packed_field(bits = "0..=2")]
+    pub row: Integer<u8, packed_bits::Bits3>,
+    #[packed_field(bits = "3..=6")]
+    pub column: Integer<u8, packed_bits::Bits3>,
 }
 
 impl PartialEq for Cell {
@@ -23,11 +27,12 @@ impl PartialEq for Cell {
 }
 
 impl Cell {
-    pub fn new(row: u8, column: u8) -> Result<Cell, Error> {
-        if row > 7 || column > 7 {
-            Err(Error::CellWrongArguments)
-        } else {
-            Ok(Cell { row, column })
+    pub fn new(row: u8, column: u8) -> Cell {
+        debug_assert!(row < 8, "row {} is out of bounds", row);
+        debug_assert!(column < 8, "column {} is out of bounds", column);
+        Cell {
+            row: row.into(),
+            column: column.into(),
         }
     }
 }
@@ -234,7 +239,8 @@ impl Game {
                 }
             });
 
-        let original_piece = &INITIAL_BOARD[origin_cell.row as usize][origin_cell.column as usize];
+        let original_piece = &INITIAL_BOARD[u8::from(origin_cell.row) as usize]
+            [u8::from(origin_cell.column) as usize];
 
         match original_piece {
             Some(_) => Ok(()),

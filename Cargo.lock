@@ -1075,6 +1075,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "packed_struct"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cea50f42bba10123bd78c09425cf34369710399d18d16f73ff8a9cf00dba070d"
+dependencies = [
+ "packed_struct_codegen",
+ "serde",
+ "serde_derive",
+]
+
+[[package]]
+name = "packed_struct_codegen"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aaaf71038d56e38aec6ab9f254737eb37450f97b7fba349fe1e3dfe6c1a68db4"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "parking_lot"
 version = "0.4.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1957,6 +1979,7 @@ dependencies = [
  "cargo-husky",
  "chashmap",
  "futures",
+ "packed_struct",
  "rand 0.8.3",
  "serde",
 ]
