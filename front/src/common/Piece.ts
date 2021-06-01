@@ -4,12 +4,12 @@ export enum PieceType {
   Bishop = 'b',
   Rook = 'r',
   Queen = 'q',
-  King = 'k'
+  King = 'k',
 }
 
 export enum PieceColor {
   Light = 'l',
-  Dark = 'd'
+  Dark = 'd',
 }
 
 export default interface Piece {

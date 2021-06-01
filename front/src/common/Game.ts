@@ -15,49 +15,49 @@ export const INITIAL_BOARD = [
 ];
 
 export default class Game {
-    id: GameId;
+  id: GameId;
 
-    history: Action[];
+  history: Action[];
 
-    lastPieceToMove: string;
+  lastPieceToMove: string;
 
-    constructor(id: GameId, history: Action[]) {
-      this.id = id;
-      this.history = history;
-      this.lastPieceToMove = '';
-    }
+  constructor(id: GameId, history: Action[]) {
+    this.id = id;
+    this.history = history;
+    this.lastPieceToMove = '';
+  }
 
-    getBoard(): string[][] {
-      // copy initial board
-      const board = JSON.parse(JSON.stringify(INITIAL_BOARD));
+  getBoard(): string[][] {
+    // copy initial board
+    const board = JSON.parse(JSON.stringify(INITIAL_BOARD));
 
-      // apply actions
-      this.history.forEach((action) => {
-        const piece = board[action.from.row][action.from.column];
-        board[action.to.row][action.to.column] = piece;
-        board[action.from.row][action.from.column] = '   ';
-        this.lastPieceToMove = piece;
+    // apply actions
+    this.history.forEach((action) => {
+      const piece = board[action.from.row][action.from.column];
+      board[action.to.row][action.to.column] = piece;
+      board[action.from.row][action.from.column] = '   ';
+      this.lastPieceToMove = piece;
+    });
+
+    return board;
+  }
+
+  getPieces(): Piece[] {
+    const pieces = [] as Piece[];
+    this.getBoard().forEach((row, rowIndex) => {
+      row.forEach((square, colIndex) => {
+        if (/^[bknpqr][dl]/.test(square)) {
+          pieces.push({
+            id: square,
+            type: square[0] as PieceType,
+            color: square[1] as PieceColor,
+            row: rowIndex,
+            column: colIndex,
+            moving: square === this.lastPieceToMove,
+          });
+        }
       });
-
-      return board;
-    }
-
-    getPieces(): Piece[] {
-      const pieces = [] as Piece[];
-      this.getBoard().forEach((row, rowIndex) => {
-        row.forEach((square, colIndex) => {
-          if (/^[bknpqr][dl]/.test(square)) {
-            pieces.push({
-              id: square,
-              type: square[0] as PieceType,
-              color: square[1] as PieceColor,
-              row: rowIndex,
-              column: colIndex,
-              moving: square === this.lastPieceToMove,
-            });
-          }
-        });
-      });
-      return pieces.sort((a, b) => a.id.localeCompare(b.id));
-    }
+    });
+    return pieces.sort((a, b) => a.id.localeCompare(b.id));
+  }
 }
