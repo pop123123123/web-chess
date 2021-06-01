@@ -18,4 +18,5 @@ export default interface Piece {
   color: PieceColor
   row: number
   column: number
+  moving: boolean
 }

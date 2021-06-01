@@ -20,7 +20,7 @@
         class="piece"
         v-for="piece in pieces"
         :key="piece.id"
-        :class="`row-${piece.row} col-${piece.column}`"
+        :class="`row-${piece.row} col-${piece.column} ${piece.moving ? 'moving' : ''}`"
       ><img :src="getSquareImage(piece.type + piece.color)" :alt="piece.type + piece.color"></div>
     </div>
   </div>
@@ -118,7 +118,6 @@ $squareSize: 64px;
           right: 0;
           bottom: 0;
           height: $squareSize;
-          z-index: 1;
           display: none;
         }
 
@@ -153,7 +152,10 @@ $squareSize: 64px;
         }
       }
 
-      transition: 1s;
+      &.moving {
+        transition: 1s;
+        z-index: 1;
+      }
 
       img {
         width: 100%;

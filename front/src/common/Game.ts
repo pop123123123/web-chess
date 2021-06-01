@@ -19,9 +19,12 @@ export default class Game {
 
     history: Action[];
 
+    lastPieceToMove: string;
+
     constructor(id: GameId, history: Action[]) {
       this.id = id;
       this.history = history;
+      this.lastPieceToMove = '';
     }
 
     getBoard(): string[][] {
@@ -33,6 +36,7 @@ export default class Game {
         const piece = board[action.from.row][action.from.column];
         board[action.to.row][action.to.column] = piece;
         board[action.from.row][action.from.column] = '   ';
+        this.lastPieceToMove = piece;
       });
 
       return board;
@@ -49,6 +53,7 @@ export default class Game {
               color: square[1] as PieceColor,
               row: rowIndex,
               column: colIndex,
+              moving: square === this.lastPieceToMove,
             });
           }
         });
