@@ -33,7 +33,7 @@ impl Cell {
 }
 
 pub enum Piece {
-    Poon,
+    Pawn,
     Knight,
     Bishop,
     Rook,
@@ -94,35 +94,35 @@ const INITIAL_BOARD: [[Option<BoardPiece>; 8]; 8] = [
     [
         Some(BoardPiece {
             color: Color::White,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
         Some(BoardPiece {
             color: Color::White,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
         Some(BoardPiece {
             color: Color::White,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
         Some(BoardPiece {
             color: Color::White,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
         Some(BoardPiece {
             color: Color::White,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
         Some(BoardPiece {
             color: Color::White,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
         Some(BoardPiece {
             color: Color::White,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
         Some(BoardPiece {
             color: Color::White,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
     ],
     [None, None, None, None, None, None, None, None],
@@ -132,35 +132,35 @@ const INITIAL_BOARD: [[Option<BoardPiece>; 8]; 8] = [
     [
         Some(BoardPiece {
             color: Color::Black,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
         Some(BoardPiece {
             color: Color::Black,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
         Some(BoardPiece {
             color: Color::Black,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
         Some(BoardPiece {
             color: Color::Black,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
         Some(BoardPiece {
             color: Color::Black,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
         Some(BoardPiece {
             color: Color::Black,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
         Some(BoardPiece {
             color: Color::Black,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
         Some(BoardPiece {
             color: Color::Black,
-            piece: Piece::Poon,
+            piece: Piece::Pawn,
         }),
     ],
     [
