@@ -51,7 +51,7 @@ pub async fn add_game(
     let game_option = data.get_mut(&game_id);
     match game_option {
         Some(mut game) => match game.push_move(action) {
-            Ok(_) => HttpResponse::Ok(),
+            Ok(_) => HttpResponse::NoContent(),
             Err(e) => match e {
                 InvalidMove::WrongTurn => HttpResponse::Forbidden(),
                 _ => HttpResponse::BadRequest(),
