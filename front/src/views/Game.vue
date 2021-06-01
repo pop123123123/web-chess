@@ -2,11 +2,15 @@
   <div class="view game">
     <Board :state="state.board" />
   </div>
+  <footer>
+    <p>Share this game: <Copy :text="url"/></p>
+  </footer>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Board from '@/components/Board.vue';
+import Copy from '@/components/Copy.vue';
 
 export default defineComponent({
   name: 'Game',
@@ -15,6 +19,7 @@ export default defineComponent({
   },
   components: {
     Board,
+    Copy,
   },
   data() {
     return {
@@ -32,6 +37,11 @@ export default defineComponent({
       },
     };
   },
+  computed: {
+    url() {
+      return window.location.href;
+    },
+  },
 });
 </script>
 
@@ -42,5 +52,17 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   user-select: none;
+}
+footer {
+  $h: 3rem;
+  width: 100%;
+  height: $h;
+  line-height: $h;
+  background: #444;
+  padding: 1em 0;
+  text-align: center;
+  p {
+    margin: 0;
+  }
 }
 </style>
