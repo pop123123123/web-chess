@@ -1,4 +1,4 @@
-use crate::data::{create, GameData, Id};
+use crate::data::{create, GameData, GameId};
 use actix_web::{get, post, put, web, Error, HttpRequest, HttpResponse, Responder};
 use futures::future::{ready, Ready};
 use serde::Serialize;
@@ -8,7 +8,7 @@ use web_chess::board::{Action, InvalidMove};
 #[get("/game/{game_id}")]
 pub async fn get_game_info(
     data: web::Data<GameData>,
-    web::Path(game_id): web::Path<Id>,
+    web::Path(game_id): web::Path<GameId>,
 ) -> impl Responder {
     let game_option = data.get(&game_id);
     let response_option = game_option.map(|b| HttpResponse::Ok().json(&(*b)));
@@ -17,7 +17,7 @@ pub async fn get_game_info(
 
 #[derive(Serialize)]
 struct CreateResponse {
-    id: u32,
+    id: GameId,
 }
 
 macro_rules! impl_respond {
@@ -47,7 +47,7 @@ pub async fn create_game(data: web::Data<GameData>) -> impl Responder {
 #[put("/game/{game_id}/action")]
 pub async fn add_game(
     data: web::Data<GameData>,
-    web::Path(game_id): web::Path<Id>,
+    web::Path(game_id): web::Path<GameId>,
     action: web::Json<Action>,
 ) -> impl Responder {
     let action = action.into_inner();
