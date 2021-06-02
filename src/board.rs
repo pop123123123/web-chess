@@ -28,6 +28,7 @@ impl PartialEq for Cell {
 }
 
 impl Cell {
+    /// Create new cell described by row and column
     pub fn new(row: u8, column: u8) -> Cell {
         debug_assert!(row < 8, "row {} is out of bounds", row);
         debug_assert!(column < 8, "column {} is out of bounds", column);
@@ -35,6 +36,16 @@ impl Cell {
             row: row.into(),
             column: column.into(),
         }
+    }
+
+    /// Get cell row
+    pub fn row(self) -> i8 {
+        u8::from(self.row) as i8
+    }
+
+    /// Get cell column
+    pub fn col(self) -> i8 {
+        u8::from(self.column) as i8
     }
 }
 
@@ -244,22 +255,11 @@ impl Game {
 
     /// Returns whether a move is valid
     pub fn is_move_valid(&self, planned_action: &Action) -> Result<(), InvalidMove> {
-        // rewind game to find original cell
-        let origin_cell = self
-            .history
-            .iter()
-            .rev()
-            .fold(planned_action.from, |cell, action| {
-                if action.to == cell {
-                    action.from
-                } else {
-                    cell
-                }
-            });
+        let from = planned_action.from;
+        let to = planned_action.to;
 
         // get piece corresponding to original cell
-        let original_piece_result = &INITIAL_BOARD[u8::from(origin_cell.row) as usize]
-            [u8::from(origin_cell.column) as usize];
+        let original_piece_result = self.get_piece_at(from);
 
         let original_piece: &BoardPiece;
 
@@ -279,72 +279,121 @@ impl Game {
         }
 
         // calculate distance from origin
-        let row_distance = ((u8::from(planned_action.to.row) as i8)
-            - (u8::from(planned_action.from.row) as i8))
-            .abs();
-        let column_distance = ((u8::from(planned_action.to.column) as i8)
-            - (u8::from(planned_action.from.column) as i8))
-            .abs();
+        let row_distance = (to.row() - from.row()).abs();
+        let col_distance = (to.col() - from.col()).abs();
+
+        // movement direction
+        let direction_row = (to.row() - from.row()).signum();
+        let direction_col = (to.col() - from.col()).signum();
 
         // check whether the piece makes a legal move
-        match &original_piece.piece {
+        let empty_cells = match &original_piece.piece {
             Piece::Knight => {
-                if !((row_distance == 2 && column_distance == 1)
-                    || (row_distance == 1 && column_distance == 2))
+                if !((row_distance == 2 && col_distance == 1)
+                    || (row_distance == 1 && col_distance == 2))
                 {
                     return Err(InvalidMove::OutOfRange);
                 }
+                Vec::new()
             }
             Piece::Bishop => {
                 // diagonal moves only
-                if row_distance != column_distance {
+                if row_distance != col_distance {
                     return Err(InvalidMove::OutOfRange);
                 }
-                // TODO: list cells to check for emptiness
+                (1..row_distance)
+                    .map(|i| {
+                        Cell::new(
+                            (from.row() + i * direction_row) as u8,
+                            (from.col() + i * direction_col) as u8,
+                        )
+                    })
+                    .collect()
             }
             Piece::Rook => {
                 // horizontal or vertical moves only
-                if row_distance != 0 && column_distance != 0 {
+                if row_distance != 0 && col_distance != 0 {
                     return Err(InvalidMove::OutOfRange);
                 }
-                // TODO: list cells to check for emptiness
+                (1..row_distance.max(col_distance))
+                    .map(|i| {
+                        Cell::new(
+                            (from.row() + i * direction_row) as u8,
+                            (from.col() + i * direction_col) as u8,
+                        )
+                    })
+                    .collect()
             }
             Piece::King => {
                 // move to closest squares only
-                if row_distance > 1 || column_distance > 1 {
+                if row_distance > 1 || col_distance > 1 {
                     return Err(InvalidMove::OutOfRange);
                 }
-                // TODO: list cells to check for emptiness
+                vec![Cell::new(
+                    (from.row() + direction_row) as u8,
+                    (from.col() + direction_col) as u8,
+                )]
             }
             Piece::Queen => {
                 // diagonal, horizontal or vertical moves only
-                if row_distance != column_distance && row_distance != 0 && column_distance != 0 {
+                if row_distance != col_distance && row_distance != 0 && col_distance != 0 {
                     return Err(InvalidMove::OutOfRange);
                 }
-                // TODO: list cells to check for emptiness
+                (1..row_distance.max(col_distance))
+                    .map(|i| {
+                        Cell::new(
+                            (from.row() + i * direction_row) as u8,
+                            (from.col() + i * direction_col) as u8,
+                        )
+                    })
+                    .collect()
             }
             Piece::Pawn => {
-                let from_row = u8::from(planned_action.from.row) as i8;
-                let to_row = u8::from(planned_action.to.row) as i8;
                 let direction = match original_piece.color {
                     Color::White => 1,
                     Color::Black => -1,
                 };
-                let on_initial_pos = (original_piece.color == Color::White && from_row == 1)
-                    || (original_piece.color == Color::Black && from_row == 6);
+                let on_initial_pos = (original_piece.color == Color::White && from.row() == 1)
+                    || (original_piece.color == Color::Black && from.row() == 6);
 
-                if on_initial_pos && column_distance == 0 && to_row == from_row + 2 * direction {
-                    // TODO: list cells to check for emptiness
-                } else if to_row != from_row + direction || column_distance > 1 {
+                if on_initial_pos && col_distance == 0 && to.row() == from.row() + 2 * direction {
+                    vec![Cell::new(
+                        (from.row() + direction) as u8,
+                        (from.col()) as u8,
+                    )]
+                } else if to.row() == from.row() + direction && col_distance == 1 {
+                    Vec::new()
+                } else {
                     return Err(InvalidMove::OutOfRange);
                 }
             }
-        }
+        };
 
-        // TODO: check cells in way of movement for emptiness
+        // check cells in way of movement for emptiness
+        if empty_cells
+            .iter()
+            .any(|&cell| self.get_piece_at(cell).is_some())
+        {
+            return Err(InvalidMove::OutOfSight);
+        }
 
         // accept move
         Ok(())
+    }
+
+    /// Returns piece at the given location
+    pub fn get_piece_at(&self, cell: Cell) -> &Option<BoardPiece> {
+        // rewind game to find original cell
+        let original_cell = self.history.iter().rev().fold(cell, |cell, action| {
+            if action.to == cell {
+                action.from
+            } else {
+                cell
+            }
+        });
+
+        // get original piece
+        &INITIAL_BOARD[original_cell.row() as usize][original_cell.col() as usize]
     }
 
     /// Process action and add it to action history if it is valid
