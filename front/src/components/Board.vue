@@ -10,8 +10,8 @@
           class="square"
           v-for="col in 8"
           :key="col"
-          @click="clickSquare(row - 1, col - 1)"
-          :class="{ selected: isSquareSelected(row - 1, col - 1) }"
+          @click="clickSquare(8 - row, col - 1)"
+          :class="{ selected: isSquareSelected(8 - row, col - 1) }"
         ></div>
       </div>
     </div>
@@ -157,7 +157,7 @@ $squareSize: 64px;
 
       @for $i from 0 through 7 {
         &.row-#{$i} {
-          top: $i * $squareSize;
+          top: (7-$i) * $squareSize;
         }
 
         &.col-#{$i} {
