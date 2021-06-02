@@ -354,11 +354,19 @@ impl Game {
                     || (original_piece.color == Color::Black && from.row() == 6);
 
                 if on_initial_pos && col_distance == 0 && to.row() == from.row() + 2 * direction {
+                    // move two cells away
                     vec![Cell::new(
                         (from.row() + direction) as u8,
                         (from.col()) as u8,
                     )]
-                } else if to.row() == from.row() + direction && col_distance == 1 {
+                } else if to.row() == from.row() + direction && col_distance <= 1 {
+                    // move one cell away
+                    let dest_piece = self.get_piece_at(to);
+                    if col_distance == 0 && dest_piece.is_some()
+                        || col_distance == 1 && dest_piece.is_none()
+                    {
+                        return Err(InvalidMove::OutOfRange);
+                    }
                     Vec::new()
                 } else {
                     return Err(InvalidMove::OutOfRange);
