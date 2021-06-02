@@ -390,16 +390,25 @@ impl Game {
     /// Returns piece at the given location
     pub fn get_piece_at(&self, cell: Cell) -> &Option<BoardPiece> {
         // rewind game to find original cell
-        let original_cell = self.history.iter().rev().fold(cell, |cell, action| {
-            if action.to == cell {
-                action.from
-            } else {
-                cell
-            }
-        });
+        let original_cell = self
+            .history
+            .iter()
+            .rev()
+            .fold(Some(cell), |cell_option, action| {
+                let cell = cell_option?;
+                if action.from == cell {
+                    None
+                } else if action.to == cell {
+                    Some(action.from)
+                } else {
+                    cell_option
+                }
+            });
 
         // get original piece
-        &INITIAL_BOARD[original_cell.row() as usize][original_cell.col() as usize]
+        original_cell.map_or(&None, |c| {
+            &INITIAL_BOARD[c.row() as usize][c.col() as usize]
+        })
     }
 
     /// Process action and add it to action history if it is valid
