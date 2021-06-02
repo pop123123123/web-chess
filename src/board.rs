@@ -61,7 +61,6 @@ pub enum InvalidMove {
     OutOfSight,
     ProvokeCheck,
     FriendlyFire,
-    PieceMoveNotImplemented,
 }
 
 /// Board in its initial state
@@ -279,26 +278,70 @@ impl Game {
             }
         }
 
+        // calculate distance from origin
+        let row_distance = ((u8::from(planned_action.to.row) as i8)
+            - (u8::from(planned_action.from.row) as i8))
+            .abs();
+        let column_distance = ((u8::from(planned_action.to.column) as i8)
+            - (u8::from(planned_action.from.column) as i8))
+            .abs();
+
         // check whether the piece makes a legal move
         match &original_piece.piece {
             Piece::Knight => {
-                let row_distance = ((u8::from(planned_action.to.row) as i8)
-                    - (u8::from(planned_action.from.row) as i8))
-                    .abs();
-                let column_distance = ((u8::from(planned_action.to.column) as i8)
-                    - (u8::from(planned_action.from.column) as i8))
-                    .abs();
-
                 if !((row_distance == 2 && column_distance == 1)
                     || (row_distance == 1 && column_distance == 2))
                 {
                     return Err(InvalidMove::OutOfRange);
                 }
             }
-            _ => {
-                return Err(InvalidMove::PieceMoveNotImplemented);
+            Piece::Bishop => {
+                // diagonal moves only
+                if row_distance != column_distance {
+                    return Err(InvalidMove::OutOfRange);
+                }
+                // TODO: list cells to check for emptiness
+            }
+            Piece::Rook => {
+                // horizontal or vertical moves only
+                if row_distance != 0 && column_distance != 0 {
+                    return Err(InvalidMove::OutOfRange);
+                }
+                // TODO: list cells to check for emptiness
+            }
+            Piece::King => {
+                // move to closest squares only
+                if row_distance > 1 || column_distance > 1 {
+                    return Err(InvalidMove::OutOfRange);
+                }
+                // TODO: list cells to check for emptiness
+            }
+            Piece::Queen => {
+                // diagonal, horizontal or vertical moves only
+                if row_distance != column_distance && row_distance != 0 && column_distance != 0 {
+                    return Err(InvalidMove::OutOfRange);
+                }
+                // TODO: list cells to check for emptiness
+            }
+            Piece::Pawn => {
+                let from_row = u8::from(planned_action.from.row) as i8;
+                let to_row = u8::from(planned_action.to.row) as i8;
+                let direction = match original_piece.color {
+                    Color::White => 1,
+                    Color::Black => -1,
+                };
+                let on_initial_pos = (original_piece.color == Color::White && from_row == 1)
+                    || (original_piece.color == Color::Black && from_row == 6);
+
+                if on_initial_pos && column_distance == 0 && to_row == from_row + 2 * direction {
+                    // TODO: list cells to check for emptiness
+                } else if to_row != from_row + direction || column_distance > 1 {
+                    return Err(InvalidMove::OutOfRange);
+                }
             }
         }
+
+        // TODO: check cells in way of movement for emptiness
 
         // accept move
         Ok(())
