@@ -329,10 +329,7 @@ impl Game {
                 if row_distance > 1 || col_distance > 1 {
                     return Err(InvalidMove::OutOfRange);
                 }
-                vec![Cell::new(
-                    (from.row() + direction_row) as u8,
-                    (from.col() + direction_col) as u8,
-                )]
+                Vec::new()
             }
             Piece::Queen => {
                 // diagonal, horizontal or vertical moves only
