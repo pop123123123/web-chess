@@ -4,6 +4,7 @@ use futures::future::{ready, Ready};
 use serde::Serialize;
 use web_chess::board::{Action, InvalidMove};
 
+/// Get a game state
 #[get("/game/{game_id}")]
 pub async fn get_game_info(
     data: web::Data<GameData>,
@@ -35,12 +36,14 @@ macro_rules! impl_respond {
 
 impl_respond!(CreateResponse);
 
+/// Create a new game
 #[post("/game")]
 pub async fn create_game(data: web::Data<GameData>) -> impl Responder {
     let id = create(&data);
     CreateResponse { id }
 }
 
+/// Send an action in a game
 #[put("/game/{game_id}/action")]
 pub async fn add_game(
     data: web::Data<GameData>,

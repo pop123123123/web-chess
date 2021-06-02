@@ -5,6 +5,7 @@ use web_chess::board::Game;
 pub type Id = u32;
 pub type GameData = CHashMap<u32, Game>;
 
+/// Create a new game and store it, returning its ID
 pub fn create(data: &GameData) -> u32 {
     let mut rng = rand::thread_rng();
     // generate a random number not present in hashmap

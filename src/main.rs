@@ -11,11 +11,13 @@ use data::GameData;
 
 const FRONTEND_PATH: &str = "./front/dist/";
 
+/// Get welcome message
 #[get("/message")]
 async fn hello() -> impl Responder {
     HttpResponse::Ok().json("Hello world!")
 }
 
+/// Run actix web server
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let port = std::env::var("PORT")

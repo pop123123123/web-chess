@@ -47,6 +47,7 @@ pub enum Piece {
     King,
 }
 
+/// Board piece defined by a color and a piece type
 pub struct BoardPiece {
     pub color: Color,
     pub piece: Piece,
@@ -63,6 +64,7 @@ pub enum InvalidMove {
     PieceMoveNotImplemented,
 }
 
+/// Board in its initial state
 const INITIAL_BOARD: [[Option<BoardPiece>; 8]; 8] = [
     [
         Some(BoardPiece {
@@ -206,6 +208,7 @@ const INITIAL_BOARD: [[Option<BoardPiece>; 8]; 8] = [
     ],
 ];
 
+/// Action defined by source and destination cells
 #[derive(Serialize, Deserialize)]
 pub struct Action {
     pub from: Cell,
@@ -214,6 +217,7 @@ pub struct Action {
 
 #[derive(Serialize, Deserialize)]
 pub struct Game {
+    /// History of actions
     history: Vec<Action>,
 }
 
@@ -229,6 +233,8 @@ impl Game {
             history: Vec::new(),
         }
     }
+
+    /// Returns current turn color
     pub fn get_turn(&self) -> Color {
         if self.history.len() % 2 == 0 {
             Color::White
@@ -236,7 +242,10 @@ impl Game {
             Color::Black
         }
     }
+
+    /// Returns whether a move is valid
     pub fn is_move_valid(&self, planned_action: &Action) -> Result<(), InvalidMove> {
+        // rewind game to find original cell
         let origin_cell = self
             .history
             .iter()
@@ -249,6 +258,7 @@ impl Game {
                 }
             });
 
+        // get piece corresponding to original cell
         let original_piece_result = &INITIAL_BOARD[u8::from(origin_cell.row) as usize]
             [u8::from(origin_cell.column) as usize];
 
@@ -256,6 +266,7 @@ impl Game {
 
         match original_piece_result {
             Some(p) => {
+                // reject action if incorrect color
                 if p.color != self.get_turn() {
                     return Err(InvalidMove::WrongTurn);
                 } else {
@@ -263,10 +274,12 @@ impl Game {
                 }
             }
             None => {
+                // reject action if moving from empty cell
                 return Err(InvalidMove::EmptySourceCell);
             }
         }
 
+        // check whether the piece makes a legal move
         match &original_piece.piece {
             Piece::Knight => {
                 let row_distance = ((u8::from(planned_action.to.row) as i8)
@@ -286,9 +299,12 @@ impl Game {
                 return Err(InvalidMove::PieceMoveNotImplemented);
             }
         }
+
+        // accept move
         Ok(())
     }
 
+    /// Process action and add it to action history if it is valid
     pub fn push_move(&mut self, planned_action: Action) -> Result<(), InvalidMove> {
         let res = self.is_move_valid(&planned_action);
         if res.is_ok() {
