@@ -55,7 +55,7 @@ export default defineComponent({
         this.game = await api.getGame(gameId);
         this.state.pieces = this.game.getPieces();
       } catch (error) {
-        if (error.response.status === 404) {
+        if (error.response?.status === 404) {
           this.stopPolling();
           this.$notify({
             title: 'This game does not exist',
@@ -76,12 +76,12 @@ export default defineComponent({
         await api.sendAction(this.game.id, action);
         await this.updateBoard();
       } catch (error) {
-        if (error.response.status === 400) {
+        if (error.response?.status === 400) {
           this.$notify({
             title: 'Illegal move!',
             type: 'warn',
           });
-        } else if (error.response.status === 403) {
+        } else if (error.response?.status === 403) {
           this.$notify({
             title: 'Not your turn!',
             type: 'warn',
