@@ -21,22 +21,37 @@ export default class Game {
 
   lastPieceToMove: string;
 
+  lastPieceToDie: Piece | undefined;
+
   constructor(id: GameId, history: Action[]) {
     this.id = id;
     this.history = history;
     this.lastPieceToMove = '';
+    this.lastPieceToDie = undefined;
   }
 
   getBoard(): string[][] {
     // copy initial board
-    const board = JSON.parse(JSON.stringify(INITIAL_BOARD));
+    const board = JSON.parse(JSON.stringify(INITIAL_BOARD)) as string[][];
 
     // apply actions
     this.history.forEach((action) => {
       const piece = board[action.from.row][action.from.column];
+      const lastPieceToDieId = board[action.to.row][action.to.column];
+
       board[action.to.row][action.to.column] = piece;
       board[action.from.row][action.from.column] = '   ';
+
       this.lastPieceToMove = piece;
+      this.lastPieceToDie = /^[bknpqr][dl]/.test(lastPieceToDieId) ? {
+        id: lastPieceToDieId,
+        type: lastPieceToDieId[0] as PieceType,
+        color: lastPieceToDieId[1] as PieceColor,
+        row: action.to.row,
+        column: action.to.column,
+        moving: false,
+        dead: true,
+      } : undefined;
     });
 
     return board;
@@ -54,10 +69,14 @@ export default class Game {
             row: rowIndex,
             column: colIndex,
             moving: square === this.lastPieceToMove,
+            dead: false,
           });
         }
       });
     });
+    if (this.lastPieceToDie !== undefined) {
+      pieces.push(this.lastPieceToDie);
+    }
     return pieces.sort((a, b) => a.id.localeCompare(b.id));
   }
 }

@@ -19,4 +19,5 @@ export default interface Piece {
   row: number
   column: number
   moving: boolean
+  dead: boolean
 }

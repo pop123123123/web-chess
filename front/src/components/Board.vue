@@ -20,7 +20,12 @@
         class="piece"
         v-for="piece in pieces"
         :key="piece.id"
-        :class="`row-${piece.row} col-${piece.column} ${piece.moving ? 'moving' : ''}`"
+        :class="`
+          row-${piece.row}
+          col-${piece.column}
+          ${piece.moving ? 'moving' : ''}
+          ${piece.dead ? 'dead' : ''}
+        `"
       ><img :src="getSquareImage(piece.type + piece.color)" :alt="piece.type + piece.color"></div>
     </div>
   </div>
@@ -171,10 +176,26 @@ $squareSize: 64px;
         100% { transform: scale(1); }
       }
 
+      @keyframes vanishPiece {
+        0%   {
+          opacity: 1;
+          transform: scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0);
+        }
+      }
+
       &.moving {
         transition: 1s;
         z-index: 1;
         animation: raisePiece 1s;
+      }
+
+      &.dead {
+        opacity: 0;
+        animation: vanishPiece 1s;
       }
 
       img {
