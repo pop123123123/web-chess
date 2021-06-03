@@ -194,7 +194,7 @@ $squareSize: 64px;
 
       &.dead {
         opacity: 0;
-        animation: vanishPiece 0.5s;
+        animation: vanishPiece 0.5s 0.5s both;
       }
 
       img {
