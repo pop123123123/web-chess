@@ -98,7 +98,6 @@ $squareSize: 64px;
   position: relative;
   width: $squareSize * 8;
   height: $squareSize * 8;
-  overflow: hidden;
   border: 10px solid black;
   transition: transform 2s;
 
@@ -183,7 +182,7 @@ $squareSize: 64px;
         }
         100% {
           opacity: 0;
-          transform: scale(0);
+          transform: scale(2);
         }
       }
 
@@ -195,7 +194,7 @@ $squareSize: 64px;
 
       &.dead {
         opacity: 0;
-        animation: vanishPiece 1s;
+        animation: vanishPiece 0.5s;
       }
 
       img {
