@@ -353,18 +353,19 @@ impl Game {
                     Color::White => 1,
                     Color::Black => -1,
                 };
-                let on_initial_pos = (original_piece.color == Color::White && from.row() == 1)
-                    || (original_piece.color == Color::Black && from.row() == 6);
 
-                if on_initial_pos && col_distance == 0 && to.row() == from.row() + 2 * direction {
-                    // move two cells away
+                // move two cells away, straight, from initial row
+                if (-5 * direction + 7) / 2 == from.row()
+                    && col_distance == 0
+                    && to.row() == from.row() + 2 * direction
+                {
                     (1..3)
                         .map(|i| {
                             Cell::new((from.row() + i * direction_row) as u8, (from.col()) as u8)
                         })
                         .collect()
+                // move one cell away
                 } else if to.row() == from.row() + direction && col_distance <= 1 {
-                    // move one cell away
                     let dest_piece = self.get_piece_at(to);
                     if col_distance == 0 && dest_piece.is_some()
                         || col_distance == 1 && dest_piece.is_none()
