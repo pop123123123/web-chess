@@ -272,10 +272,11 @@ impl Game {
             return Err(InvalidMove::WrongTurn);
         }
 
-        let target_piece = self.get_piece_at(to);
-        if target_piece
+        // reject if friendly fire
+        if self
+            .get_piece_at(to)
             .as_ref()
-            .map_or(false, |x| x.color == original_piece.color)
+            .map_or(false, |p| p.color == original_piece.color)
         {
             return Err(InvalidMove::FriendlyFire);
         }
