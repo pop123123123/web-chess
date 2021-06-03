@@ -4,6 +4,7 @@
     <Board
       :pieces="state.pieces"
       :rotated="rotatedBoard"
+      :white-turn="whiteTurn"
       @movePiece="sendAction"
     />
     <GameNotifications />
@@ -46,6 +47,9 @@ export default defineComponent({
   computed: {
     url() {
       return window.location.href;
+    },
+    whiteTurn(): boolean {
+      return (this.game?.history.length ?? 0) % 2 === 0;
     },
   },
   methods: {

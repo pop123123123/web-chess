@@ -1,5 +1,5 @@
 <template>
-  <div class="board" :class="{ 'rotated': rotated }">
+  <div class="board" :class="{ 'rotated': rotated, 'white-turn': whiteTurn }">
     <div class="background">
       <div
         class="row"
@@ -53,6 +53,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    whiteTurn: {
+      type: Boolean,
+      required: true,
+    },
   },
   methods: {
     getSquareImage(square: string) {
@@ -99,7 +103,8 @@ $squareSize: 64px;
   width: $squareSize * 8;
   height: $squareSize * 8;
   border: 10px solid black;
-  transition: transform 2s;
+  box-shadow: 0 -10px 0 greenyellow;
+  transition: transform 2s, box-shadow 1s .5s;
 
   &.rotated {
     transform: rotate(180deg);
@@ -107,6 +112,10 @@ $squareSize: 64px;
     .piece img {
       transform: rotate(-180deg);
     }
+  }
+
+  &.white-turn {
+    box-shadow: 0 10px 0 greenyellow;
   }
 
   .background {
