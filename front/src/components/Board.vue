@@ -1,5 +1,5 @@
 <template>
-  <div class="board" :class="{ 'rotated': rotated, 'white-turn': whiteTurn }">
+  <div class="board" :class="{ rotated, 'white-turn': whiteTurn, 'no-transition': !doAnimations }">
     <div class="background">
       <div
         class="row"
@@ -42,6 +42,7 @@ export default defineComponent({
   data() {
     return {
       selectedSquare: undefined as Cell | undefined,
+      doAnimations: false,
     };
   },
   props: {
@@ -92,11 +93,26 @@ export default defineComponent({
       return row === this.selectedSquare?.row && column === this.selectedSquare?.column;
     },
   },
+  watch: {
+    pieces(pieces, oldPieces) {
+      if (oldPieces.length > 0) {
+        this.doAnimations = true;
+      }
+    },
+  },
 });
 </script>
 
 <style scoped lang="scss">
 $squareSize: 64px;
+
+.no-transition {
+  &, * {
+    transition: none !important;
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
 
 .board {
   position: relative;
