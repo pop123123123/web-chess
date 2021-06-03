@@ -6,6 +6,7 @@
       :rotated="rotatedBoard"
       @movePiece="sendAction"
     />
+    <GameNotifications />
   </div>
   <footer>
     <p>Share this game: <Copy :text="url"/></p>
@@ -16,6 +17,7 @@
 import { defineComponent } from 'vue';
 import Board from '@/components/Board.vue';
 import Copy from '@/components/Copy.vue';
+import GameNotifications from '@/components/GameNotifications.vue';
 import Action from '@/common/Action';
 import Game from '@/common/Game';
 import Piece from '@/common/Piece';
@@ -29,6 +31,7 @@ export default defineComponent({
   components: {
     Board,
     Copy,
+    GameNotifications,
   },
   data() {
     return {
@@ -121,6 +124,7 @@ export default defineComponent({
   align-items: center;
   user-select: none;
   overflow: hidden;
+  position: relative;
 }
 footer {
   $h: 3rem;
