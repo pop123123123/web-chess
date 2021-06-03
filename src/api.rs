@@ -1,19 +1,8 @@
 use crate::data::{create, GameData, GameId};
-use actix_web::{get, post, put, web, Error, HttpRequest, HttpResponse, Responder};
+use actix_web::{get, patch, post, put, web, Error, HttpRequest, HttpResponse, Responder};
 use futures::future::{ready, Ready};
 use serde::Serialize;
 use web_chess::board::{Action, InvalidMove};
-
-/// Get a game state
-#[get("/game/{game_id}")]
-pub async fn get_game_info(
-    data: web::Data<GameData>,
-    web::Path(game_id): web::Path<GameId>,
-) -> impl Responder {
-    let game_option = data.get(&game_id);
-    let response_option = game_option.map(|b| HttpResponse::Ok().json(&(*b)));
-    response_option.unwrap_or_else(|| HttpResponse::NotFound().finish())
-}
 
 #[derive(Serialize)]
 struct CreateResponse {
@@ -41,6 +30,34 @@ impl_respond!(CreateResponse);
 pub async fn create_game(data: web::Data<GameData>) -> impl Responder {
     let id = create(&data);
     CreateResponse { id }
+}
+
+/// Get a game state
+#[get("/game/{game_id}")]
+pub async fn get_game_info(
+    data: web::Data<GameData>,
+    web::Path(game_id): web::Path<GameId>,
+) -> impl Responder {
+    let game_option = data.get(&game_id);
+    let response_option = game_option.map(|b| HttpResponse::Ok().json(&(*b)));
+    response_option.unwrap_or_else(|| HttpResponse::NotFound().finish())
+}
+
+/// Send an action in a game
+#[patch("/game/{game_id}")]
+pub async fn reset_game(
+    data: web::Data<GameData>,
+    web::Path(game_id): web::Path<GameId>,
+) -> impl Responder {
+    let game_option = data.get_mut(&game_id);
+    match game_option {
+        Some(mut game) => {
+            game.reset();
+            HttpResponse::NoContent()
+        }
+        None => HttpResponse::NotFound(),
+    }
+    .finish()
 }
 
 /// Send an action in a game

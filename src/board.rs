@@ -253,6 +253,11 @@ impl Game {
         }
     }
 
+    /// Resets the game
+    pub fn reset(&mut self) {
+        self.history.clear()
+    }
+
     /// Returns whether a move is valid
     pub fn is_move_valid(&self, planned_action: &Action) -> Result<(), InvalidMove> {
         let from = planned_action.from;
