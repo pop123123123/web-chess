@@ -272,6 +272,14 @@ impl Game {
             return Err(InvalidMove::WrongTurn);
         }
 
+        let target_piece = self.get_piece_at(to);
+        if target_piece
+            .as_ref()
+            .map_or(false, |x| x.color == original_piece.color)
+        {
+            return Err(InvalidMove::FriendlyFire);
+        }
+
         // calculate distance from origin
         let row_distance = (to.row() - from.row()).abs();
         let col_distance = (to.col() - from.col()).abs();
