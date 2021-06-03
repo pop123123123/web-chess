@@ -58,8 +58,9 @@ export default defineComponent({
         if (error.response.status === 404) {
           this.stopPolling();
           this.$notify({
-            title: 'Invalid game',
+            title: 'This game does not exist',
             type: 'error',
+            duration: -1,
           });
         } else {
           this.$notify({
@@ -77,12 +78,12 @@ export default defineComponent({
       } catch (error) {
         if (error.response.status === 400) {
           this.$notify({
-            title: 'Invalid request',
-            type: 'error',
+            title: 'Illegal move!',
+            type: 'warn',
           });
         } else if (error.response.status === 403) {
           this.$notify({
-            title: 'Invalid move',
+            title: 'Not your turn!',
             type: 'warn',
           });
         } else {
