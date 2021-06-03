@@ -172,6 +172,10 @@ $squareSize: 64px;
           display: block;
           background: #11ee1166;
         }
+
+        &.selected:hover::after {
+          background: #11ee1144;
+        }
       }
     }
   }
