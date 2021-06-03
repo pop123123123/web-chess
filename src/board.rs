@@ -259,23 +259,17 @@ impl Game {
         let to = planned_action.to;
 
         // get piece corresponding to original cell
-        let original_piece_result = self.get_piece_at(from);
-
-        let original_piece: &BoardPiece;
-
-        match original_piece_result {
-            Some(p) => {
-                // reject action if incorrect color
-                if p.color != self.get_turn() {
-                    return Err(InvalidMove::WrongTurn);
-                } else {
-                    original_piece = p;
-                }
-            }
+        let original_piece = match self.get_piece_at(from) {
+            Some(p) => p,
             None => {
-                // reject action if moving from empty cell
+                // reject action if moving air
                 return Err(InvalidMove::EmptySourceCell);
             }
+        };
+
+        // reject action if incorrect color
+        if original_piece.color != self.get_turn() {
+            return Err(InvalidMove::WrongTurn);
         }
 
         // calculate distance from origin
