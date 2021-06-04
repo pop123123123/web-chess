@@ -17,7 +17,7 @@
           on-text="Black"
           v-model:value="rotatedBoard"
         /></li>
-        <li><Button class="warn" @click="updateBoard">Reset game</Button></li>
+        <li><Button class="warn" @click="resetGame">Reset game</Button></li>
         <li><Button>Offer draw</Button></li>
       </ul>
     </aside>
@@ -113,6 +113,18 @@ export default defineComponent({
             type: 'error',
           });
         }
+      }
+    },
+    async resetGame() {
+      if (this.game === undefined) { return; }
+      try {
+        await api.resetGame(this.game.id);
+        await this.updateBoard();
+      } catch (error) {
+        this.$notify({
+          title: 'Unknown error',
+          type: 'error',
+        });
       }
     },
     startPolling() {

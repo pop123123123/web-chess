@@ -43,7 +43,7 @@ pub async fn get_game_info(
     response_option.unwrap_or_else(|| HttpResponse::NotFound().finish())
 }
 
-/// Send an action in a game
+/// Reset game
 #[patch("/game/{game_id}")]
 pub async fn reset_game(
     data: web::Data<GameData>,

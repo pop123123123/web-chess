@@ -21,4 +21,8 @@ export default {
   async sendAction(gameId: GameId, action: Action): Promise<void> {
     await apisator.put(`/game/${gameId}/action`, action);
   },
+
+  async resetGame(gameId: GameId): Promise<void> {
+    await apisator.patch(`/game/${gameId}`);
+  },
 };
