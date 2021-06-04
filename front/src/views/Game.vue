@@ -1,5 +1,8 @@
 <template>
   <div class="view game">
+    <aside>
+      <History :history="history"/>
+    </aside>
     <div class="board-container">
       <Board
         :pieces="state.pieces"
@@ -33,6 +36,7 @@ import { defineComponent } from 'vue';
 import Board from '@/components/Board.vue';
 import Button from '@/components/Button.vue';
 import Copy from '@/components/Copy.vue';
+import History from '@/components/History.vue';
 import GameNotifications from '@/components/GameNotifications.vue';
 import Switch from '@/components/Switch.vue';
 import { Action } from '@/common/Action';
@@ -49,6 +53,7 @@ export default defineComponent({
     Board,
     Button,
     Copy,
+    History,
     GameNotifications,
     Switch,
   },
@@ -202,21 +207,41 @@ $gameHeight: 512px;
     justify-content: center;
     background: theme.$background-secondary;
 
-    .buttons {
+    ul {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-around;
-      gap: 20px;
       margin: 0;
-      padding: 10px;
       list-style: none;
+    }
+
+    .buttons {
+      gap: 20px;
+      padding: 10px;
 
       li {
         min-width: 50%;
 
         button {
           width: 100%;
+        }
+      }
+    }
+    .history {
+      padding: 0;
+      width: 12em;
+
+      li {
+        border-bottom: 1px solid theme.$background-main;
+        padding: 20px 20%;
+        padding-right: 0;
+        margin: 0;
+        width: 80%;
+        text-align: start;
+
+        &:first-child {
+          border-top: 1px solid theme.$background-main;
         }
       }
     }
