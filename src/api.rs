@@ -61,8 +61,8 @@ pub async fn reset_game(
 }
 
 /// Delete the last action in a game
-#[delete("/game/{game_id}/action")]
-pub async fn delete_action(
+#[delete("/game/{game_id}/last_action")]
+pub async fn delete_last_action(
     data: web::Data<GameData>,
     web::Path(game_id): web::Path<GameId>,
 ) -> impl Responder {

@@ -6,7 +6,7 @@ use actix_web::{dev, get, middleware, web, App, HttpResponse, HttpServer, Respon
 
 mod api;
 mod data;
-use api::{add_action, create_game, delete_action, get_game_info, reset_game};
+use api::{add_action, create_game, delete_last_action, get_game_info, reset_game};
 use data::GameData;
 
 const FRONTEND_PATH: &str = "./front/dist/";
@@ -36,7 +36,7 @@ async fn main() -> std::io::Result<()> {
                     .service(get_game_info)
                     .service(create_game)
                     .service(add_action)
-                    .service(delete_action)
+                    .service(delete_last_action)
                     .service(reset_game),
             )
             .service(
