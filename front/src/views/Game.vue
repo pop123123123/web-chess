@@ -19,6 +19,7 @@
         /></li>
         <li><Button class="success" @click="resetGame">Reset game</Button></li>
         <li><Button class="success">Offer draw</Button></li>
+        <li><Button class="success" @click="deleteLastAction">Undo</Button></li>
       </ul>
     </aside>
   </div>
@@ -125,6 +126,25 @@ export default defineComponent({
           title: 'Unknown error',
           type: 'error',
         });
+      }
+    },
+    async deleteLastAction() {
+      if (this.game === undefined) { return; }
+      try {
+        await api.deleteLastAction(this.game.id);
+        await this.updateBoard();
+      } catch (error) {
+        if (error.response?.status === 400) {
+          this.$notify({
+            title: 'Cannot undo!',
+            type: 'warn',
+          });
+        } else {
+          this.$notify({
+            title: 'Unknown error',
+            type: 'error',
+          });
+        }
       }
     },
     startPolling() {

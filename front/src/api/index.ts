@@ -25,4 +25,8 @@ export default {
   async resetGame(gameId: GameId): Promise<void> {
     await apisator.patch(`/game/${gameId}`);
   },
+
+  async deleteLastAction(gameId: GameId): Promise<void> {
+    await apisator.delete(`/game/${gameId}/last_action`);
+  },
 };
