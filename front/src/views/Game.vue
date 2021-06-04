@@ -1,11 +1,14 @@
 <template>
   <div class="view game">
-    <Board
-      :pieces="state.pieces"
-      :rotated="rotatedBoard"
-      :white-turn="whiteTurn"
-      @movePiece="sendAction"
-    />
+    <div class="board-container">
+      <Board
+        :pieces="state.pieces"
+        :rotated="rotatedBoard"
+        :white-turn="whiteTurn"
+        @movePiece="sendAction"
+      />
+      <GameNotifications />
+    </div>
     <aside>
       <ul>
         <li><label><input type="checkbox" v-model="rotatedBoard">Rotate board</label></li>
@@ -14,7 +17,6 @@
         <li><Button>Offer draw</Button></li>
       </ul>
     </aside>
-    <GameNotifications />
   </div>
   <footer>
     <p>Share this game: <Copy :text="url"/></p>
@@ -141,12 +143,37 @@ $gameHeight: 512px;
 .game {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  user-select: none;
-  overflow: hidden;
-  position: relative;
+  padding: 0;
+
+  .board-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    overflow: hidden;
+    position: relative;
+    padding: 10px;
+  }
+
+  aside {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: theme.$background-secondary;
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-around;
+      gap: 10px;
+      margin: 0;
+      padding: 10px;
+      list-style: none;
+    }
+  }
 }
 footer {
   $h: 3rem;
@@ -158,31 +185,6 @@ footer {
   text-align: center;
   p {
     margin: 0;
-  }
-}
-
-aside {
-  position: absolute;
-  right: $marginSides;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  ul {
-    list-style: none;
-
-    border-left: 2px solid #fdf1db;
-    margin: 0;
-    padding-left: math.div($marginSides, 2);
-
-    height: $gameHeight * .5;
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-around;
   }
 }
 </style>
