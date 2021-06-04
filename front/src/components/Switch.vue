@@ -1,9 +1,9 @@
 <template>
-  <div class="switch">
+  <div class="switch" :class="`switch-${theme}`">
     <input id="a" type="radio" value="false" v-model="internalValue"/>
-    <label for="a">White</label>
+    <label for="a">{{ offText }}</label>
     <input id="b" type="radio" value="true" v-model="internalValue"/>
-    <label for="b">Black</label>
+    <label for="b">{{ onText }}</label>
     <span class="toggle-outside">
       <span class="toggle-inside"></span>
     </span>
@@ -20,6 +20,18 @@ export default defineComponent({
   }),
   props: {
     value: Boolean,
+    theme: {
+      type: String,
+      default: 'default',
+    },
+    offText: {
+      type: String,
+      default: 'Off',
+    },
+    onText: {
+      type: String,
+      default: 'On',
+    },
   },
   emits: ['update:value'],
   watch: {
@@ -31,9 +43,23 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-$text-color: white;
-$primary-color: white;
-$secondary-color: #222;
+@use '../scss/theme';
+
+@mixin buttonColoring($name) {
+  & {
+    .toggle-outside {
+      background: nth(map-get(theme.$switch, $name), 1);
+    }
+
+    .toggle-inside {
+      background: nth(map-get(theme.$switch, $name), 2);
+    }
+
+    input ~ input:checked ~ .toggle-outside .toggle-inside {
+      background: nth(map-get(theme.$switch, $name), 3);
+    }
+  }
+}
 
 *, *:before, *:after {
   box-sizing: border-box;
@@ -41,86 +67,86 @@ $secondary-color: #222;
 
 .switch {
   position: relative;
-  width: 18rem;
-  height: 3rem;
-  margin: 0 auto;
-  font-size: 0;
-  margin-bottom: 1rem;
-  & input {
+  width: 200px;
+  height: 40px;
+  font-size: 0.9em;
+
+  input {
     position: absolute;
     top: 0;
     z-index: 2;
     opacity: 0;
     cursor: pointer;
-    height: 3rem;
-    width: 6rem;
-    left: 6rem;
+    height: 40px;
+    width: 80px;
+    left: 60px;
     margin: 0;
-    &:checked   {
+
+    &:hover ~ .toggle-outside {
+      filter: brightness(1.1);
+    }
+
+    &:checked {
       z-index: 1;
+
       & + label {
         opacity: 1;
         cursor: default;
       }
     }
+
     &:not(:checked) + label:hover {
       opacity: .5;
     }
   }
-  & label {
-    color: $text-color;
+
+  label {
+    color: inherit;
     opacity: .33;
-    transition: opacity .25s ease;
     cursor: pointer;
-    font-size: 1.5rem;
-    line-height: 3rem;
+    line-height: 40px;
     display: inline-block;
-    width: 6rem;
+    width: 60px;
     height: 100%;
     margin: 0;
     text-align: center;
   }
-  & label:last-of-type  {
-    margin-left: 6rem;
+
+  label:last-of-type {
+    margin-left: 80px;
   }
-  & .toggle-outside {
+
+  .toggle-outside {
     height: 100%;
-    border-radius: 2rem;
-    padding: .25rem;
+    border-radius: 8px;
+    padding: 5px;
     overflow: hidden;
-    transition: .25s ease all;
-    background: $secondary-color;
     position: absolute;
-    width: 6rem;
-    left: 6rem;
+    width: 80px;
+    left: 60px;
+    border: 3px solid #00000066;
   }
-  & input ~ input:checked ~ .toggle-outside {
-    background: $primary-color;
-  }
-  & .toggle-inside {
-    border-radius: 5rem;
-    background: $primary-color;
+
+  .toggle-inside {
+    border-radius: 4px;
     position: absolute;
-    transition: .25s ease all;
-    height: 2.5rem;
-    width: 2.5rem;
+    transition: left .25s;
+    height: 24px;
+    width: 35px;
   }
-  & input:checked ~ .toggle-outside .toggle-inside {
-    left: .25rem;
+
+  input:checked ~ .toggle-outside .toggle-inside {
+    left: 5px;
   }
-  & input ~ input:checked ~ .toggle-outside .toggle-inside {
-    left: 3.25rem;
-    background: $secondary-color;
+
+  input ~ input:checked ~ .toggle-outside .toggle-inside {
+    left: 34px;
   }
-  & input:checked + label:hover ~ .toggle-outside .toggle-inside {
-      height: 2.5rem;
-      width: 2.5rem;
-  }
-  & input:hover ~ .toggle-outside .toggle-inside   {
-    width: 3.5rem;
-  }
-  & input:hover ~ input:checked ~ .toggle-outside .toggle-inside {
-    left: 2.25rem;
+
+  @each $class, $colors in theme.$switch {
+    &.switch-#{$class} {
+      @include buttonColoring($class);
+    }
   }
 }
 </style>

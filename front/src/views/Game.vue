@@ -11,7 +11,12 @@
     </div>
     <aside>
       <ul>
-        <li><Switch v-model:value="rotatedBoard"/></li>
+        <li><Switch
+          theme="black-white"
+          off-text="White"
+          on-text="Black"
+          v-model:value="rotatedBoard"
+        /></li>
         <li><Button class="warn" @click="updateBoard">Reset game</Button></li>
         <li><Button>Offer draw</Button></li>
       </ul>
