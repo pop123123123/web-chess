@@ -38,6 +38,7 @@ button {
     font-size: 0.8em;
     font-weight: bold;
     text-transform: uppercase;
+    white-space: nowrap;
   }
 
   &:hover {

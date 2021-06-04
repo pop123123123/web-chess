@@ -249,11 +249,8 @@ $gameHeight: 512px;
 }
 footer {
   $h: 3rem;
-  width: 100%;
-  height: $h;
-  line-height: $h;
   background: theme.$background-footer;
-  padding: 1em 0;
+  padding: 0.5em 0;
   text-align: center;
   p {
     margin: 0;
@@ -269,6 +266,7 @@ footer {
       justify-content: center;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
 
       li {
         min-width: initial;
