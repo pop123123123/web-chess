@@ -1,5 +1,5 @@
 use crate::data::{create, GameData, GameId};
-use actix_web::{get, patch, post, put, web, Error, HttpRequest, HttpResponse, Responder};
+use actix_web::{delete, get, patch, post, put, web, Error, HttpRequest, HttpResponse, Responder};
 use futures::future::{ready, Ready};
 use serde::Serialize;
 use web_chess::board::{Action, InvalidMove};
@@ -60,9 +60,26 @@ pub async fn reset_game(
     .finish()
 }
 
+/// Delete the last action in a game
+#[delete("/game/{game_id}/action")]
+pub async fn delete_action(
+    data: web::Data<GameData>,
+    web::Path(game_id): web::Path<GameId>,
+) -> impl Responder {
+    let game_option = data.get_mut(&game_id);
+    match game_option {
+        Some(mut game) => match game.undo_move() {
+            Some(_) => HttpResponse::NoContent(),
+            None => HttpResponse::BadRequest(),
+        },
+        None => HttpResponse::NotFound(),
+    }
+    .finish()
+}
+
 /// Send an action in a game
 #[put("/game/{game_id}/action")]
-pub async fn add_game(
+pub async fn add_action(
     data: web::Data<GameData>,
     web::Path(game_id): web::Path<GameId>,
     action: web::Json<Action>,

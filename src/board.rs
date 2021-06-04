@@ -423,4 +423,9 @@ impl Game {
         }
         res
     }
+
+    /// Remove the last action if any
+    pub fn undo_move(&mut self) -> Option<Action> {
+        self.history.pop()
+    }
 }
