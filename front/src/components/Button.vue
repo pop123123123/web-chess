@@ -3,27 +3,22 @@
 </template>
 
 <style lang="scss" scoped>
-$theme: (
-  "default" : (#44a4fc, #187fe7, #ffffffdd),
-  "success" : (#42a85f, #68cd86, #ffffffdd),
-  "warn" : (#f48a06, #ffb648, #000000aa),
-  "error" : (#b82e24, #e54d42, #ffffffdd),
-);
+@use '../scss/theme';
 
 @mixin buttonColoring($name) {
   & {
-    background: nth(map-get($theme, $name), 1);
+    background: nth(map-get(theme.$colors, $name), 1);
 
     > div {
-      background: nth(map-get($theme, $name), 2);
-      color: nth(map-get($theme, $name), 3);
+      background: nth(map-get(theme.$colors, $name), 2);
+      color: nth(map-get(theme.$colors, $name), 3);
     }
 
     &:active {
-      background: nth(map-get($theme, $name), 2);
+      background: nth(map-get(theme.$colors, $name), 2);
 
       > div {
-        background: nth(map-get($theme, $name), 1);
+        background: nth(map-get(theme.$colors, $name), 1);
 
       }
     }
@@ -48,7 +43,7 @@ button {
   }
 }
 
-@each $class, $colors in $theme {
+@each $class, $colors in theme.$colors {
   button.#{$class} {
     @include buttonColoring($class);
   }

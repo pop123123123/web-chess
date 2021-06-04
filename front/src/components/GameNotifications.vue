@@ -15,20 +15,15 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-$theme: (
-  "default" : (#44a4fc, #187fe7, #ffffffdd),
-  "success" : (#42a85f, #68cd86, #ffffffdd),
-  "warn" : (#f48a06, #ffb648, #000000aa),
-  "error" : (#b82e24, #e54d42, #ffffffdd),
-);
+@use '../scss/theme';
 
 @mixin notificationColoring($name) {
   & {
-    background: nth(map-get($theme, $name), 1);
+    background: nth(map-get(theme.$colors, $name), 1);
 
     .notification-title {
-      background: nth(map-get($theme, $name), 2);
-      color: nth(map-get($theme, $name), 3);
+      background: nth(map-get(theme.$colors, $name), 2);
+      color: nth(map-get(theme.$colors, $name), 3);
     }
   }
 }
@@ -65,7 +60,7 @@ $theme: (
     }
   }
 
-  @each $class, $colors in $theme {
+  @each $class, $colors in theme.$colors {
     &.#{$class} {
       @include notificationColoring($class);
     }
