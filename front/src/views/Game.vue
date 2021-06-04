@@ -1,12 +1,19 @@
 <template>
   <div class="view game">
-    <p><label><input type="checkbox" v-model="rotatedBoard">Rotate board</label></p>
     <Board
       :pieces="state.pieces"
       :rotated="rotatedBoard"
       :white-turn="whiteTurn"
       @movePiece="sendAction"
     />
+    <aside>
+      <ul>
+        <li><label><input type="checkbox" v-model="rotatedBoard">Rotate board</label></li>
+        <li><Switch/></li>
+        <li><Button class="warn" @click="updateBoard">Reset game</Button></li>
+        <li><Button>Offer draw</Button></li>
+      </ul>
+    </aside>
     <GameNotifications />
   </div>
   <footer>
@@ -17,8 +24,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Board from '@/components/Board.vue';
+import Button from '@/components/Button.vue';
 import Copy from '@/components/Copy.vue';
 import GameNotifications from '@/components/GameNotifications.vue';
+import Switch from '@/components/Switch.vue';
 import Action from '@/common/Action';
 import Game from '@/common/Game';
 import Piece from '@/common/Piece';
@@ -31,8 +40,10 @@ export default defineComponent({
   },
   components: {
     Board,
+    Button,
     Copy,
     GameNotifications,
+    Switch,
   },
   data() {
     return {
@@ -121,6 +132,11 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@use 'sass:math';
+
+$marginSides: 2vw;
+$gameHeight: 512px;
+
 .game {
   flex: 1;
   display: flex;
@@ -141,6 +157,31 @@ footer {
   text-align: center;
   p {
     margin: 0;
+  }
+}
+
+aside {
+  position: absolute;
+  right: $marginSides;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  ul {
+    list-style: none;
+
+    border-left: 2px solid #fdf1db;
+    margin: 0;
+    padding-left: math.div($marginSides, 2);
+
+    height: $gameHeight * .5;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-around;
   }
 }
 </style>

@@ -15,6 +15,24 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+$theme: (
+  "default" : (#44a4fc, #187fe7, #ffffffdd),
+  "success" : (#42a85f, #68cd86, #ffffffdd),
+  "warn" : (#f48a06, #ffb648, #000000aa),
+  "error" : (#b82e24, #e54d42, #ffffffdd),
+);
+
+@mixin notificationColoring($name) {
+  & {
+    background: nth(map-get($theme, $name), 1);
+
+    .notification-title {
+      background: nth(map-get($theme, $name), 2);
+      color: nth(map-get($theme, $name), 3);
+    }
+  }
+}
+
 .game-notification-group {
   position: absolute;
 
@@ -28,15 +46,13 @@ export default defineComponent({
   padding: 5px;
   border-radius: 12px;
   border: 3px solid #00000066;
-  background: #44a4fc;
+  @include notificationColoring('default');
 
   .notification-title {
-    background: #187fe7;
     border-radius: 6px;
     padding: 5px;
     text-align: center;
     font-size: 0.9em;
-    color: #ffffffdd;
   }
 
   .notification-content {
@@ -49,28 +65,9 @@ export default defineComponent({
     }
   }
 
-  &.success {
-    background: #42a85f;
-
-    .notification-title {
-      background: #68cd86;
-    }
-  }
-
-  &.warn {
-    background: #f48a06;
-
-    .notification-title {
-      background: #ffb648;
-      color: #000000aa;
-    }
-  }
-
-  &.error {
-    background: #b82e24;
-
-    .notification-title {
-      background: #e54d42;
+  @each $class, $colors in $theme {
+    &.#{$class} {
+      @include notificationColoring($class);
     }
   }
 }
