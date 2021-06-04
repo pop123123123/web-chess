@@ -104,6 +104,8 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+@use '../scss/theme';
+
 $squareSize: 64px;
 
 .no-transition {
@@ -118,8 +120,8 @@ $squareSize: 64px;
   position: relative;
   width: $squareSize * 8;
   height: $squareSize * 8;
-  border: 10px solid black;
-  box-shadow: 0 -10px 0 greenyellow;
+  border: 10px solid theme.$board-border-color;
+  box-shadow: 0 -10px 0 theme.$board-turn-indicator;
   transition: transform 2s, box-shadow 1s .5s;
 
   &.rotated {
@@ -131,7 +133,7 @@ $squareSize: 64px;
   }
 
   &.white-turn {
-    box-shadow: 0 10px 0 greenyellow;
+    box-shadow: 0 10px 0 theme.$board-turn-indicator;
   }
 
   .background {
@@ -145,12 +147,12 @@ $squareSize: 64px;
 
       &:nth-child(2n) .square:nth-child(2n),
       &:nth-child(2n+1) .square:nth-child(2n+1) {
-        background: wheat;
+        background: theme.$board-square-light;
       }
 
       .square {
         position: relative;
-        background: peru;
+        background: theme.$board-square-dark;
 
         &::after {
           content: '';

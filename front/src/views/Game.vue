@@ -133,6 +133,7 @@ export default defineComponent({
 
 <style lang="scss">
 @use 'sass:math';
+@use '../scss/theme';
 
 $marginSides: 2vw;
 $gameHeight: 512px;
@@ -152,7 +153,7 @@ footer {
   width: 100%;
   height: $h;
   line-height: $h;
-  background: #444;
+  background: theme.$background-footer;
   padding: 1em 0;
   text-align: center;
   p {
