@@ -10,15 +10,15 @@
       <GameNotifications />
     </div>
     <aside>
-      <ul>
+      <ul class="buttons">
         <li><Switch
           theme="black-white"
           off-text="White"
           on-text="Black"
           v-model:value="rotatedBoard"
         /></li>
-        <li><Button class="warn" @click="resetGame">Reset game</Button></li>
-        <li><Button>Offer draw</Button></li>
+        <li><Button class="success" @click="resetGame">Reset game</Button></li>
+        <li><Button class="success">Offer draw</Button></li>
       </ul>
     </aside>
   </div>
@@ -179,15 +179,23 @@ $gameHeight: 512px;
     justify-content: center;
     background: theme.$background-secondary;
 
-    ul {
+    .buttons {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-around;
-      gap: 10px;
+      gap: 20px;
       margin: 0;
       padding: 10px;
       list-style: none;
+
+      li {
+        min-width: 50%;
+
+        button {
+          width: 100%;
+        }
+      }
     }
   }
 }
@@ -208,10 +216,15 @@ footer {
   .game {
     flex-direction: column;
 
-    aside > ul {
+    aside > .buttons {
       flex-direction: row;
       justify-content: center;
       align-items: center;
+      gap: 10px;
+
+      li {
+        min-width: initial;
+      }
     }
   }
 }

@@ -33,9 +33,11 @@ button {
 
   > div {
     border-radius: 4px;
-    padding: 5px;
+    padding: 8px;
     text-align: center;
-    font-size: 0.9em;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
   }
 
   &:hover {
