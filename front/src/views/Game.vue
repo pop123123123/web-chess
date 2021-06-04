@@ -11,8 +11,7 @@
     </div>
     <aside>
       <ul>
-        <li><label><input type="checkbox" v-model="rotatedBoard">Rotate board</label></li>
-        <li><Switch/></li>
+        <li><Switch v-model:value="rotatedBoard"/></li>
         <li><Button class="warn" @click="updateBoard">Reset game</Button></li>
         <li><Button>Offer draw</Button></li>
       </ul>

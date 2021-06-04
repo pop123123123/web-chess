@@ -1,8 +1,8 @@
 <template>
   <div class="switch">
-    <input id="a" type="radio" value="true" v-model="value"/>
+    <input id="a" type="radio" value="false" v-model="internalValue"/>
     <label for="a">White</label>
-    <input id="b" type="radio" value="false" v-model="value"/>
+    <input id="b" type="radio" value="true" v-model="internalValue"/>
     <label for="b">Black</label>
     <span class="toggle-outside">
       <span class="toggle-inside"></span>
@@ -16,21 +16,17 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'Switch',
   data: () => ({
-    value: true,
+    internalValue: 'false',
   }),
   props: {
-    modelValue: {
-      type: Boolean,
-      default: true,
+    value: Boolean,
+  },
+  emits: ['update:value'],
+  watch: {
+    internalValue(value) {
+      this.$emit('update:value', value === 'true');
     },
   },
-  emits: ['update:modelValue'],
-  methods: {
-    changePageTitle(value: boolean) {
-      this.$emit('update:modelValue', value);
-    },
-  },
-  // TODO watch for changes, link value / modelValue
 });
 </script>
 
