@@ -1,4 +1,4 @@
-import Action from './Action';
+import { Action, ActionInterface } from './Action';
 import Piece, { PieceColor, PieceType } from './Piece';
 
 export type GameId = number;
@@ -23,9 +23,9 @@ export default class Game {
 
   lastPieceToDie: Piece | undefined;
 
-  constructor(id: GameId, history: Action[]) {
+  constructor(id: GameId, history: ActionInterface[]) {
     this.id = id;
-    this.history = history;
+    this.history = history.map((ai) => Action.fromActionInterface(ai));
     this.lastPieceToMove = '';
     this.lastPieceToDie = undefined;
   }

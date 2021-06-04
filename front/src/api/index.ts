@@ -1,4 +1,4 @@
-import Action from '@/common/Action';
+import { Action } from '@/common/Action';
 import Game, { GameId } from '@/common/Game';
 import axios from 'axios';
 

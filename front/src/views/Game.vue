@@ -35,7 +35,7 @@ import Button from '@/components/Button.vue';
 import Copy from '@/components/Copy.vue';
 import GameNotifications from '@/components/GameNotifications.vue';
 import Switch from '@/components/Switch.vue';
-import Action from '@/common/Action';
+import { Action } from '@/common/Action';
 import Game from '@/common/Game';
 import Piece from '@/common/Piece';
 import api from '@/api';
@@ -68,6 +68,9 @@ export default defineComponent({
     },
     whiteTurn(): boolean {
       return (this.game?.history.length ?? 0) % 2 === 0;
+    },
+    history(): string[] {
+      return (this.game?.history ?? []).map((a) => a.toAlgebraicNotation());
     },
   },
   methods: {
