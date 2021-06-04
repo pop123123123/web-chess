@@ -106,7 +106,7 @@ export default defineComponent({
 <style scoped lang="scss">
 @use '../scss/theme';
 
-$squareSize: 64px;
+$squareSize: 12.5%;
 
 .no-transition {
   &, * {
@@ -118,8 +118,9 @@ $squareSize: 64px;
 
 .board {
   position: relative;
-  width: $squareSize * 8;
-  height: $squareSize * 8;
+  max-height: 512px;
+  max-width: 512px;
+  width: 100%;
   border: 10px solid theme.$board-border-color;
   box-shadow: 0 -10px 0 theme.$board-turn-indicator;
   transition: transform 2s, box-shadow 1s .5s;
@@ -142,7 +143,6 @@ $squareSize: 64px;
 
     .row {
       display: grid;
-      height: $squareSize;
       grid-template-columns: repeat(8, 1fr);
 
       &:nth-child(2n) .square:nth-child(2n),
@@ -151,6 +151,7 @@ $squareSize: 64px;
       }
 
       .square {
+        padding-bottom: 100%;
         position: relative;
         background: theme.$board-square-dark;
 
@@ -161,7 +162,6 @@ $squareSize: 64px;
           top: 0;
           right: 0;
           bottom: 0;
-          height: $squareSize;
           display: none;
         }
 

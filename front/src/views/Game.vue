@@ -203,4 +203,16 @@ footer {
     margin: 0;
   }
 }
+
+@media screen and (max-width: 900px) {
+  .game {
+    flex-direction: column;
+
+    aside > ul {
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
 </style>
