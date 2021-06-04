@@ -26,8 +26,8 @@ export default defineComponent({
   },
   emits: ['update:modelValue'],
   methods: {
-    changePageTitle(title) {
-      this.$emit('update:modelValue', title);
+    changePageTitle(value: boolean) {
+      this.$emit('update:modelValue', value);
     },
   },
   // TODO watch for changes, link value / modelValue
