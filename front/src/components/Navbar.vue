@@ -35,6 +35,7 @@ $hover-color: #556b2f44;
   color: theme.$color-text-dark;
   padding: 1rem;
   text-align: center;
+  height: 1.5rem;
   font-size: 1.25rem;
 
   a {
