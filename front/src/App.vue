@@ -1,6 +1,12 @@
 <template>
-  <Navbar/>
-  <router-view/>
+  <div class="wrapper">
+    <Navbar/>
+    <router-view v-slot="{ Component }">
+      <transition name="slide">
+        <component :is="Component" />
+      </transition>
+    </router-view>
+  </div>
 </template>
 
 <script lang="ts">
@@ -16,6 +22,38 @@ export default defineComponent({
 
 <style lang="scss">
 @use './scss/theme';
+
+.wrapper {
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+.slide-enter-active,
+.slide-leave-active {
+  transition: all .75s ease-out;
+  width: 100vw;
+}
+
+.slide-enter-to {
+  position: absolute;
+  left: 0;
+}
+
+.slide-enter-from {
+  position: absolute;
+  left: 100%;
+}
+
+.slide-leave-to {
+  position: absolute;
+  left: -100%;
+}
+
+.slide-leave-from {
+  position: absolute;
+  left: 0;
+}
 
 body {
   display: flex;
