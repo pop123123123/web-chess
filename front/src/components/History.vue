@@ -1,13 +1,15 @@
 <template>
   <div class="history" :class="{ expand: showMore }">
-    <transition-group name="list-complete" tag="ul" class="history-list">
-      <li v-for="(s, i) in history" :key="i" class="list-complete-item">
-        {{i+1}}. {{s}}
-      </li>
-    </transition-group>
-    <div class="show-more">
-      <input type="checkbox" id="show-more" v-model="showMore">
-      <label for="show-more">▽</label>
+    <div class="history-list-wrapper">
+      <transition-group name="list-complete" tag="ul" class="history-list">
+        <li v-for="(s, i) in history" :key="i" class="list-complete-item">
+          {{i+1}}. {{s}}
+        </li>
+      </transition-group>
+      <div class="show-more">
+        <input type="checkbox" id="show-more" v-model="showMore">
+        <label for="show-more">▽</label>
+      </div>
     </div>
   </div>
 </template>
@@ -44,6 +46,9 @@ $list-expanded-height: $list-item-height * 3;
 }
 
 .history {
+  position: relative;
+  flex: 1;
+  width: $list-width;
   transition: height 0.5s;
 
   .show-more {
@@ -51,13 +56,24 @@ $list-expanded-height: $list-item-height * 3;
   }
 }
 
+.history-list-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden auto;
+}
+
 .history-list {
-  padding: 0;
   width: $list-width;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 
   .list-complete {
     &-item {
-      transition: all 0.8s ease;
+      transition: opacity 0.8s ease, transform 0.8s ease;
       display: inline-block;
       height: $list-item-height;
       margin: 0;
@@ -65,6 +81,7 @@ $list-expanded-height: $list-item-height * 3;
       width: $list-width;
       text-align: start;
       border-bottom: 1px solid theme.$background-main;
+      left: 0;
 
       &:first-child {
         border-top: 1px solid theme.$background-main;
@@ -86,8 +103,9 @@ $list-expanded-height: $list-item-height * 3;
   .history {
     display: flex;
     overflow: hidden;
+    flex: unset;
+    width: auto;
     height: $list-item-height;
-    align-items: flex-end;
 
     &.expand {
       height: $list-expanded-height;
@@ -102,10 +120,15 @@ $list-expanded-height: $list-item-height * 3;
       }
     }
 
-    .history-list {
-      overflow: hidden;
+    .history-list-wrapper {
+      position: static;
+      display: flex;
       flex: 1;
-      align-items: flex-start;
+      align-items: flex-end;
+    }
+
+    .history-list {
+      width: 100%;
 
       .list-complete-item {
         padding-left: $list-padding-mobile;

@@ -33,8 +33,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use 'sass:math';
-
 div {
   position: relative;
   display: inline-block;

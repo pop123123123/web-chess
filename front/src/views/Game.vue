@@ -207,16 +207,13 @@ $gameHeight: 512px;
     justify-content: center;
     background: theme.$background-secondary;
 
-    ul {
+    .buttons {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-around;
       margin: 0;
       list-style: none;
-    }
-
-    .buttons {
       gap: 20px;
       padding: 10px;
 
