@@ -36,6 +36,7 @@ export default defineComponent({
 
 $list-item-height: 3.5em;
 $list-width: 12em;
+$list-padding-mobile: 3em;
 $list-expanded-height: $list-item-height * 3;
 
 *, *:before, *:after {
@@ -104,9 +105,15 @@ $list-expanded-height: $list-item-height * 3;
     .history-list {
       overflow: hidden;
       flex: 1;
+      align-items: flex-start;
 
-      .list-complete-item:last-child {
-        border-bottom-color: transparent;
+      .list-complete-item {
+        padding-left: $list-padding-mobile;
+        width: 100%;
+
+        &:last-child {
+          border-bottom-color: transparent;
+        }
       }
     }
 
