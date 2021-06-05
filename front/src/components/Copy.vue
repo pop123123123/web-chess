@@ -42,15 +42,12 @@ div {
     cursor: pointer;
   }
   &::after {
-    $h: 2em;
     content: 'Copied!';
     position: absolute;
-    top: -50%;
+    top: 50%;
     left: 50%;
-    padding: .7em;
-    height: $h;
-    line-height: $h;
-    transform: translate(-50%, math.div($h, 2));
+    padding: 4px 10px;
+    transform: translate(-50%, -50%);
     background: gray;
     border: 2px solid darkgray;
     opacity: 0;

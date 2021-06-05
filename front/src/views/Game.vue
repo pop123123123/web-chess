@@ -252,6 +252,8 @@ footer {
   background: theme.$background-footer;
   padding: 0.5em 0;
   text-align: center;
+  overflow: hidden;
+
   p {
     margin: 0;
   }
