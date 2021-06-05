@@ -1,35 +1,37 @@
 <template>
-  <div class="view game">
-    <aside>
-      <History :history="history"/>
-    </aside>
-    <div class="board-container">
-      <Board
-        :pieces="state.pieces"
-        :rotated="rotatedBoard"
-        :white-turn="whiteTurn"
-        :actions="game?.history ?? []"
-        @movePiece="sendAction"
-      />
-      <GameNotifications />
+  <div class="wrapper">
+    <div class="view game">
+      <aside>
+        <History :history="history"/>
+      </aside>
+      <div class="board-container">
+        <Board
+          :pieces="state.pieces"
+          :rotated="rotatedBoard"
+          :white-turn="whiteTurn"
+          :actions="game?.history ?? []"
+          @movePiece="sendAction"
+        />
+        <GameNotifications />
+      </div>
+      <aside>
+        <ul class="buttons">
+          <li><Switch
+            theme="black-white"
+            off-text="White"
+            on-text="Black"
+            v-model:value="rotatedBoard"
+          /></li>
+          <li><Button class="success" @click="resetGame">Reset game</Button></li>
+          <li><Button class="success">Offer draw</Button></li>
+          <li><Button class="success" @click="deleteLastAction">Undo</Button></li>
+        </ul>
+      </aside>
     </div>
-    <aside>
-      <ul class="buttons">
-        <li><Switch
-          theme="black-white"
-          off-text="White"
-          on-text="Black"
-          v-model:value="rotatedBoard"
-        /></li>
-        <li><Button class="success" @click="resetGame">Reset game</Button></li>
-        <li><Button class="success">Offer draw</Button></li>
-        <li><Button class="success" @click="deleteLastAction">Undo</Button></li>
-      </ul>
-    </aside>
+    <footer>
+      <p>Share this game: <Copy :text="url"/></p>
+    </footer>
   </div>
-  <footer>
-    <p>Share this game: <Copy :text="url"/></p>
-  </footer>
 </template>
 
 <script lang="ts">
@@ -184,6 +186,12 @@ export default defineComponent({
 
 $marginSides: 2vw;
 $gameHeight: 512px;
+
+.wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
 .game {
   flex: 1;

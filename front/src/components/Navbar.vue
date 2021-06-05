@@ -33,9 +33,9 @@ $hover-color: #556b2f44;
 #nav {
   background: theme.$background-header;
   color: theme.$color-text-dark;
-  padding: 1em;
+  padding: 1rem;
   text-align: center;
-  font-size: 1.25em;
+  font-size: 1.25rem;
 
   a {
     text-decoration: none;

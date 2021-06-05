@@ -1,12 +1,10 @@
 <template>
-  <div class="wrapper">
-    <Navbar/>
-    <router-view v-slot="{ Component }">
-      <transition name="slide">
-        <component :is="Component" />
-      </transition>
-    </router-view>
-  </div>
+  <Navbar/>
+  <router-view v-slot="{ Component }">
+    <transition name="fade">
+      <component :is="Component" />
+    </transition>
+  </router-view>
 </template>
 
 <script lang="ts">
@@ -23,36 +21,22 @@ export default defineComponent({
 <style lang="scss">
 @use './scss/theme';
 
-.wrapper {
-  width: 100vw;
-  min-height: 100vh;
-  overflow: hidden;
-  position: relative;
-}
-.slide-enter-active,
-.slide-leave-active {
-  transition: all .75s ease-out;
-  width: 100vw;
-}
-
-.slide-enter-to {
+.fade-enter-active, .fade-leave-active, .fade-enter-from, .fade-leave-to {
   position: absolute;
   left: 0;
+  right: 0;
+  top: 3.5rem;
+  bottom: 0;
+}
+.fade-enter-active {
+  transition-delay: .1s !important;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.25s ease;
 }
 
-.slide-enter-from {
-  position: absolute;
-  left: 100%;
-}
-
-.slide-leave-to {
-  position: absolute;
-  left: -100%;
-}
-
-.slide-leave-from {
-  position: absolute;
-  left: 0;
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
 }
 
 body {
