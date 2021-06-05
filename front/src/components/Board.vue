@@ -1,5 +1,13 @@
 <template>
-  <div class="board" :class="{ rotated, 'white-turn': whiteTurn, 'no-transition': !doAnimations }">
+  <div
+    class="board"
+    :class="{
+      rotated,
+      'white-turn': whiteTurn,
+      'no-transition': !doAnimations,
+      'reverse-animation': reverseAnimation
+    }"
+  >
     <div class="background">
       <div
         class="row"
@@ -43,6 +51,7 @@ export default defineComponent({
     return {
       selectedSquare: undefined as Cell | undefined,
       doAnimations: false,
+      reverseAnimation: false,
     };
   },
   props: {
@@ -56,6 +65,10 @@ export default defineComponent({
     },
     whiteTurn: {
       type: Boolean,
+      required: true,
+    },
+    actions: {
+      type: Array as PropType<Array<Action>>,
       required: true,
     },
   },
@@ -99,6 +112,11 @@ export default defineComponent({
         this.doAnimations = true;
       }
     },
+    actions(actions, oldActions) {
+      if (oldActions.length !== actions.length) {
+        this.reverseAnimation = oldActions.length > actions.length;
+      }
+    },
   },
 });
 </script>
@@ -124,6 +142,13 @@ $squareSize: 12.5%;
   border: 10px solid theme.$board-border-color;
   box-shadow: 0 -10px 0 theme.$board-turn-indicator;
   transition: transform 2s, box-shadow 1s .5s;
+
+  &.reverse-animation {
+    .piece {
+      transition: 1s;
+      animation: unset !important;
+    }
+  }
 
   &.rotated {
     transform: rotate(180deg);

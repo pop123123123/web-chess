@@ -8,6 +8,7 @@
         :pieces="state.pieces"
         :rotated="rotatedBoard"
         :white-turn="whiteTurn"
+        :actions="game?.history ?? []"
         @movePiece="sendAction"
       />
       <GameNotifications />
