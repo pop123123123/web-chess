@@ -92,7 +92,7 @@ $list-expanded-height: $list-item-height * 3;
 
       .history-list {
         overflow: auto;
-        height: $list-expanded-height;
+        max-height: $list-expanded-height;
       }
 
       .show-more input[type="checkbox"] + label {
@@ -103,6 +103,10 @@ $list-expanded-height: $list-item-height * 3;
     .history-list {
       overflow: hidden;
       flex: 1;
+
+      .list-complete-item:last-child {
+        border-bottom-color: transparent;
+      }
     }
 
     .show-more {
