@@ -34,6 +34,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:math';
 @use '../scss/theme';
 
 $list-item-height: 3.5em;
@@ -148,7 +149,7 @@ $list-expanded-height: $list-item-height * 3;
 
         + label {
           display: block;
-          font-size: $list-item-height / 2;
+          font-size: math.div($list-item-height, 2);
           line-height: 1em;
           padding: 0.5em;
           transition: transform 0.5s;
