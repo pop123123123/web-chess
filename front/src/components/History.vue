@@ -12,7 +12,10 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'History',
   props: {
-    history: [String],
+    history: {
+      type: Array,
+      default: () => [],
+    },
   },
 });
 </script>

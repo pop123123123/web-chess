@@ -11,6 +11,6 @@ export default class Cell {
 
   toCellName(): string {
     const columnName = String.fromCharCode(this.column + baseCode);
-    return `${columnName}${this.row}`;
+    return `${columnName}${this.row + 1}`;
   }
 }
