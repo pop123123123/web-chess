@@ -35,6 +35,7 @@ export default defineComponent({
 @use '../scss/theme';
 
 $list-item-height: 3.5em;
+$list-width: 12em;
 $list-expanded-height: $list-item-height * 3;
 
 *, *:before, *:after {
@@ -51,7 +52,7 @@ $list-expanded-height: $list-item-height * 3;
 
 .history-list {
   padding: 0;
-  width: 12em;
+  width: $list-width;
 
   .list-complete {
     &-item {
@@ -59,8 +60,8 @@ $list-expanded-height: $list-item-height * 3;
       display: inline-block;
       height: $list-item-height;
       margin: 0;
-      padding: 20px 0 20px 20%;
-      width: 100%;
+      padding: 20px 0 20px $list-width * 0.2;
+      width: $list-width;
       text-align: start;
       border-bottom: 1px solid theme.$background-main;
 
