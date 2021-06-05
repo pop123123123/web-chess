@@ -219,7 +219,7 @@ $gameHeight: 512px;
     .buttons {
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: stretch;
       justify-content: space-around;
       margin: 0;
       list-style: none;

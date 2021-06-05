@@ -1,12 +1,12 @@
 <template>
   <div class="switch" :class="`switch-${theme}`">
-    <input id="a" type="radio" value="false" v-model="internalValue"/>
-    <label for="a">{{ offText }}</label>
-    <input id="b" type="radio" value="true" v-model="internalValue"/>
-    <label for="b">{{ onText }}</label>
-    <span class="toggle-outside">
-      <span class="toggle-inside"></span>
-    </span>
+    <input type="checkbox" v-model="internalValue"/>
+    <div class="toggle-outside">
+      <div class="toggle-inside">
+        <span>{{ offText }}</span>
+        <span>{{ onText }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -36,7 +36,7 @@ export default defineComponent({
   emits: ['update:value'],
   watch: {
     internalValue(value) {
-      this.$emit('update:value', value === 'true');
+      this.$emit('update:value', value);
     },
   },
 });
@@ -47,100 +47,113 @@ export default defineComponent({
 
 @mixin buttonColoring($name) {
   & {
-    .toggle-outside {
-      background: nth(map-get(theme.$switch, $name), 1);
-    }
+    background: nth(map-get(theme.$switch, $name), 1);
 
-    .toggle-inside {
+    .toggle-outside {
       background: nth(map-get(theme.$switch, $name), 2);
     }
 
-    input ~ input:checked ~ .toggle-outside .toggle-inside {
+    .toggle-inside {
       background: nth(map-get(theme.$switch, $name), 3);
+
+      span {
+        color: nth(map-get(theme.$switch, $name), 2);
+      }
+    }
+
+    input:checked ~ .toggle-outside .toggle-inside {
+      background: nth(map-get(theme.$switch, $name), 4);
     }
   }
 }
 
-*, *:before, *:after {
-  box-sizing: border-box;
-}
+$switch-width: 110px;
+$p: 5px;
 
 .switch {
   position: relative;
-  width: 200px;
-  height: 40px;
-  font-size: 0.9em;
+  min-width: $switch-width;
+  height: 30px;
+  font-size: 0.8em;
+  border: 3px solid #00000066;
+  border-radius: 8px;
+  padding: $p;
 
   input {
     position: absolute;
     top: 0;
+    left: 0;
+    height: 100%;
     z-index: 2;
-    opacity: 0;
     cursor: pointer;
-    height: 40px;
-    width: 80px;
-    left: 60px;
+    width: 100%;
     margin: 0;
+    opacity: 0;
+
+    &:focus-visible ~ .toggle-outside {
+      box-shadow: 0 0 1px 3px #2af;
+    }
 
     &:hover ~ .toggle-outside {
       filter: brightness(1.1);
     }
 
+    ~ .toggle-outside span {
+      opacity: 1;
+      color: grey;
+    }
+
+    ~ .toggle-outside span:last-of-type {
+      opacity: 0;
+    }
+
     &:checked {
       z-index: 1;
 
-      & + label {
+      ~ .toggle-outside span {
+        opacity: 0;
+      }
+
+      ~ .toggle-outside span:last-of-type {
         opacity: 1;
-        cursor: default;
       }
     }
-
-    &:not(:checked) + label:hover {
-      opacity: .5;
-    }
   }
 
-  label {
+  span {
+    position: relative;
+    top: 50%;
     color: inherit;
-    opacity: .33;
-    cursor: pointer;
-    line-height: 40px;
-    display: inline-block;
-    width: 60px;
-    height: 100%;
+    line-height: 0;
+    display: block;
     margin: 0;
     text-align: center;
-  }
-
-  label:last-of-type {
-    margin-left: 80px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
   }
 
   .toggle-outside {
+    position: relative;
     height: 100%;
-    border-radius: 8px;
-    padding: 5px;
+    width: 100%;
+    border-radius: 4px;
     overflow: hidden;
-    position: absolute;
-    width: 80px;
-    left: 60px;
-    border: 3px solid #00000066;
   }
 
   .toggle-inside {
     border-radius: 4px;
+    transition: all .25s;
+    height: 100%;
+    min-width: 50%;
+    top: 0;
+    left: 0;
     position: absolute;
-    transition: left .25s;
-    height: 24px;
-    width: 35px;
   }
 
   input:checked ~ .toggle-outside .toggle-inside {
-    left: 5px;
-  }
-
-  input ~ input:checked ~ .toggle-outside .toggle-inside {
-    left: 34px;
+    left: 100%;
+    transform: translateX(-100%);
   }
 
   @each $class, $colors in theme.$switch {
