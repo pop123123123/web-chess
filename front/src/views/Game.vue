@@ -228,23 +228,6 @@ $gameHeight: 512px;
         }
       }
     }
-    .history {
-      padding: 0;
-      width: 12em;
-
-      li {
-        border-bottom: 1px solid theme.$background-main;
-        padding: 20px 20%;
-        padding-right: 0;
-        margin: 0;
-        width: 80%;
-        text-align: start;
-
-        &:first-child {
-          border-top: 1px solid theme.$background-main;
-        }
-      }
-    }
   }
 }
 footer {
