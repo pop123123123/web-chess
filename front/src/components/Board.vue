@@ -125,6 +125,7 @@ export default defineComponent({
 @use '../scss/theme';
 
 $squareSize: 12.5%;
+$max-board-size: 512px;
 
 .no-transition {
   &, * {
@@ -136,8 +137,8 @@ $squareSize: 12.5%;
 
 .board {
   position: relative;
-  max-height: 512px;
-  max-width: 512px;
+  max-height: $max-board-size;
+  max-width: $max-board-size;
   width: 100%;
   border: 10px solid theme.$board-border-color;
   box-shadow: 0 -10px 0 theme.$board-turn-indicator;
@@ -258,6 +259,12 @@ $squareSize: 12.5%;
         transition: transform 2s;
       }
     }
+  }
+}
+
+@media screen and (max-width: $max-board-size) {
+  .board {
+    border: 0;
   }
 }
 </style>

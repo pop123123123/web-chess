@@ -207,7 +207,7 @@ $gameHeight: 512px;
     user-select: none;
     overflow: hidden;
     position: relative;
-    padding: 10px;
+    padding: 10px 0;
   }
 
   aside {
