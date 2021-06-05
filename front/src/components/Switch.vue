@@ -67,7 +67,7 @@ export default defineComponent({
   }
 }
 
-$switch-width: 110px;
+$switch-width: 60px;
 $p: 5px;
 
 .switch {
@@ -149,6 +149,7 @@ $p: 5px;
     top: 0;
     left: 0;
     position: absolute;
+    padding: 0 $p;
   }
 
   input:checked ~ .toggle-outside .toggle-inside {

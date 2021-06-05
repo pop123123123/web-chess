@@ -224,11 +224,9 @@ $gameHeight: 512px;
       margin: 0;
       list-style: none;
       gap: 20px;
-      padding: 10px;
+      padding: 10px 40px;
 
       li {
-        min-width: 50%;
-
         button {
           width: 100%;
         }
@@ -254,13 +252,15 @@ footer {
 
     aside > .buttons {
       flex-direction: row;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      gap: 10px;
+      gap: 5px;
       flex-wrap: wrap;
+      padding: 10px;
 
       li {
         min-width: initial;
+        flex: 1;
       }
     }
   }
