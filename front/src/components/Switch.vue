@@ -149,7 +149,7 @@ $p: 5px;
     top: 0;
     left: 0;
     position: absolute;
-    padding: 0 $p;
+    padding: 0 8px;
   }
 
   input:checked ~ .toggle-outside .toggle-inside {

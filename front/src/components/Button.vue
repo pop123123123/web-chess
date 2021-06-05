@@ -33,7 +33,7 @@ button {
 
   > div {
     border-radius: 4px;
-    padding: 8px;
+    padding: 8px 16px;
     text-align: center;
     font-size: 0.8em;
     font-weight: bold;
