@@ -1,7 +1,7 @@
 <template>
   <div class="view home">
     <h1>Web-chess</h1>
-    <p>{{message}}</p>
+    <p>Welcome.</p>
     <button @click="newGame">New game</button>
   </div>
 </template>
@@ -12,13 +12,6 @@ import api from '@/api';
 
 export default defineComponent({
   name: 'Home',
-  data: () => ({
-    message: '',
-  }),
-  async mounted() {
-    const message : string = await api.getMessage();
-    this.message = message;
-  },
   methods: {
     async newGame() {
       const id : number = await api.createGame();

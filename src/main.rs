@@ -2,7 +2,7 @@ extern crate chashmap;
 extern crate rand;
 
 use actix_files::{Files, NamedFile};
-use actix_web::{dev, get, middleware, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{dev, middleware, web, App, HttpServer};
 
 mod api;
 mod data;
@@ -10,12 +10,6 @@ use api::{add_action, create_game, delete_last_action, get_game_info, reset_game
 use data::GameData;
 
 const FRONTEND_PATH: &str = "./front/dist/";
-
-/// Get welcome message
-#[get("/message")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().json("Hello world!")
-}
 
 /// Run actix web server
 #[actix_web::main]
@@ -32,7 +26,6 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::Compress::default())
             .service(
                 web::scope("/api")
-                    .service(hello)
                     .service(get_game_info)
                     .service(create_game)
                     .service(add_action)
