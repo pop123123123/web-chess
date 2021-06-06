@@ -262,7 +262,6 @@ footer {
       padding: 10px;
 
       li {
-        min-width: initial;
         flex: 1;
       }
     }
