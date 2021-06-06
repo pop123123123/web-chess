@@ -28,9 +28,16 @@ export default defineComponent({
     },
     async importGame(e: Event) {
       e.preventDefault();
-      const history = historyFromBase64(this.jsonData);
-      const id : number = await api.importGame(history);
-      this.$router.push(`/game/${id}`);
+      try {
+        const history = historyFromBase64(this.jsonData);
+        const id : number = await api.importGame(history);
+        this.$router.push(`/game/${id}`);
+      } catch (_e) {
+        this.$notify({
+          title: 'This game is invalid',
+          type: 'error',
+        });
+      }
     },
   },
 });
