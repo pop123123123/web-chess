@@ -29,7 +29,7 @@
       </aside>
     </div>
     <footer>
-      <p>Share this game: <Copy :text="url"/></p>
+      <p>Share this game: <Share title="Join me for a chess game:" :url="url"/></p>
     </footer>
   </div>
 </template>
@@ -38,7 +38,7 @@
 import { defineComponent } from 'vue';
 import Board from '@/components/Board.vue';
 import Button from '@/components/Button.vue';
-import Copy from '@/components/Copy.vue';
+import Share from '@/components/Share.vue';
 import History from '@/components/History.vue';
 import GameNotifications from '@/components/GameNotifications.vue';
 import Switch from '@/components/Switch.vue';
@@ -55,7 +55,7 @@ export default defineComponent({
   components: {
     Board,
     Button,
-    Copy,
+    Share,
     History,
     GameNotifications,
     Switch,
