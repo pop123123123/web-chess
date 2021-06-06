@@ -12,7 +12,6 @@
           :actions="game?.history ?? []"
           @movePiece="sendAction"
         />
-        <GameNotifications />
       </div>
       <aside>
         <ul class="buttons">
@@ -43,7 +42,6 @@ import Board from '@/components/Board.vue';
 import Button from '@/components/Button.vue';
 import Share from '@/components/Share.vue';
 import History from '@/components/History.vue';
-import GameNotifications from '@/components/GameNotifications.vue';
 import Switch from '@/components/Switch.vue';
 import { Action } from '@/common/Action';
 import Game from '@/common/Game';
@@ -60,7 +58,6 @@ export default defineComponent({
     Button,
     Share,
     History,
-    GameNotifications,
     Switch,
   },
   data() {

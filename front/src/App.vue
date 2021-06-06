@@ -5,14 +5,17 @@
       <component :is="Component" />
     </transition>
   </router-view>
+  <GameNotifications />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Navbar from '@/components/Navbar.vue';
+import GameNotifications from '@/components/GameNotifications.vue';
 
 export default defineComponent({
   components: {
+    GameNotifications,
     Navbar,
   },
 });
