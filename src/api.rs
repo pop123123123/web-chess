@@ -27,8 +27,11 @@ impl_respond!(CreateResponse);
 
 /// Create a new game
 #[post("/game")]
-pub async fn create_game(data: web::Data<GameData>) -> impl Responder {
-    let id = create(&data);
+pub async fn create_game(
+    data: web::Data<GameData>,
+    history: web::Json<Vec<Action>>,
+) -> impl Responder {
+    let id = create(&data, history.into_inner());
     CreateResponse { id }
 }
 

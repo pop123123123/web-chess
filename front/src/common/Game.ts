@@ -1,5 +1,6 @@
 import { Action, ActionInterface } from './Action';
 import Piece, { PieceColor, PieceType } from './Piece';
+import { BASE64_ENCODE } from './b64';
 
 export type GameId = number;
 
@@ -78,5 +79,9 @@ export default class Game {
       pieces.push(this.lastPieceToDie);
     }
     return pieces.sort((a, b) => a.id.localeCompare(b.id));
+  }
+
+  toBase64(): string {
+    return this.history.flatMap((ac) => ac.asArray()).map((i) => BASE64_ENCODE[i]).join('');
   }
 }

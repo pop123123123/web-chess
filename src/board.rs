@@ -12,7 +12,7 @@ pub enum Color {
     Black,
 }
 
-#[derive(Copy, Clone, Serialize, Deserialize, PackedStruct)]
+#[derive(Copy, Clone, Debug, Serialize, Deserialize, PackedStruct)]
 #[packed_struct(bit_numbering = "msb0")]
 pub struct Cell {
     #[packed_field(bits = "0..=2")]
@@ -219,7 +219,7 @@ const INITIAL_BOARD: [[Option<BoardPiece>; 8]; 8] = [
 ];
 
 /// Action defined by source and destination cells
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Action {
     pub from: Cell,
     pub to: Cell,
@@ -234,6 +234,12 @@ pub struct Game {
 impl Default for Game {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+impl From<Vec<Action>> for Game {
+    fn from(history: Vec<Action>) -> Self {
+        Game { history }
     }
 }
 

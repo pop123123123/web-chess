@@ -32,6 +32,15 @@ class Action {
     const toName = this.to.toCellName();
     return `${fromName}-${toName}`;
   }
+
+  asArray(): number[] {
+    return [this.from.asUint(), this.to.asUint()];
+  }
+
+  static fromArray(a: number[]): Action {
+    const [from, to] = a;
+    return new Action(Cell.fromUint(from), Cell.fromUint(to));
+  }
 }
 
 export { Action, ActionInterface };

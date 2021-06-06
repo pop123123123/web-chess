@@ -29,7 +29,10 @@
       </aside>
     </div>
     <footer>
-      <p>Share this game: <Share title="Join me for a chess game:" :url="url"/></p>
+      <p>
+        Invite people: <Share title="Join me for a chess game:" :url="url"/>
+        <input type="text" readonly v-model="jsonString"/>
+      </p>
     </footer>
   </div>
 </template>
@@ -73,6 +76,9 @@ export default defineComponent({
   computed: {
     url() {
       return window.location.href;
+    },
+    jsonString(): string {
+      return this.game?.toBase64() ?? '';
     },
     whiteTurn(): boolean {
       return (this.game?.history.length ?? 0) % 2 === 0;
