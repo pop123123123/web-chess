@@ -73,11 +73,11 @@ $p: 5px;
 .switch {
   position: relative;
   min-width: $switch-width;
-  height: 30px;
-  font-size: 0.8em;
+  height: 28px;
   border: 3px solid #00000066;
   border-radius: 8px;
   padding: $p;
+  font-size: 0.7em;
 
   input {
     position: absolute;
@@ -121,16 +121,14 @@ $p: 5px;
   }
 
   span {
-    position: relative;
-    top: 50%;
     color: inherit;
-    line-height: 0;
     display: block;
     margin: 0;
     text-align: center;
-    font-size: 0.8em;
     font-weight: bold;
     text-transform: uppercase;
+    line-height: 28px;
+    height: 0;
   }
 
   .toggle-outside {

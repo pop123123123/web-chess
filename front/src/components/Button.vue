@@ -29,16 +29,19 @@ button {
   padding: 5px;
   border-radius: 8px;
   border: 3px solid #00000066;
+  font-size: 0.7em;
+  font-family: inherit;
   @include buttonColoring('default');
 
   > div {
     border-radius: 4px;
-    padding: 8px 16px;
+    padding: 0 16px;
     text-align: center;
-    font-size: 0.8em;
     font-weight: bold;
     text-transform: uppercase;
     white-space: nowrap;
+    line-height: 28px;
+    height: 28px;
   }
 
   &:hover {
