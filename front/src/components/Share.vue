@@ -1,5 +1,5 @@
 <template>
-  <Button class="info" @click="trySharingElseCopy">Share</Button>
+  <Button class="info" @click="trySharingElseCopy">{{ buttonTitle }}</Button>
 </template>
 
 <script lang="ts">
@@ -12,13 +12,21 @@ export default defineComponent({
     Button,
   },
   props: {
+    buttonTitle: {
+      type: String,
+      default: 'Share',
+    },
     title: {
       type: String,
       required: true,
     },
     url: {
       type: String,
-      required: true,
+      default: undefined,
+    },
+    text: {
+      type: String,
+      default: undefined,
     },
   },
   data: () => ({
@@ -26,66 +34,29 @@ export default defineComponent({
   }),
   methods: {
     async copy() {
-      await navigator.clipboard.writeText(this.url);
+      await navigator.clipboard.writeText(this.url || this.text);
     },
     async share() {
-      const data = { title: this.title, url: this.url };
+      const data = { title: this.title, url: this.url, text: this.text };
       await navigator.share(data);
     },
     async trySharingElseCopy() {
       try {
         await this.share();
-        this.$notify({
-          title: 'shared !',
-          type: 'info',
-        });
       } catch (err) {
         try {
           await this.copy();
           this.$notify({
-            title: 'URL copied !',
+            title: 'Copied to clipboard!',
             type: 'info',
           });
         } catch (_err) {
-          this.$notify({
-            title: 'Could not copy, please copy your browser\'s url',
-            type: 'error',
-          });
+          // eslint-disable-next-line no-alert
+          window.prompt('Could not copy, please copy manually.', this.url || this.text);
         }
       }
-    },
-    hideMessage() {
-      this.copied = false;
     },
   },
 
 });
 </script>
-
-<style lang="scss" scoped>
-div {
-  position: relative;
-  display: inline-block;
-  input {
-    cursor: pointer;
-  }
-  &::after {
-    content: 'Copied!';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    padding: 4px 10px;
-    transform: translate(-50%, -50%);
-    background: gray;
-    border: 2px solid darkgray;
-    opacity: 0;
-    pointer-events : none;
-    transition: 2s;
-  }
-  &.copied::after {
-    display: block;
-    opacity: 1;
-    transition: .2s;
-  }
-}
-</style>

@@ -30,14 +30,18 @@
           <li><Button class="success">Offer draw</Button></li>
           <li><Button class="success" @click="deleteLastAction">Undo</Button></li>
         </ul>
+        <div class="buttons-bottom">
+          <div class="title"><span>Invite players</span></div>
+          <Share button-title="Share this game" title="Join me for a chess game!" :url="url"/>
+          <div class="title"><span>Save moves</span></div>
+          <Share
+            button-title="Export"
+            :title="`Import this game on ${host}`"
+            :text="jsonString"
+          />
+        </div>
       </aside>
     </div>
-    <footer>
-      <p>
-        Invite people: <Share title="Join me for a chess game:" :url="url"/>
-        <input type="text" readonly v-model="jsonString"/>
-      </p>
-    </footer>
   </div>
 </template>
 
@@ -89,6 +93,9 @@ export default defineComponent({
     },
     history(): string[] {
       return (this.game?.history ?? []).map((a) => a.toAlgebraicNotation());
+    },
+    host(): string {
+      return window.location.host;
     },
   },
   methods: {
@@ -237,14 +244,14 @@ $gameHeight: 512px;
   aside {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     background: theme.$background-secondary;
 
     .buttons {
       display: flex;
       flex-direction: column;
       align-items: stretch;
-      justify-content: space-around;
+      justify-content: center;
+      flex: 1;
       margin: 0;
       list-style: none;
       gap: 20px;
@@ -256,17 +263,41 @@ $gameHeight: 512px;
         }
       }
     }
-  }
-}
-footer {
-  $h: 3rem;
-  background: theme.$background-footer;
-  padding: 0.5em 0;
-  text-align: center;
-  overflow: hidden;
 
-  p {
-    margin: 0;
+    .buttons-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 10px 40px;
+      overflow: hidden;
+      background: inherit;
+
+      .title {
+        position: relative;
+        z-index: 1;
+        background: inherit;
+        padding: 0.5em 0;
+        margin-top: 10px;
+        text-align: center;
+
+        &::before {
+          content: '';
+          display: block;
+          margin: 0 auto;
+          border-top: 1px solid theme.$background-main;
+          position: absolute;
+          top: 50%;
+          right: 0;
+          left: 0;
+          z-index: -1;
+        }
+
+        span {
+          background: inherit;
+          padding: 0 0.5em;
+        }
+      }
+    }
   }
 }
 
