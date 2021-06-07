@@ -37,7 +37,11 @@ export default defineComponent({
       await navigator.clipboard.writeText(this.url || this.text);
     },
     async share() {
-      const data = { title: this.title, url: this.url, text: this.text };
+      const data = {
+        title: this.title,
+        ...(this.url ? { url: this.url } : {}),
+        ...(this.text ? { text: this.text } : {}),
+      };
       await navigator.share(data);
     },
     async trySharingElseCopy() {
