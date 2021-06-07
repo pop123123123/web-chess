@@ -36,7 +36,7 @@ export default defineComponent({
   }
 }
 
-.game-notification {
+.vue-notification-template.game-notification {
   margin: 0 5px 5px;
   padding: 5px;
   border-radius: 12px;
