@@ -123,9 +123,12 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @use '../scss/theme';
+@use 'sass:string';
 
 $squareSize: 12.5%;
 $max-board-size: 512px;
+$border-width: 32px;
+$border-width-small: 16px;
 
 .no-transition {
   &, * {
@@ -140,7 +143,8 @@ $max-board-size: 512px;
   max-height: $max-board-size;
   max-width: $max-board-size;
   width: 100%;
-  border: 10px solid theme.$board-border-color;
+  border: $border-width solid theme.$board-border-color;
+  box-sizing: border-box;
   box-shadow: 0 -10px 0 theme.$board-turn-indicator;
   transition: transform 2s, box-shadow 1s .5s;
 
@@ -153,6 +157,14 @@ $max-board-size: 512px;
 
   &.rotated {
     transform: rotate(180deg);
+
+    .background .row {
+      &:first-child .square::before,
+      &:last-child .square::before,
+      &::before, &::after {
+        transform: rotate(-180deg);
+      }
+    }
 
     .piece img {
       transform: rotate(-180deg);
@@ -170,6 +182,7 @@ $max-board-size: 512px;
     .row {
       display: grid;
       grid-template-columns: repeat(8, 1fr);
+      position: relative;
 
       &:nth-child(2n) .square:nth-child(2n),
       &:nth-child(2n+1) .square:nth-child(2n+1) {
@@ -204,6 +217,58 @@ $max-board-size: 512px;
         &.selected:hover::after {
           background: #11ee1144;
         }
+      }
+
+      &:first-child, &:last-child {
+        $letters: 'abcdefgh';
+        @for $i from 1 through 8 {
+          .square:nth-child(#{$i})::before {
+            content: string.slice($letters, $i, $i);
+          }
+        }
+
+        .square::before {
+          position: absolute;
+          z-index: 1;
+          line-height: $border-width;
+          opacity: 0.7;
+          font-weight: bold;
+          text-align: center;
+          width: 100%;
+        }
+      }
+
+      &:first-child .square::before {
+        top: -$border-width;
+      }
+
+      &:last-child .square::before {
+        bottom: -$border-width;
+      }
+
+      @for $i from 1 through 8 {
+        &:nth-child(#{$i})::before, &:nth-child(#{$i})::after {
+          content: string.quote(#{9-$i});
+        }
+      }
+
+      &::before, &::after {
+        position: absolute;
+        z-index: 1;
+        line-height: 0;
+        top: 50%;
+        opacity: 0.7;
+        font-weight: bold;
+        width: $border-width;
+        text-align: center;
+      }
+
+      &::before {
+        left: -$border-width;
+      }
+
+      &::after {
+        right: -$border-width;
       }
     }
   }
@@ -264,8 +329,35 @@ $max-board-size: 512px;
 
 @media screen and (max-width: $max-board-size) {
   .board {
-    border: 0;
+    border-width: $border-width-small;
     transition: box-shadow 1s .5s;
+
+    .background .row {
+      &:first-child .square::before {
+        top: -$border-width-small;
+        line-height: $border-width-small;
+        font-size: 0.7em;
+      }
+
+      &:last-child .square::before {
+        bottom: -$border-width-small;
+        line-height: $border-width-small;
+        font-size: 0.7em;
+      }
+
+      &::before, &::after {
+        width: $border-width-small;
+        font-size: 0.7em;
+      }
+
+      &::before {
+        left: -$border-width-small;
+      }
+
+      &::after {
+        right: -$border-width-small;
+      }
+    }
 
     .pieces .piece img {
       transition: none;
