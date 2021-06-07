@@ -155,6 +155,14 @@ $border-width-small: 16px;
     }
   }
 
+  .background .row {
+    &:first-child .square::before,
+    &:last-child .square::before,
+    &::before, &::after {
+      transition: transform 2s;
+    }
+  }
+
   &.rotated {
     transform: rotate(180deg);
 
@@ -337,17 +345,20 @@ $border-width-small: 16px;
         top: -$border-width-small;
         line-height: $border-width-small;
         font-size: 0.7em;
+        transition: none;
       }
 
       &:last-child .square::before {
         bottom: -$border-width-small;
         line-height: $border-width-small;
         font-size: 0.7em;
+        transition: none;
       }
 
       &::before, &::after {
         width: $border-width-small;
         font-size: 0.7em;
+        transition: none;
       }
 
       &::before {
