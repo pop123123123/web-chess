@@ -1,5 +1,10 @@
 <template>
-  <div class="wrapper">
+  <div v-if="loading" class="view game-loading"></div>
+  <div v-else-if="notFound" class="view game-not-found">
+    <img class="icon" src="@/assets/not-found.svg" alt="Not found">
+    This game does not exist.
+  </div>
+  <div v-else class="wrapper">
     <div class="view game">
       <aside>
         <History :history="history"/>
@@ -63,6 +68,8 @@ export default defineComponent({
   data() {
     return {
       polling: 0,
+      loading: true,
+      notFound: false,
       state: {
         pieces: [] as Piece[],
       },
@@ -93,11 +100,7 @@ export default defineComponent({
       } catch (error) {
         if (error.response?.status === 404) {
           this.stopPolling();
-          this.$notify({
-            title: 'This game does not exist',
-            type: 'error',
-            duration: -1,
-          });
+          this.notFound = true;
         } else {
           this.$notify({
             title: 'Unknown error',
@@ -105,6 +108,7 @@ export default defineComponent({
           });
         }
       }
+      this.loading = false;
     },
     async sendAction(action: Action) {
       if (this.game === undefined) { return; }
@@ -122,6 +126,9 @@ export default defineComponent({
             title: 'Not your turn!',
             type: 'warn',
           });
+        } else if (error.response?.status === 404) {
+          this.stopPolling();
+          this.notFound = true;
         } else {
           this.$notify({
             title: 'Unknown error',
@@ -194,6 +201,20 @@ $gameHeight: 512px;
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+.game-not-found {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1em;
+
+  > .icon {
+    width: 8em;
+    opacity: 0.7;
+  }
 }
 
 .game {
