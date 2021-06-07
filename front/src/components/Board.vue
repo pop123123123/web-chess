@@ -159,6 +159,7 @@ $border-width-small: 16px;
     &:first-child .square::before,
     &:last-child .square::before,
     &::before, &::after {
+      pointer-events: none;
       transition: transform 2s;
     }
   }
