@@ -31,14 +31,18 @@
           <li><Button class="success" @click="deleteLastAction">Undo</Button></li>
         </ul>
         <div class="buttons-bottom">
-          <div class="title"><span>Invite players</span></div>
-          <Share button-title="Share this game" title="Join me for a chess game!" :url="url"/>
-          <div class="title"><span>Save moves</span></div>
-          <Share
-            button-title="Export"
-            :title="`Import this game on ${host}`"
-            :text="jsonString"
-          />
+          <div>
+            <div class="title"><span>Invite players</span></div>
+            <Share button-title="Share" title="Join me for a chess game!" :url="url"/>
+          </div>
+          <div>
+            <div class="title"><span>Save moves</span></div>
+            <Share
+              button-title="Export"
+              :title="`Import this game on ${host}`"
+              :text="jsonString"
+            />
+          </div>
         </div>
       </aside>
     </div>
@@ -268,17 +272,16 @@ $gameHeight: 512px;
       display: flex;
       flex-direction: column;
       align-items: stretch;
-      padding: 10px 40px;
+      padding: 0 40px 20px;
       overflow: hidden;
-      background: inherit;
 
       .title {
         position: relative;
         z-index: 1;
-        background: inherit;
         padding: 0.5em 0;
-        margin-top: 10px;
+        margin: 10px 0;
         text-align: center;
+        white-space: nowrap;
 
         &::before {
           content: '';
@@ -287,15 +290,19 @@ $gameHeight: 512px;
           border-top: 1px solid theme.$background-main;
           position: absolute;
           top: 50%;
-          right: 0;
-          left: 0;
+          right: -30px;
+          left: -30px;
           z-index: -1;
         }
 
         span {
-          background: inherit;
+          background: theme.$background-secondary;
           padding: 0 0.5em;
         }
+      }
+
+      button {
+        width: 100%;
       }
     }
   }
@@ -305,16 +312,29 @@ $gameHeight: 512px;
   .game {
     flex-direction: column;
 
-    aside > .buttons {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      gap: 5px;
-      flex-wrap: wrap;
-      padding: 10px;
+    aside {
+      .buttons {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5px;
+        flex-wrap: wrap;
+        padding: 10px;
 
-      li {
-        flex: 1;
+        li {
+          flex: 1;
+        }
+      }
+
+      .buttons-bottom {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 40px;
+        row-gap: 0;
+
+        > div {
+          flex: 1;
+        }
       }
     }
   }
