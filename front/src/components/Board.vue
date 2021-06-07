@@ -146,7 +146,7 @@ $max-board-size: 512px;
 
   &.reverse-animation {
     .piece {
-      transition: 1s;
+      transition: top 1s, left 1s;
       animation: unset !important;
     }
   }
@@ -265,6 +265,11 @@ $max-board-size: 512px;
 @media screen and (max-width: $max-board-size) {
   .board {
     border: 0;
+    transition: box-shadow 1s .5s;
+
+    .pieces .piece img {
+      transition: none;
+    }
   }
 }
 </style>
