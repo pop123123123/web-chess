@@ -36,11 +36,11 @@
         </ul>
         <div class="buttons-bottom">
           <div>
-            <div class="title"><span>Invite players</span></div>
+            <TitleSeparator>Invite players</TitleSeparator>
             <Share button-title="Share" title="Join me for a chess game!" :url="url"/>
           </div>
           <div>
-            <div class="title"><span>Save moves</span></div>
+            <TitleSeparator>Save moves</TitleSeparator>
             <Share
               button-title="Export"
               icon="copy"
@@ -65,6 +65,7 @@ import { Action } from '@/common/Action';
 import Game from '@/common/Game';
 import Piece from '@/common/Piece';
 import api from '@/api';
+import TitleSeparator from '@/components/TitleSeparator.vue';
 
 export default defineComponent({
   name: 'Game',
@@ -77,6 +78,7 @@ export default defineComponent({
     Share,
     History,
     Switch,
+    TitleSeparator,
   },
   data() {
     return {
@@ -279,32 +281,6 @@ $gameHeight: 512px;
       align-items: stretch;
       padding: 0 40px 20px;
       overflow: hidden;
-
-      .title {
-        position: relative;
-        z-index: 1;
-        padding: 0.5em 0;
-        margin: 10px 0;
-        text-align: center;
-        white-space: nowrap;
-
-        &::before {
-          content: '';
-          display: block;
-          margin: 0 auto;
-          border-top: 1px solid theme.$background-main;
-          position: absolute;
-          top: 50%;
-          right: -30px;
-          left: -30px;
-          z-index: -1;
-        }
-
-        span {
-          background: theme.$background-secondary;
-          padding: 0 0.5em;
-        }
-      }
 
       button {
         width: 100%;
