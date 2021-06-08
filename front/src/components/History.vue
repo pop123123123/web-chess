@@ -64,10 +64,14 @@ $list-expanded-height: $list-item-height * 3;
   bottom: 0;
   left: 0;
   overflow: hidden auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .history-list {
   width: $list-width;
+  min-height: 0;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -123,9 +127,9 @@ $list-expanded-height: $list-item-height * 3;
 
     .history-list-wrapper {
       position: static;
-      display: flex;
       flex: 1;
       align-items: flex-end;
+      flex-direction: row;
     }
 
     .history-list {
