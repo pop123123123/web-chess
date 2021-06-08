@@ -40,7 +40,7 @@
             <Share button-title="Share" title="Join me for a chess game!" :url="url"/>
           </div>
           <div>
-            <TitleSeparator>Save moves</TitleSeparator>
+            <TitleSeparator>Save game</TitleSeparator>
             <Share
               button-title="Export"
               icon="copy"
