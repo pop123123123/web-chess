@@ -1,8 +1,8 @@
 <template>
   <div class="history" :class="{ expand: showMore }">
-    <div class="history-list-wrapper">
-      <transition-group name="list-complete" tag="ul" class="history-list">
-        <li v-for="(s, i) in history" :key="i" class="list-complete-item">
+    <div ref="wrapper" class="history-list-wrapper">
+      <transition-group ref="list" name="list-complete" tag="ul" class="history-list">
+        <li v-for="(s, i) in history" :key="i" :ref="setItemRef" class="list-complete-item">
           {{i+1}}. {{s}}
         </li>
       </transition-group>
@@ -28,7 +28,40 @@ export default defineComponent({
   data() {
     return {
       showMore: false,
+      itemRefs: [],
+      lastLength: 0,
     };
+  },
+  methods: {
+    setItemRef(el) {
+      if (el) {
+        this.itemRefs.push(el);
+      }
+    },
+    scrollToBottom() {
+      const el = this.$refs.wrapper;
+      el.scrollTop = el.scrollHeight;
+
+      const el2 = this.$refs.list.$el;
+      el2.scrollTop = el2.scrollHeight;
+    },
+  },
+  watch: {
+    showMore() {
+      this.scrollToBottom();
+    },
+  },
+  beforeUpdate() {
+    this.lastLength = this.itemRefs.length;
+    this.itemRefs = [];
+  },
+  updated() {
+    if (this.itemRefs.length !== this.lastLength) {
+      this.scrollToBottom();
+    }
+  },
+  mounted() {
+    this.scrollToBottom();
   },
 });
 </script>
