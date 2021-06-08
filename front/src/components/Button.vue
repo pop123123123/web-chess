@@ -64,9 +64,9 @@ button {
   @include buttonColoring('default');
 
   &:disabled {
-    filter: grayscale(0.5);
+    filter: grayscale(0.6) brightness(1.2);
     pointer-events: none;
-    opacity: 0.8;
+    opacity: 0.5;
   }
 
   > div {
