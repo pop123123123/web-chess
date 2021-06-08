@@ -2,6 +2,7 @@
   <div class="switch" :class="`switch-${theme}`">
     <input type="checkbox" v-model="internalValue"/>
     <div class="toggle-outside">
+      <div class="toggle-spacer"></div>
       <div class="toggle-inside">
         <span>{{ offText }}</span>
         <span>{{ onText }}</span>
@@ -120,39 +121,38 @@ $p: 5px;
     }
   }
 
-  span {
-    color: inherit;
-    display: block;
-    margin: 0;
-    text-align: center;
-    font-weight: bold;
-    text-transform: uppercase;
-    line-height: 28px;
-    height: 0;
-  }
-
   .toggle-outside {
-    position: relative;
+    display: flex;
     height: 100%;
     width: 100%;
     border-radius: 4px;
     overflow: hidden;
   }
 
-  .toggle-inside {
-    border-radius: 4px;
-    transition: all .25s;
-    height: 100%;
-    min-width: 50%;
-    top: 0;
-    left: 0;
-    position: absolute;
-    padding: 0 8px;
+  .toggle-spacer {
+    flex: 0;
+    transition: flex .25s;
   }
 
-  input:checked ~ .toggle-outside .toggle-inside {
-    left: 100%;
-    transform: translateX(-100%);
+  .toggle-inside {
+    border-radius: 4px;
+    transition: background-color .25s;
+    min-width: 50%;
+
+    span {
+      color: inherit;
+      display: block;
+      padding: 0 8px;
+      text-align: center;
+      font-weight: bold;
+      text-transform: uppercase;
+      line-height: 28px;
+      height: 0;
+    }
+  }
+
+  input:checked ~ .toggle-outside .toggle-spacer {
+    flex: 1;
   }
 
   @each $class, $colors in theme.$switch {
