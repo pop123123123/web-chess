@@ -1,5 +1,9 @@
 <template>
-  <div v-if="loading" class="view game-loading"></div>
+  <div v-if="connectError" class="view game-connect-error">
+    <img class="icon" src="@/assets/error.svg" alt="Not found">
+    Error when connecting. Retrying...
+  </div>
+  <div v-else-if="loading" class="view game-loading"></div>
   <div v-else-if="notFound" class="view game-not-found">
     <img class="icon" src="@/assets/not-found.svg" alt="Not found">
     This game does not exist.
@@ -79,6 +83,7 @@ export default defineComponent({
       polling: 0,
       loading: true,
       notFound: false,
+      connectError: false,
       state: {
         pieces: [] as Piece[],
       },
@@ -114,13 +119,12 @@ export default defineComponent({
           this.stopPolling();
           this.notFound = true;
         } else {
-          this.$notify({
-            title: 'Unknown error',
-            type: 'error',
-          });
+          this.connectError = true;
+          return;
         }
       }
       this.loading = false;
+      this.connectError = false;
     },
     async sendAction(action: Action) {
       if (this.game === undefined) { return; }
@@ -215,7 +219,7 @@ $gameHeight: 512px;
   flex-direction: column;
 }
 
-.game-not-found {
+.game-not-found, .game-connect-error {
   flex: 1;
   display: flex;
   justify-content: center;
