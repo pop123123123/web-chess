@@ -1,5 +1,5 @@
 <template>
-  <Button class="info" @click="trySharingElseCopy">{{ buttonTitle }}</Button>
+  <Button class="info" :icon="icon" @click="trySharingElseCopy">{{ buttonTitle }}</Button>
 </template>
 
 <script lang="ts">
@@ -15,6 +15,10 @@ export default defineComponent({
     buttonTitle: {
       type: String,
       default: 'Share',
+    },
+    icon: {
+      type: [String, Array],
+      default: 'share-alt',
     },
     title: {
       type: String,

@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import notifications from '@kyvg/vue3-notification';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import FontAwesomeIcon from '@/font-awesome';
 import App from './App.vue';
 import router from './router';
 import store from './store';

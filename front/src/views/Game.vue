@@ -26,9 +26,9 @@
             on-text="Black"
             v-model:value="rotatedBoard"
           /></li>
-          <li><Button class="success" @click="resetGame">Reset game</Button></li>
-          <li><Button class="success">Offer draw</Button></li>
-          <li><Button class="success" @click="deleteLastAction">Undo</Button></li>
+          <li><Button class="success" icon="trash" @click="resetGame">Reset game</Button></li>
+          <li><Button class="success" icon="handshake">Offer draw</Button></li>
+          <li><Button class="success" icon="undo-alt" @click="deleteLastAction">Undo</Button></li>
         </ul>
         <div class="buttons-bottom">
           <div>
@@ -39,6 +39,7 @@
             <div class="title"><span>Save moves</span></div>
             <Share
               button-title="Export"
+              icon="copy"
               :title="`Import this game on ${host}`"
               :text="jsonString"
             />
