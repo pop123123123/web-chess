@@ -140,13 +140,13 @@ $border-width-small: 16px;
 
 .board {
   position: relative;
-  max-height: $max-board-size;
-  max-width: $max-board-size;
+  max-width: calc(100vh - 96px);
   width: 100%;
   border: $border-width solid theme.$board-border-color;
   box-sizing: border-box;
   box-shadow: 0 -10px 0 theme.$board-turn-indicator;
   transition: transform 2s, box-shadow 1s .5s;
+  background: theme.$board-square-dark;
 
   &.reverse-animation {
     .piece {
@@ -340,6 +340,7 @@ $border-width-small: 16px;
   .board {
     border-width: $border-width-small;
     transition: box-shadow 1s .5s;
+    max-width: $max-board-size;
 
     .background .row {
       &:first-child .square::before {

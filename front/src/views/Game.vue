@@ -22,7 +22,7 @@
           @movePiece="sendAction"
         />
       </div>
-      <aside>
+      <aside><div>
         <ul class="buttons">
           <li><Switch
             theme="black-white"
@@ -49,7 +49,7 @@
             />
           </div>
         </div>
-      </aside>
+      </div></aside>
     </div>
   </div>
 </template>
@@ -249,13 +249,19 @@ $gameHeight: 512px;
     user-select: none;
     overflow: hidden;
     position: relative;
-    padding: 10px 0;
+    padding: 20px;
   }
 
   aside {
-    display: flex;
-    flex-direction: column;
     background: theme.$background-secondary;
+    overflow: hidden auto;
+    max-height: calc(100vh - 56px);
+
+    > div {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
 
     .buttons {
       display: flex;
@@ -266,7 +272,7 @@ $gameHeight: 512px;
       margin: 0;
       list-style: none;
       gap: 20px;
-      padding: 10px 40px;
+      padding: 20px 40px 10px;
 
       li {
         button {
@@ -293,6 +299,10 @@ $gameHeight: 512px;
   .game {
     flex-direction: column;
 
+    .board-container {
+      padding: 10px 0;
+    }
+
     aside {
       .buttons {
         flex-direction: row;
@@ -301,6 +311,7 @@ $gameHeight: 512px;
         gap: 5px;
         flex-wrap: wrap;
         padding: 10px;
+        padding-bottom: 0;
 
         li {
           flex: 1;
