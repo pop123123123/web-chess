@@ -1,5 +1,6 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
+  faChess,
   faCopy,
   faHandshake,
   faShareAlt,
@@ -9,6 +10,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 library.add(
+  faChess,
   faCopy,
   faHandshake,
   faShareAlt,

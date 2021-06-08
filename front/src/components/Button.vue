@@ -63,6 +63,12 @@ button {
   font-family: inherit;
   @include buttonColoring('default');
 
+  &:disabled {
+    filter: grayscale(0.5);
+    pointer-events: none;
+    opacity: 0.8;
+  }
+
   > div {
     border-radius: 4px;
     padding: 0 8px 0 36px;
