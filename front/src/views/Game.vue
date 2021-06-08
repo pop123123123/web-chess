@@ -304,6 +304,7 @@ $gameHeight: 512px;
     }
 
     aside {
+      max-height: unset;
       .buttons {
         flex-direction: row;
         justify-content: space-between;
@@ -321,10 +322,12 @@ $gameHeight: 512px;
       .buttons-bottom {
         flex-direction: row;
         flex-wrap: wrap;
-        gap: 40px;
         row-gap: 0;
+        padding: 0 7.5px 20px;
 
         > div {
+          overflow: hidden;
+          padding: 2.5px;
           flex: 1;
         }
       }

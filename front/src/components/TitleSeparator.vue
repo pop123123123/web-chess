@@ -23,7 +23,7 @@ export default defineComponent({
   position: relative;
   z-index: 1;
   padding: 0.5em 0;
-  margin: 20px 0 10px;
+  margin: 10px 0 5px;
   text-align: center;
   white-space: nowrap;
 

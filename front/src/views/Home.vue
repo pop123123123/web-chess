@@ -73,6 +73,7 @@ export default defineComponent({
   border-radius: 8px;
   min-width: 16em;
   text-align: center;
+  gap: 5px;
 
   h1 {
     margin: 0;
