@@ -4,6 +4,7 @@ import {
   faCopy,
   faHandshake,
   faShareAlt,
+  faTimes,
   faTrash,
   faUndoAlt,
 } from '@fortawesome/free-solid-svg-icons';
@@ -14,6 +15,7 @@ library.add(
   faCopy,
   faHandshake,
   faShareAlt,
+  faTimes,
   faTrash,
   faUndoAlt,
 );

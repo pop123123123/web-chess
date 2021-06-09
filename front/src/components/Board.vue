@@ -36,6 +36,15 @@
         `"
       ><img :src="getSquareImage(piece.type + piece.color)" :alt="piece.type + piece.color"></div>
     </div>
+    <div class="overlay">
+      <div class="promotion">
+        <span class="close"><font-awesome-icon icon="times"></font-awesome-icon></span>
+        <img :src="getSquareImage('nl')" :alt="nl">
+        <img :src="getSquareImage('rl')" :alt="rl">
+        <img :src="getSquareImage('bl')" :alt="bl">
+        <img :src="getSquareImage('ql')" :alt="ql">
+      </div>
+    </div>
   </div>
 </template>
 
@@ -176,6 +185,10 @@ $border-width-small: 16px;
     }
 
     .piece img {
+      transform: rotate(-180deg);
+    }
+
+    .overlay > * {
       transform: rotate(-180deg);
     }
   }
@@ -334,6 +347,61 @@ $border-width-small: 16px;
       }
     }
   }
+
+  .overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #00000066;
+
+    > * {
+      transition: transform 2s;
+    }
+
+    .promotion {
+      position: relative;
+      background: theme.$board-square-dark;
+      border: 3px solid theme.$board-border-color;
+      width: 50%;
+      padding: 8%;
+      border-radius: 8px;
+      overflow: hidden;
+
+      .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 8%;
+        padding: 0 2%;
+        color: theme.$board-border-color;
+        border-radius: 0 0 0 8px;
+
+        &:hover {
+          background: theme.$board-square-light;
+        }
+
+        svg {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      img {
+        width: 25%;
+        cursor: pointer;
+        border-radius: 8px;
+
+        &:hover {
+          background: theme.$board-square-light;
+        }
+      }
+    }
+  }
 }
 
 @media screen and (max-width: $max-board-size) {
@@ -373,6 +441,10 @@ $border-width-small: 16px;
     }
 
     .pieces .piece img {
+      transition: none;
+    }
+
+    .overlay > * {
       transition: none;
     }
   }
