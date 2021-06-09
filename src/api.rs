@@ -43,7 +43,11 @@ pub async fn get_game_info(
 ) -> impl Responder {
     let game_option = data.get(&game_id);
     let response_option = game_option.map(|b| HttpResponse::Ok().json(&(*b)));
-    response_option.unwrap_or_else(|| HttpResponse::NotFound().finish())
+    response_option.unwrap_or_else(|| {
+        HttpResponse::NotFound()
+            .content_type("application/json")
+            .finish()
+    })
 }
 
 /// Reset game
