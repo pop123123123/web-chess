@@ -73,7 +73,7 @@ export default defineComponent({
 $list-item-height: 3.5em;
 $list-width: 12em;
 $list-padding-mobile: 3em;
-$list-expanded-height: $list-item-height * 3;
+$list-expanded-height: $list-item-height * 3.5;
 
 *, *:before, *:after {
   box-sizing: border-box;
@@ -167,6 +167,7 @@ $list-expanded-height: $list-item-height * 3;
 
     .history-list {
       width: 100%;
+      overflow: hidden;
 
       .list-complete-item {
         padding-left: $list-padding-mobile;
