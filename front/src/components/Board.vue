@@ -37,33 +37,22 @@
       ><img :src="getPieceImage(piece.type + piece.color)" :alt="piece.type + piece.color"></div>
     </div>
     <div class="overlay">
-      <div class="promotion">
-        <TitleSeparator class="board-overlay-title">Promotion</TitleSeparator>
-        <div class="promotion-pieces">
-          <img :src="getPieceImage('nl')" alt="nl">
-          <img :src="getPieceImage('rl')" alt="rl">
-          <img :src="getPieceImage('bl')" alt="bl">
-          <img :src="getPieceImage('ql')" alt="ql">
-        </div>
-        <Button class="warn" icon="times">Cancel move</Button>
-      </div>
+      <PromotionPrompt></PromotionPrompt>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import Button from '@/components/Button.vue';
 import Cell from '@/common/Cell';
 import { Action } from '@/common/Action';
 import Piece, { getPieceImage } from '@/common/Piece';
-import TitleSeparator from './TitleSeparator.vue';
+import PromotionPrompt from './PromotionPrompt.vue';
 
 export default defineComponent({
   name: 'Board',
   components: {
-    Button,
-    TitleSeparator,
+    PromotionPrompt,
   },
   data() {
     return {
@@ -366,31 +355,6 @@ $border-width-small: 16px;
 
     > * {
       transition: transform 2s;
-    }
-
-    .promotion {
-      background: theme.$board-square-dark;
-      border: 3px solid theme.$board-border-color;
-      width: 50%;
-      max-height: 50%;
-      padding: 10px 20px 20px;
-      border-radius: 8px;
-      overflow: hidden auto;
-      text-align: center;
-
-      .promotion-pieces {
-        margin-bottom: 10px;
-
-        img {
-          width: 25%;
-          cursor: pointer;
-          border-radius: 8px;
-
-          &:hover {
-            background: theme.$board-square-light;
-          }
-        }
-      }
     }
   }
 }
