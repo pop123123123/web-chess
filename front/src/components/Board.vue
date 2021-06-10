@@ -34,16 +34,16 @@
           ${piece.moving ? 'moving' : ''}
           ${piece.dead ? 'dead' : ''}
         `"
-      ><img :src="getSquareImage(piece.type + piece.color)" :alt="piece.type + piece.color"></div>
+      ><img :src="getPieceImage(piece.type + piece.color)" :alt="piece.type + piece.color"></div>
     </div>
     <div class="overlay">
       <div class="promotion">
         <TitleSeparator class="board-overlay-title">Promotion</TitleSeparator>
         <div class="promotion-pieces">
-          <img :src="getSquareImage('nl')" :alt="nl">
-          <img :src="getSquareImage('rl')" :alt="rl">
-          <img :src="getSquareImage('bl')" :alt="bl">
-          <img :src="getSquareImage('ql')" :alt="ql">
+          <img :src="getPieceImage('nl')" alt="nl">
+          <img :src="getPieceImage('rl')" alt="rl">
+          <img :src="getPieceImage('bl')" alt="bl">
+          <img :src="getPieceImage('ql')" alt="ql">
         </div>
         <Button class="warn" icon="times">Cancel move</Button>
       </div>
@@ -56,7 +56,7 @@ import { defineComponent, PropType } from 'vue';
 import Button from '@/components/Button.vue';
 import Cell from '@/common/Cell';
 import { Action } from '@/common/Action';
-import Piece from '@/common/Piece';
+import Piece, { getPieceImage } from '@/common/Piece';
 import TitleSeparator from './TitleSeparator.vue';
 
 export default defineComponent({
@@ -91,12 +91,8 @@ export default defineComponent({
     },
   },
   methods: {
-    getSquareImage(square: string) {
-      const images = require.context('../assets/pieces/', false, /\.svg$/);
-      if (square.match(/[bknpqr][dl]/)) {
-        return images(`./${square}.svg`);
-      }
-      return null;
+    getPieceImage(name: string) {
+      return getPieceImage(name);
     },
     clickSquare(row: number, column: number) {
       const cell = { row, column } as Cell;

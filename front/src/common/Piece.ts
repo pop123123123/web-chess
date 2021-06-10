@@ -12,6 +12,14 @@ export enum PieceColor {
   Dark = 'd',
 }
 
+export function getPieceImage(name: string): string {
+  const images = require.context('../assets/pieces/', false, /\.svg$/);
+  if (name.match(/[bknpqr][dl]/)) {
+    return images(`./${name}.svg`);
+  }
+  return '';
+}
+
 export default interface Piece {
   id: string
   type: PieceType
