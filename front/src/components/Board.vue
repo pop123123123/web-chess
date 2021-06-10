@@ -38,11 +38,14 @@
     </div>
     <div class="overlay">
       <div class="promotion">
-        <span class="close"><font-awesome-icon icon="times"></font-awesome-icon></span>
-        <img :src="getSquareImage('nl')" :alt="nl">
-        <img :src="getSquareImage('rl')" :alt="rl">
-        <img :src="getSquareImage('bl')" :alt="bl">
-        <img :src="getSquareImage('ql')" :alt="ql">
+        <TitleSeparator class="board-overlay-title">Promotion</TitleSeparator>
+        <div class="promotion-pieces">
+          <img :src="getSquareImage('nl')" :alt="nl">
+          <img :src="getSquareImage('rl')" :alt="rl">
+          <img :src="getSquareImage('bl')" :alt="bl">
+          <img :src="getSquareImage('ql')" :alt="ql">
+        </div>
+        <Button class="warn" icon="times">Cancel move</Button>
       </div>
     </div>
   </div>
@@ -50,12 +53,18 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
+import Button from '@/components/Button.vue';
 import Cell from '@/common/Cell';
 import { Action } from '@/common/Action';
 import Piece from '@/common/Piece';
+import TitleSeparator from './TitleSeparator.vue';
 
 export default defineComponent({
   name: 'Board',
+  components: {
+    Button,
+    TitleSeparator,
+  },
   data() {
     return {
       selectedSquare: undefined as Cell | undefined,
@@ -364,40 +373,26 @@ $border-width-small: 16px;
     }
 
     .promotion {
-      position: relative;
       background: theme.$board-square-dark;
       border: 3px solid theme.$board-border-color;
       width: 50%;
-      padding: 8%;
+      max-height: 50%;
+      padding: 10px 20px 20px;
       border-radius: 8px;
-      overflow: hidden;
+      overflow: hidden auto;
+      text-align: center;
 
-      .close {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 8%;
-        padding: 0 2%;
-        color: theme.$board-border-color;
-        border-radius: 0 0 0 8px;
+      .promotion-pieces {
+        margin-bottom: 10px;
 
-        &:hover {
-          background: theme.$board-square-light;
-        }
+        img {
+          width: 25%;
+          cursor: pointer;
+          border-radius: 8px;
 
-        svg {
-          width: 100%;
-          height: 100%;
-        }
-      }
-
-      img {
-        width: 25%;
-        cursor: pointer;
-        border-radius: 8px;
-
-        &:hover {
-          background: theme.$board-square-light;
+          &:hover {
+            background: theme.$board-square-light;
+          }
         }
       }
     }

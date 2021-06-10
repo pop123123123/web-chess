@@ -42,6 +42,26 @@ export default defineComponent({
   span {
     background: theme.$background-secondary;
     padding: 0 0.5em;
+
+    &:empty {
+      background: transparent !important;
+    }
+  }
+
+  &.board-overlay-title {
+    color: theme.$board-border-color;
+    font-weight: bold;
+
+    &::before {
+      border-color: theme.$board-border-color;
+      opacity: 0.3;
+      right: -10px;
+      left: -10px;
+    }
+
+    span {
+      background: theme.$board-square-dark;
+    }
   }
 }
 </style>
