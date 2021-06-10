@@ -6,7 +6,7 @@ pub enum Error {
     CellWrongArguments,
 }
 
-#[derive(PartialEq)]
+#[derive(Serialize, Deserialize, PartialEq)]
 pub enum Color {
     White,
     Black,
@@ -49,6 +49,7 @@ impl Cell {
     }
 }
 
+#[derive(PartialEq)]
 pub enum Piece {
     Pawn,
     Knight,
@@ -218,11 +219,200 @@ const INITIAL_BOARD: [[Option<BoardPiece>; 8]; 8] = [
     ],
 ];
 
+#[derive(Serialize, Deserialize)]
+pub enum Action {
+    Standard(StandardAction),
+    EnPassant(EnPassantAction),
+    Promotion(PromotionAction),
+    Castling(CastlingAction),
+}
+
+trait Move {
+    fn from(&self) -> Cell;
+    fn to(&self) -> Cell;
+}
+
+impl Move for StandardAction {
+    fn from(&self) -> Cell {
+        self.from
+    }
+
+    fn to(&self) -> Cell {
+        self.to
+    }
+}
+
 /// Action defined by source and destination cells
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Action {
+pub struct StandardAction {
     pub from: Cell,
     pub to: Cell,
+}
+
+type EnPassantAction = StandardAction;
+
+#[derive(Copy, Clone, Serialize, Deserialize)]
+pub enum Direction {
+    Straight,
+    Left,
+    Right,
+}
+
+impl From<Direction> for i8 {
+    fn from(direction: Direction) -> i8 {
+        match direction {
+            Direction::Straight => 0,
+            Direction::Left => -1,
+            Direction::Right => 1,
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize)]
+pub enum PromotePiece {
+    Knight,
+    Bishop,
+    Rook,
+    Queen,
+}
+
+impl From<Piece> for PromotePiece {
+    fn from(piece: Piece) -> PromotePiece {
+        debug_assert!(
+            piece == Piece::Pawn,
+            "it is not possible to promote pawn to pawn"
+        );
+        debug_assert!(
+            piece == Piece::King,
+            "it is not possible to promote pawn to king"
+        );
+
+        match piece {
+            Piece::Knight => PromotePiece::Knight,
+            Piece::Bishop => PromotePiece::Bishop,
+            Piece::Rook => PromotePiece::Rook,
+            Piece::Queen => PromotePiece::Queen,
+            _ => PromotePiece::Knight,
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct PromotionAction {
+    pub start_column: u8,
+    pub color: Color,
+    pub direction: Direction,
+    pub promote_piece: PromotePiece,
+}
+
+impl PromotionAction {
+    fn new(
+        start_column: u8,
+        color: Color,
+        direction: Direction,
+        promote_piece: Piece,
+    ) -> PromotionAction {
+        let end_column: i8 = start_column as i8 + i8::from(direction);
+        debug_assert!(
+            !(0..7).contains(&end_column),
+            "move leads out of bounds (column {})",
+            end_column
+        );
+        PromotionAction {
+            start_column,
+            color,
+            direction,
+            promote_piece: PromotePiece::from(promote_piece),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize)]
+pub enum CastlingSide {
+    King,
+    Queen,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct CastlingAction {
+    pub side: CastlingSide,
+    pub color: Color,
+}
+
+impl CastlingAction {
+    fn tower_from(&self) -> Cell {
+        let row = match self.color {
+            Color::White => 0,
+            Color::Black => 7,
+        };
+        let column = match self.side {
+            CastlingSide::King => 7,
+            CastlingSide::Queen => 0,
+        };
+        Cell::new(row, column)
+    }
+
+    fn tower_to(&self) -> Cell {
+        let row = match self.color {
+            Color::White => 0,
+            Color::Black => 7,
+        };
+        let column = match self.side {
+            CastlingSide::King => 5,
+            CastlingSide::Queen => 2,
+        };
+        Cell::new(row, column)
+    }
+}
+
+impl Action {
+    fn from(&self) -> Cell {
+        match self {
+            Action::Promotion(promotion) => {
+                let row = match promotion.color {
+                    Color::Black => 1,
+                    Color::White => 6,
+                };
+                Cell::new(row, promotion.start_column)
+            }
+            Action::Castling(castling) => {
+                let row = match castling.color {
+                    Color::White => 0,
+                    Color::Black => 7,
+                };
+                Cell::new(row, 4)
+            }
+            Action::Standard(action) => action.from,
+            Action::EnPassant(action) => action.from,
+        }
+    }
+
+    fn to(&self) -> Cell {
+        match self {
+            Action::Promotion(promotion) => {
+                let row = match promotion.color {
+                    Color::Black => 0,
+                    Color::White => 7,
+                };
+
+                let column: i8 = promotion.start_column as i8 + i8::from(promotion.direction);
+                Cell::new(row, column as u8)
+            }
+            Action::Castling(castling) => {
+                let row = match castling.color {
+                    Color::White => 0,
+                    Color::Black => 7,
+                };
+                let column = match castling.side {
+                    CastlingSide::King => 6,
+                    CastlingSide::Queen => 2,
+                };
+                Cell::new(row, column)
+            }
+            Action::Standard(action) => action.to,
+            Action::EnPassant(action) => action.to,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize)]
@@ -266,8 +456,8 @@ impl Game {
 
     /// Returns whether a move is valid
     pub fn is_move_valid(&self, planned_action: &Action) -> Result<(), InvalidMove> {
-        let from = planned_action.from;
-        let to = planned_action.to;
+        let from = planned_action.from();
+        let to = planned_action.to();
 
         // get piece corresponding to original cell
         let original_piece = match self.get_piece_at(from) {
@@ -406,10 +596,10 @@ impl Game {
     pub fn get_piece_at(&self, cell: Cell) -> &Option<BoardPiece> {
         // rewind game to find original cell
         let original_cell = self.history.iter().rev().try_fold(cell, |cell, action| {
-            if action.from == cell {
+            if action.from() == cell {
                 None
-            } else if action.to == cell {
-                Some(action.from)
+            } else if action.to() == cell {
+                Some(action.from())
             } else {
                 Some(cell)
             }
