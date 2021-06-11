@@ -62,10 +62,10 @@ import Share from '@/components/Share.vue';
 import History from '@/components/History.vue';
 import Switch from '@/components/Switch.vue';
 import { Action } from '@/common/Action';
-import Game from '@/common/Game';
 import Piece from '@/common/Piece';
 import api from '@/api';
 import TitleSeparator from '@/components/TitleSeparator.vue';
+import Game from '@/common/Game';
 
 export default defineComponent({
   name: 'Game',
@@ -89,7 +89,6 @@ export default defineComponent({
       state: {
         pieces: [] as Piece[],
       },
-      game: undefined as Game | undefined,
       rotatedBoard: false,
     };
   },
@@ -109,13 +108,18 @@ export default defineComponent({
     host(): string {
       return window.location.host;
     },
+    game(): Game | undefined {
+      return this.$store.state.game;
+    },
   },
   methods: {
     async updateBoard() {
       const gameId = this.game?.id ?? parseInt(this.$route.params.id as string, 10);
       try {
-        this.game = await api.getGame(gameId);
-        this.state.pieces = this.game.getPieces();
+        await this.$store.dispatch('initGame', gameId);
+        if (this.game !== undefined) {
+          this.state.pieces = this.game.getPieces();
+        }
       } catch (error) {
         if (error.response?.status === 404) {
           this.stopPolling();
