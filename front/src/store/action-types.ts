@@ -11,20 +11,13 @@ type AAC = {
   ): ReturnType<Mutations[K]>
 } & Omit<ActionContext<State, State>, 'commit'>;
 
-export enum ActionTypes {
-  CREATE_GAME = 'CREATE_GAME',
-  IMPORT_GAME = 'IMPORT_GAME',
-  GET_GAME = 'GET_GAME',
-  RESET_GAME = 'RESET_GAME',
-  SEND_ACTION = 'SEND_ACTION',
-  DELETE_LAST_ACTION = 'DELETE_LAST_ACTION',
+export interface Actions {
+  CREATE_GAME(ctx: AAC): Promise<number>
+  IMPORT_GAME(ctx: AAC, history: Action[]): Promise<number>
+  GET_GAME(ctx: AAC, gameId: number): Promise<void>
+  RESET_GAME(ctx: AAC, gameId: number): Promise<void>
+  SEND_ACTION(ctx: AAC, payload: { gameId: number, action: Action }): Promise<void>
+  DELETE_LAST_ACTION(ctx: AAC, gameId: number): Promise<void>
 }
 
-export interface Actions {
-  [ActionTypes.CREATE_GAME](ctx: AAC): Promise<number>
-  [ActionTypes.IMPORT_GAME](ctx: AAC, history: Action[]): Promise<number>
-  [ActionTypes.GET_GAME](ctx: AAC, gameId: number): Promise<void>
-  [ActionTypes.RESET_GAME](ctx: AAC, gameId: number): Promise<void>
-  [ActionTypes.SEND_ACTION](ctx: AAC, payload: { gameId: number, action: Action }): Promise<void>
-  [ActionTypes.DELETE_LAST_ACTION](ctx: AAC, gameId: number): Promise<void>
-}
+export type ActionTypes = keyof Actions;

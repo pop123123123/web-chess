@@ -21,7 +21,6 @@ import { defineComponent } from 'vue';
 import { historyFromBase64 } from '@/common/b64';
 import Button from '@/components/Button.vue';
 import TitleSeparator from '@/components/TitleSeparator.vue';
-import { ActionTypes } from '@/store/action-types';
 
 export default defineComponent({
   name: 'Home',
@@ -34,14 +33,14 @@ export default defineComponent({
   }),
   methods: {
     async newGame() {
-      const id : number = await this.$store.dispatch(ActionTypes.CREATE_GAME);
+      const id : number = await this.$store.dispatch('CREATE_GAME');
       this.$router.push(`/game/${id}`);
     },
     async importGame(e: Event) {
       e.preventDefault();
       try {
         const history = historyFromBase64(this.jsonData);
-        const id : number = await this.$store.dispatch(ActionTypes.IMPORT_GAME, history);
+        const id : number = await this.$store.dispatch('IMPORT_GAME', history);
         this.$router.push(`/game/${id}`);
       } catch (_e) {
         this.$notify({
