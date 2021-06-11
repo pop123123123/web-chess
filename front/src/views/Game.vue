@@ -63,7 +63,6 @@ import History from '@/components/History.vue';
 import Switch from '@/components/Switch.vue';
 import { Action } from '@/common/Action';
 import Piece from '@/common/Piece';
-import api from '@/api';
 import TitleSeparator from '@/components/TitleSeparator.vue';
 import Game from '@/common/Game';
 import { ActionTypes } from '@/store/action-types';
@@ -117,7 +116,7 @@ export default defineComponent({
     async updateBoard() {
       const gameId = this.game?.id ?? parseInt(this.$route.params.id as string, 10);
       try {
-        await this.$store.dispatch(ActionTypes.INIT_GAME, gameId);
+        await this.$store.dispatch(ActionTypes.GET_GAME, gameId);
         if (this.game !== undefined) {
           this.state.pieces = this.game.getPieces();
         }
@@ -136,7 +135,8 @@ export default defineComponent({
     async sendAction(action: Action) {
       if (this.game === undefined) { return; }
       try {
-        await api.sendAction(this.game.id, action);
+        const payload = { gameId: this.game.id, action };
+        await this.$store.dispatch(ActionTypes.SEND_ACTION, payload);
         await this.updateBoard();
       } catch (error) {
         if (error.response?.status === 400) {
@@ -163,7 +163,7 @@ export default defineComponent({
     async resetGame() {
       if (this.game === undefined) { return; }
       try {
-        await api.resetGame(this.game.id);
+        await this.$store.dispatch(ActionTypes.RESET_GAME, this.game.id);
         await this.updateBoard();
       } catch (error) {
         this.$notify({
@@ -175,7 +175,7 @@ export default defineComponent({
     async deleteLastAction() {
       if (this.game === undefined) { return; }
       try {
-        await api.deleteLastAction(this.game.id);
+        await this.$store.dispatch(ActionTypes.DELETE_LAST_ACTION, this.game.id);
         await this.updateBoard();
       } catch (error) {
         if (error.response?.status === 400) {
