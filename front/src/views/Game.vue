@@ -66,6 +66,7 @@ import Piece from '@/common/Piece';
 import api from '@/api';
 import TitleSeparator from '@/components/TitleSeparator.vue';
 import Game from '@/common/Game';
+import { ActionTypes } from '@/store/action-types';
 
 export default defineComponent({
   name: 'Game',
@@ -116,7 +117,7 @@ export default defineComponent({
     async updateBoard() {
       const gameId = this.game?.id ?? parseInt(this.$route.params.id as string, 10);
       try {
-        await this.$store.dispatch('initGame', gameId);
+        await this.$store.dispatch(ActionTypes.INIT_GAME, gameId);
         if (this.game !== undefined) {
           this.state.pieces = this.game.getPieces();
         }
