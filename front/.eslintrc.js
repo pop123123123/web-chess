@@ -11,14 +11,6 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2020,
   },
-  rules: {
-    semi: 'off',
-    '@typescript-eslint/semi': ['error'],
-    'no-shadow': 'off',
-    '@typescript-eslint/no-shadow': ['error'],
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-  },
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
@@ -28,6 +20,19 @@ module.exports = {
       extends: [
         'airbnb-typescript',
       ],
+      rules: {
+        'no-param-reassign': [
+          'off',
+          {
+            props: true,
+            ignorePropertyModificationsFor: [
+              'state',
+            ],
+          },
+        ],
+        'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+        'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+      },
     },
   ],
 };
