@@ -22,6 +22,9 @@ const actions: ActionTree<State, State> & Actions = {
   DELETE_LAST_ACTION(_, gameId) {
     return api.deleteLastAction(gameId);
   },
+  async CLEAR_GAME_STATE({ commit }) {
+    commit('SET_GAME', undefined);
+  },
 };
 
 export default actions;

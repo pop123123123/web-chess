@@ -206,8 +206,9 @@ export default defineComponent({
     this.startPolling();
     await this.updateBoard();
   },
-  unmounted() {
+  async unmounted() {
     this.stopPolling();
+    await this.$store.dispatch('CLEAR_GAME_STATE');
   },
 });
 </script>
