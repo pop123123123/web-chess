@@ -1,4 +1,5 @@
 use crate::data::{create, GameData, GameId};
+use actix_web::dev::HttpResponseBuilder;
 use actix_web::{delete, get, patch, post, put, web, Error, HttpRequest, HttpResponse, Responder};
 use futures::future::{ready, Ready};
 use serde::Serialize;
@@ -84,6 +85,32 @@ pub async fn delete_last_action(
     .finish()
 }
 
+fn action_to_http_builder(result: &Result<(), InvalidMove>) -> HttpResponseBuilder {
+    match result {
+        Ok(_) => HttpResponse::NoContent(),
+        Err(e) => match e {
+            InvalidMove::WrongTurn => HttpResponse::Forbidden(),
+            _ => HttpResponse::BadRequest(),
+        },
+    }
+}
+
+/// Test an action for a game
+#[post("/game/{game_id}/action")]
+pub async fn test_action(
+    data: web::Data<GameData>,
+    web::Path(game_id): web::Path<GameId>,
+    action: web::Json<Action>,
+) -> impl Responder {
+    let action = action.into_inner();
+    let game_option = data.get(&game_id);
+    match game_option {
+        Some(game) => action_to_http_builder(&game.is_move_valid(&action)),
+        None => HttpResponse::NotFound(),
+    }
+    .finish()
+}
+
 /// Send an action in a game
 #[put("/game/{game_id}/action")]
 pub async fn add_action(
@@ -94,13 +121,7 @@ pub async fn add_action(
     let action = action.into_inner();
     let game_option = data.get_mut(&game_id);
     match game_option {
-        Some(mut game) => match game.push_move(action) {
-            Ok(_) => HttpResponse::NoContent(),
-            Err(e) => match e {
-                InvalidMove::WrongTurn => HttpResponse::Forbidden(),
-                _ => HttpResponse::BadRequest(),
-            },
-        },
+        Some(mut game) => action_to_http_builder(&game.push_move(action)),
         None => HttpResponse::NotFound(),
     }
     .finish()
