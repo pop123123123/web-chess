@@ -25,6 +25,10 @@ async function sendAction(gameId: GameId, action: Action): Promise<void> {
   await apisator.put(`/game/${gameId}/action`, action);
 }
 
+async function tryAction(gameId: GameId, action: Action): Promise<void> {
+  await apisator.post(`/game/${gameId}/action`, action);
+}
+
 async function resetGame(gameId: GameId): Promise<void> {
   await apisator.patch(`/game/${gameId}`);
 }
@@ -39,6 +43,7 @@ export default {
   importGame,
   createGame,
   sendAction,
+  tryAction,
   resetGame,
   deleteLastAction,
 };

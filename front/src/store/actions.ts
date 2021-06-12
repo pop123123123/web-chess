@@ -19,6 +19,9 @@ const actions: ActionTree<State, State> & Actions = {
   SEND_ACTION(_, { gameId, action }) {
     return api.sendAction(gameId, action);
   },
+  TRY_ACTION(_, { gameId, action }) {
+    return api.tryAction(gameId, action);
+  },
   DELETE_LAST_ACTION(_, gameId) {
     return api.deleteLastAction(gameId);
   },
