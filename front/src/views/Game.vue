@@ -18,8 +18,8 @@
           :pieces="state.pieces"
           :rotated="rotatedBoard"
           :white-turn="whiteTurn"
-          :actions="game?.history ?? []"
-          @movePiece="sendAction"
+          @movePiece="movePiece"
+          @confirmPromotion="confirmPromotion"
         />
       </div>
       <aside><div>
@@ -62,7 +62,7 @@ import Share from '@/components/Share.vue';
 import History from '@/components/History.vue';
 import Switch from '@/components/Switch.vue';
 import { Action } from '@/common/Action';
-import Piece from '@/common/Piece';
+import Piece, { PieceColor, PieceType } from '@/common/Piece';
 import TitleSeparator from '@/components/TitleSeparator.vue';
 import Game from '@/common/Game';
 
@@ -131,11 +131,43 @@ export default defineComponent({
       this.loading = false;
       this.connectError = false;
     },
-    async sendAction(action: Action) {
+    async movePiece(action: Action) {
+      // get moving piece
+      const piece = this.state.pieces.find(
+        (p) => p.column === action.from.column && p.row === action.from.row,
+      );
+
+      if (piece?.type === PieceType.Pawn
+      && ((this.whiteTurn && action.from.row === 6 && action.to.row === 7
+      && piece.color === PieceColor.Light)
+      || (!this.whiteTurn && action.from.row === 1 && action.to.row === 0
+      && piece.color === PieceColor.Dark))
+      && Math.abs(action.from.column - action.to.column) <= 1) {
+        // promotion, check if move is valid
+        await this.sendAction(action, true);
+        // start promotion phase
+        this.startPromotion(action, piece.color);
+      } else {
+        // other cases
+        await this.sendAction(action);
+      }
+    },
+    async confirmPromotion(action: Action, pieceType: PieceType) {
+      await this.sendAction(action, false, pieceType);
+    },
+    startPromotion(action: Action, color: PieceColor) {
+      this.$store.commit('SET_PROMOTION', { action, color });
+    },
+    async sendAction(action: Action, dryRun = false, promotion: PieceType | undefined = undefined) {
       if (this.game === undefined) { return; }
       try {
-        const payload = { gameId: this.game.id, action };
-        await this.$store.dispatch('SEND_ACTION', payload);
+        if (promotion) {
+          const payload = { gameId: this.game.id, action, pieceType: promotion };
+          await this.$store.dispatch('SEND_PROMOTION_ACTION', payload);
+        } else {
+          const payload = { gameId: this.game.id, action };
+          await this.$store.dispatch(dryRun ? 'TRY_ACTION' : 'SEND_ACTION', payload);
+        }
         await this.updateBoard();
       } catch (error) {
         if (error.response?.status === 400) {

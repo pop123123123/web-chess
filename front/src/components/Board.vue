@@ -36,8 +36,11 @@
         `"
       ><img :src="getPieceImage(piece.type + piece.color)" :alt="piece.type + piece.color"></div>
     </div>
-    <div class="overlay">
-      <PromotionPrompt></PromotionPrompt>
+    <div class="promotion-wrapper" v-if="promotion">
+      <PromotionPrompt
+        @choosePiece="choosePromotionPiece"
+        @cancel="cancelPromotion"
+      ></PromotionPrompt>
     </div>
   </div>
 </template>
@@ -46,7 +49,9 @@
 import { defineComponent, PropType } from 'vue';
 import Cell from '@/common/Cell';
 import { Action } from '@/common/Action';
-import Piece, { getPieceImage } from '@/common/Piece';
+import Piece, { getPieceImage, PieceType } from '@/common/Piece';
+import Game from '@/common/Game';
+import Promotion from '@/common/Promotion';
 import PromotionPrompt from './PromotionPrompt.vue';
 
 export default defineComponent({
@@ -72,10 +77,6 @@ export default defineComponent({
     },
     whiteTurn: {
       type: Boolean,
-      required: true,
-    },
-    actions: {
-      type: Array as PropType<Array<Action>>,
       required: true,
     },
   },
@@ -107,6 +108,23 @@ export default defineComponent({
     },
     isSquareSelected(row: number, column: number) {
       return row === this.selectedSquare?.row && column === this.selectedSquare?.column;
+    },
+    choosePromotionPiece(pieceType: PieceType) {
+      this.$emit('confirmPromotion', this.$store.state.promotion?.action, pieceType);
+    },
+    cancelPromotion() {
+      this.$store.commit('SET_PROMOTION', undefined);
+    },
+  },
+  computed: {
+    game(): Game | undefined {
+      return this.$store.state.game;
+    },
+    actions(): Action[] {
+      return this.game?.history ?? [];
+    },
+    promotion(): Promotion | undefined {
+      return this.$store.state.promotion;
     },
   },
   watch: {
@@ -182,7 +200,7 @@ $border-width-small: 16px;
       transform: rotate(-180deg);
     }
 
-    .overlay > * {
+    .promotion-wrapper > * {
       transform: rotate(-180deg);
     }
   }
@@ -342,7 +360,7 @@ $border-width-small: 16px;
     }
   }
 
-  .overlay {
+  .promotion-wrapper {
     position: absolute;
     left: 0;
     top: 0;
@@ -352,6 +370,7 @@ $border-width-small: 16px;
     align-items: center;
     justify-content: center;
     background: #00000066;
+    z-index: 10;
 
     > * {
       transition: transform 2s;
@@ -399,7 +418,7 @@ $border-width-small: 16px;
       transition: none;
     }
 
-    .overlay > * {
+    .promotion-wrapper > * {
       transition: none;
     }
   }

@@ -1,5 +1,6 @@
 import { Action } from '@/common/Action';
 import { ActionContext } from 'vuex';
+import { PieceType } from '@/common/Piece';
 import { Mutations } from './mutation-types';
 import { State } from './state';
 
@@ -18,6 +19,9 @@ export interface Actions {
   RESET_GAME(ctx: AAC, gameId: number): Promise<void>
   SEND_ACTION(ctx: AAC, payload: { gameId: number, action: Action }): Promise<void>
   TRY_ACTION(ctx: AAC, payload: { gameId: number, action: Action }): Promise<void>
+  SEND_PROMOTION_ACTION(ctx: AAC, payload: {
+    gameId: number, action: Action, pieceType: PieceType
+  }): Promise<void>
   DELETE_LAST_ACTION(ctx: AAC, gameId: number): Promise<void>
   CLEAR_GAME_STATE(ctx: AAC): Promise<void>
 }
