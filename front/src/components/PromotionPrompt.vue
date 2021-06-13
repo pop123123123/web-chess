@@ -2,10 +2,13 @@
   <div class="promotion">
     <TitleSeparator class="board-overlay-title">Promotion</TitleSeparator>
     <div class="promotion-pieces">
-      <img :src="getPieceImage('nl')" alt="nl" @click="choosePiece('n')">
-      <img :src="getPieceImage('rl')" alt="rl" @click="choosePiece('r')">
-      <img :src="getPieceImage('bl')" alt="bl" @click="choosePiece('b')">
-      <img :src="getPieceImage('ql')" alt="ql" @click="choosePiece('q')">
+      <img
+        v-for="piece in pieces"
+        :key="piece"
+        :src="getPieceImage(piece)"
+        :alt="piece"
+        @click="choosePiece(piece[0])"
+      >
     </div>
     <Button class="warn" icon="times" @click="cancel()">Cancel move</Button>
   </div>
@@ -15,7 +18,7 @@
 import { defineComponent } from 'vue';
 import Button from '@/components/Button.vue';
 import TitleSeparator from '@/components/TitleSeparator.vue';
-import { getPieceImage, PieceType } from '@/common/Piece';
+import { getPieceImage, PieceColor, PieceType } from '@/common/Piece';
 
 export default defineComponent({
   name: 'PromotionPrompt',
@@ -36,6 +39,14 @@ export default defineComponent({
     },
     cancel() {
       this.$emit('cancel');
+    },
+  },
+  computed: {
+    pieces() {
+      if (this.$store.state.promotion?.color === PieceColor.Dark) {
+        return ['nd', 'rd', 'bd', 'qd'];
+      }
+      return ['nl', 'rl', 'bl', 'ql'];
     },
   },
 });
