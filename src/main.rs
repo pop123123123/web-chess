@@ -1,10 +1,10 @@
 use actix_files::{Files, NamedFile};
 use actix_web::{dev, middleware, web, App, HttpServer};
 
-mod api;
-mod data;
-use api::{add_action, create_game, delete_last_action, get_game_info, reset_game, test_action};
-use data::GameData;
+use web_chess::api::{
+    add_action, create_game, delete_last_action, get_game_info, reset_game, test_action,
+};
+use web_chess::data::GameData;
 
 const FRONTEND_PATH: &str = "./front/dist/";
 

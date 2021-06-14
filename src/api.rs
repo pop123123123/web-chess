@@ -1,9 +1,9 @@
+use crate::board::{Action, InvalidMove};
 use crate::data::{create, GameData, GameId};
 use actix_web::dev::HttpResponseBuilder;
 use actix_web::{delete, get, patch, post, put, web, Error, HttpRequest, HttpResponse, Responder};
 use futures::future::{ready, Ready};
 use serde::Serialize;
-use web_chess::board::{Action, InvalidMove};
 
 #[derive(Serialize)]
 struct CreateResponse {
