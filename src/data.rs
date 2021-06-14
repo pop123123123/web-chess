@@ -1,5 +1,5 @@
-use crate::rand::RngCore;
 use chashmap::CHashMap;
+use rand::RngCore;
 use web_chess::board::{Action, Game};
 
 pub type GameId = u32;

@@ -1,6 +1,3 @@
-extern crate chashmap;
-extern crate rand;
-
 use actix_files::{Files, NamedFile};
 use actix_web::{dev, middleware, web, App, HttpServer};
 
