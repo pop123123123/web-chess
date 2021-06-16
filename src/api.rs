@@ -3,11 +3,11 @@ use crate::data::{create, GameData, GameId};
 use actix_web::dev::HttpResponseBuilder;
 use actix_web::{delete, get, patch, post, put, web, Error, HttpRequest, HttpResponse, Responder};
 use futures::future::{ready, Ready};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Serialize)]
-struct CreateResponse {
-    id: GameId,
+#[derive(Serialize, Deserialize)]
+pub struct CreateResponse {
+    pub id: GameId,
 }
 
 macro_rules! impl_respond {

@@ -3,6 +3,7 @@ mod tests {
     use actix_web::{test, web, App};
     use web_chess::api::{
         add_action, create_game, delete_last_action, get_game_info, reset_game, test_action,
+        CreateResponse,
     };
     use web_chess::board::Action;
     use web_chess::data::GameData;
@@ -29,6 +30,7 @@ mod tests {
     async fn test_create_game() {
         let mut app = setup_app!();
 
+        // create game
         let history: Vec<Action> = Vec::new();
         let req = test::TestRequest::post()
             .uri("/game")
@@ -36,6 +38,35 @@ mod tests {
             .to_request();
         let resp = test::call_service(&mut app, req).await;
 
-        debug_assert!(resp.status().is_success(), "got response {}", resp.status());
+        debug_assert!(
+            resp.status().is_success(),
+            "did not expect {}",
+            resp.status()
+        );
+    }
+
+    #[actix_rt::test]
+    async fn test_get_game_info() {
+        let mut app = setup_app!();
+
+        // create game
+        let history: Vec<Action> = Vec::new();
+        let req = test::TestRequest::post()
+            .uri("/game")
+            .set_json(&history)
+            .to_request();
+        let resp: CreateResponse = test::read_response_json(&mut app, req).await;
+
+        // get game info
+        let req = test::TestRequest::get()
+            .uri(&*format!("/game/{}", resp.id))
+            .to_request();
+        let resp = test::call_service(&mut app, req).await;
+
+        debug_assert!(
+            resp.status().is_success(),
+            "did not expect {}",
+            resp.status()
+        );
     }
 }
