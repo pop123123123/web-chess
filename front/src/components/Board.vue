@@ -49,6 +49,7 @@
 import { defineComponent, PropType } from 'vue';
 import Cell from '@/common/Cell';
 import { Action } from '@/common/Action';
+import StandardAction from '@/common/StandardAction';
 import Piece, { getPieceImage, PieceType } from '@/common/Piece';
 import Game from '@/common/Game';
 import Promotion from '@/common/Promotion';
@@ -99,7 +100,7 @@ export default defineComponent({
         this.selectedSquare = undefined;
       } else {
         // move selected piece to position
-        const action: Action = new Action(this.selectedSquare, cell);
+        const action: Action = new StandardAction(this.selectedSquare, cell);
         this.$emit('movePiece', action);
 
         // unselect piece

@@ -1,6 +1,7 @@
 import { Action, ActionInterface } from './Action';
 import Piece, { PieceColor, PieceType } from './Piece';
 import { BASE64_ENCODE } from './b64';
+import ActionFactory from './ActionFactory';
 
 export type GameId = number;
 
@@ -26,7 +27,7 @@ export default class Game {
 
   constructor(id: GameId, history: ActionInterface[]) {
     this.id = id;
-    this.history = history.map((ai) => Action.fromActionInterface(ai));
+    this.history = history.map((ai) => ActionFactory.fromActionInterface(ai));
     this.lastPieceToMove = '';
     this.lastPieceToDie = undefined;
   }

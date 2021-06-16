@@ -22,11 +22,11 @@ async function createGame(): Promise<GameId> {
 }
 
 async function sendAction(gameId: GameId, action: Action): Promise<void> {
-  await apisator.put(`/game/${gameId}/action`, action);
+  await apisator.put(`/game/${gameId}/action`, action.serialize());
 }
 
 async function tryAction(gameId: GameId, action: Action): Promise<void> {
-  await apisator.post(`/game/${gameId}/action`, action);
+  await apisator.post(`/game/${gameId}/action`, action.serialize());
 }
 
 async function resetGame(gameId: GameId): Promise<void> {
