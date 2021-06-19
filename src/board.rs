@@ -49,7 +49,7 @@ impl Cell {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Piece {
     Pawn,
     Knight,
@@ -60,6 +60,7 @@ pub enum Piece {
 }
 
 /// Board piece defined by a color and a piece type
+#[derive(Copy, Clone)]
 pub struct BoardPiece {
     pub color: Color,
     pub piece: Piece,
@@ -287,7 +288,7 @@ impl From<i8> for Direction {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Copy, Clone, Serialize, Deserialize)]
 pub enum PromotePiece {
     Knight,
     Bishop,
@@ -312,6 +313,17 @@ impl From<Piece> for PromotePiece {
             Piece::Rook => PromotePiece::Rook,
             Piece::Queen => PromotePiece::Queen,
             _ => PromotePiece::Queen,
+        }
+    }
+}
+
+impl From<PromotePiece> for Piece {
+    fn from(piece: PromotePiece) -> Piece {
+        match piece {
+            PromotePiece::Knight => Piece::Knight,
+            PromotePiece::Bishop => Piece::Bishop,
+            PromotePiece::Rook => Piece::Rook,
+            PromotePiece::Queen => Piece::Queen,
         }
     }
 }
@@ -343,6 +355,28 @@ impl PromotionAction {
             direction,
             promote_piece: PromotePiece::from(promote_piece),
         }
+    }
+}
+
+impl Move for PromotionAction {
+    fn from(&self) -> Cell {
+        Cell::new(
+            match self.color {
+                Color::Black => 1,
+                Color::White => 6,
+            },
+            self.start_column,
+        )
+    }
+
+    fn to(&self) -> Cell {
+        Cell::new(
+            match self.color {
+                Color::Black => 0,
+                Color::White => 7,
+            },
+            self.start_column + self.direction as u8,
+        )
     }
 }
 
@@ -650,22 +684,40 @@ impl Game {
     }
 
     /// Returns piece at the given location
-    pub fn get_piece_at(&self, cell: Cell) -> &Option<BoardPiece> {
+    pub fn get_piece_at(&self, cell: Cell) -> Option<BoardPiece> {
         // rewind game to find original cell
+        let mut board_piece: Option<BoardPiece> = None;
         let original_cell = self.history.iter().rev().try_fold(cell, |cell, action| {
+            // standard move
             if action.from() == cell {
+                // piece has moved away, cell is empty
                 None
             } else if action.to() == cell {
-                Some(action.from())
+                // piece enters the cell, capturing piece origin
+                match action {
+                    // promotion: board piece is the one set by the promotion
+                    Action::Promotion(action) => {
+                        board_piece = Some(BoardPiece {
+                            color: action.color,
+                            piece: Piece::from(action.promote_piece),
+                        });
+                        None
+                    }
+                    // other actions
+                    action => Some(action.from()),
+                }
             } else {
+                // no change
                 Some(cell)
             }
         });
 
+        if board_piece.is_some() {
+            return board_piece;
+        }
+
         // get original piece
-        original_cell.map_or(&None, |c| {
-            &INITIAL_BOARD[c.row() as usize][c.col() as usize]
-        })
+        original_cell.and_then(|c| INITIAL_BOARD[c.row() as usize][c.col() as usize])
     }
 
     /// Process action and add it to action history if it is valid
