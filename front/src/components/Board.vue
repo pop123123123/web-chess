@@ -27,7 +27,7 @@
       <div
         class="piece"
         v-for="piece in pieces"
-        :key="piece.id"
+        :key="piece.id.slice(-3)"
         :class="`
           row-${piece.row}
           col-${piece.column}
