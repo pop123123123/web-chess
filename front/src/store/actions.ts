@@ -1,4 +1,5 @@
 import api from '@/api';
+import PromotionAction from '@/common/PromotionAction';
 import { ActionTree } from 'vuex';
 import { Actions } from './action-types';
 import { State } from './state';
@@ -22,10 +23,9 @@ const actions: ActionTree<State, State> & Actions = {
   TRY_ACTION(_, { gameId, action }) {
     return api.tryAction(gameId, action);
   },
-  // TODO: send promotion type here
-  // SEND_PROMOTION_ACTION({ commit }, { gameId, action, pieceType }) {
-  async SEND_PROMOTION_ACTION({ commit }, { gameId, action }) {
-    await api.sendAction(gameId, action);
+  async SEND_PROMOTION_ACTION({ commit }, { gameId, action, pieceType }) {
+    const promotionAction = new PromotionAction(action.from, action.to, pieceType);
+    await api.sendAction(gameId, promotionAction);
     commit('SET_PROMOTION', undefined);
   },
   DELETE_LAST_ACTION(_, gameId) {
@@ -33,6 +33,7 @@ const actions: ActionTree<State, State> & Actions = {
   },
   async CLEAR_GAME_STATE({ commit }) {
     commit('SET_GAME', undefined);
+    commit('SET_PROMOTION', undefined);
   },
 };
 

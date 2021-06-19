@@ -2,29 +2,24 @@ import Cell from './Cell';
 import { PieceType } from './Piece';
 
 interface ActionRequestInterface {
-  from: {
-    row: number,
-    column: number,
-  },
-  to: {
-    row: number,
-    column: number,
-  },
+  from: Cell,
+  to: Cell,
   piece?: PieceType,
 }
 
-interface ActionInterface {
+type ActionInterface = {
   Standard: {
-    from: {
-      row: number,
-      column: number,
-    },
-    to: {
-      row: number,
-      column: number,
-    },
+    from: Cell,
+    to: Cell,
   }
-}
+} & {
+  Promotion: {
+    start_column: number,
+    color: 'Black' | 'White',
+    direction: 'Straight' | 'Left' | 'Right',
+    promote_piece: 'Knight' | 'Rook' | 'Bishop' | 'Queen',
+  }
+};
 
 abstract class Action {
   from: Cell;

@@ -6,7 +6,7 @@ pub enum Error {
     CellWrongArguments,
 }
 
-#[derive(Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Copy, Clone, Serialize, Deserialize, PartialEq)]
 pub enum Color {
     White,
     Black,
@@ -49,7 +49,7 @@ impl Cell {
     }
 }
 
-#[derive(PartialEq)]
+#[derive(Debug, PartialEq)]
 pub enum Piece {
     Pawn,
     Knight,
@@ -73,6 +73,7 @@ pub enum InvalidMove {
     OutOfSight,
     ProvokeCheck,
     FriendlyFire,
+    InvalidPromotionPiece,
 }
 
 /// Board in its initial state
@@ -227,7 +228,7 @@ pub struct ActionRequest {
     pub piece: Option<char>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum Action {
     Standard(StandardAction),
     EnPassant(EnPassantAction),
@@ -259,7 +260,7 @@ pub struct StandardAction {
 
 type EnPassantAction = StandardAction;
 
-#[derive(Copy, Clone, Serialize, Deserialize)]
+#[derive(Debug, Copy, Clone, Serialize, Deserialize)]
 pub enum Direction {
     Straight,
     Left,
@@ -276,7 +277,17 @@ impl From<Direction> for i8 {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+impl From<i8> for Direction {
+    fn from(value: i8) -> Direction {
+        match value {
+            0 => Direction::Straight,
+            i8::MIN..=-1_i8 => Direction::Left,
+            1_i8..=i8::MAX => Direction::Right,
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub enum PromotePiece {
     Knight,
     Bishop,
@@ -287,11 +298,11 @@ pub enum PromotePiece {
 impl From<Piece> for PromotePiece {
     fn from(piece: Piece) -> PromotePiece {
         debug_assert!(
-            piece == Piece::Pawn,
+            piece != Piece::Pawn,
             "it is not possible to promote pawn to pawn"
         );
         debug_assert!(
-            piece == Piece::King,
+            piece != Piece::King,
             "it is not possible to promote pawn to king"
         );
 
@@ -300,12 +311,12 @@ impl From<Piece> for PromotePiece {
             Piece::Bishop => PromotePiece::Bishop,
             Piece::Rook => PromotePiece::Rook,
             Piece::Queen => PromotePiece::Queen,
-            _ => PromotePiece::Knight,
+            _ => PromotePiece::Queen,
         }
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PromotionAction {
     pub start_column: u8,
     pub color: Color,
@@ -322,7 +333,7 @@ impl PromotionAction {
     ) -> PromotionAction {
         let end_column: i8 = start_column as i8 + i8::from(direction);
         debug_assert!(
-            !(0..7).contains(&end_column),
+            (0..=7).contains(&end_column),
             "move leads out of bounds (column {})",
             end_column
         );
@@ -335,13 +346,13 @@ impl PromotionAction {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum CastlingSide {
     King,
     Queen,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct CastlingAction {
     pub side: CastlingSide,
     pub color: Color,
@@ -606,11 +617,35 @@ impl Game {
             return Err(InvalidMove::OutOfSight);
         }
 
-        // accept move
-        let action = Action::Standard(StandardAction {
-            from: planned_action.from,
-            to: planned_action.to,
-        });
+        // final action
+        let action = if original_piece.piece == Piece::Pawn
+            && (match original_piece.color {
+                Color::White => 7,
+                Color::Black => 0,
+            }) == to.row()
+        {
+            // promotion action
+            let promote_piece = match planned_action.piece {
+                Some(piece) => match piece {
+                    'n' => Piece::Knight,
+                    'r' => Piece::Rook,
+                    'b' => Piece::Bishop,
+                    'q' => Piece::Queen,
+                    _ => return Err(InvalidMove::InvalidPromotionPiece),
+                },
+                None => Piece::Queen,
+            };
+            Action::Promotion(PromotionAction::new(
+                from.col() as u8,
+                original_piece.color,
+                Direction::from(direction_col),
+                promote_piece,
+            ))
+        } else {
+            // standard action
+            Action::Standard(StandardAction { from, to })
+        };
+
         Ok(action)
     }
 
