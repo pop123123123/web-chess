@@ -51,7 +51,7 @@ export default class Game {
 
       this.lastPieceToMove = piece;
       this.lastPieceToDie = /^[bknpqr][dl]/.test(lastPieceToDieId) ? {
-        id: lastPieceToDieId,
+        id: lastPieceToDieId.slice(-3),
         type: lastPieceToDieId[0] as PieceType,
         color: lastPieceToDieId[1] as PieceColor,
         row: action.to.row,
@@ -70,7 +70,7 @@ export default class Game {
       row.forEach((square, colIndex) => {
         if (/^[bknpqr][dl]/.test(square)) {
           pieces.push({
-            id: square,
+            id: square.slice(-3),
             type: square[0] as PieceType,
             color: square[1] as PieceColor,
             row: rowIndex,
