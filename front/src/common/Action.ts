@@ -1,4 +1,17 @@
 import Cell from './Cell';
+import { PieceType } from './Piece';
+
+interface ActionRequestInterface {
+  from: {
+    row: number,
+    column: number,
+  },
+  to: {
+    row: number,
+    column: number,
+  },
+  piece?: PieceType,
+}
 
 interface ActionInterface {
   Standard: {
@@ -33,7 +46,7 @@ abstract class Action {
     return [this.from.asUint(), this.to.asUint()];
   }
 
-  abstract serialize(): ActionInterface;
+  abstract serialize(): ActionRequestInterface;
 }
 
-export { Action, ActionInterface };
+export { Action, ActionInterface, ActionRequestInterface };

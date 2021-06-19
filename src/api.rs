@@ -1,4 +1,4 @@
-use crate::board::{Action, InvalidMove};
+use crate::board::{ActionRequest, InvalidMove};
 use crate::data::{create, GameData, GameId};
 use actix_web::dev::HttpResponseBuilder;
 use actix_web::{delete, get, patch, post, put, web, Error, HttpRequest, HttpResponse, Responder};
@@ -30,7 +30,7 @@ impl_respond!(CreateResponse);
 #[post("/game")]
 pub async fn create_game(
     data: web::Data<GameData>,
-    history: web::Json<Vec<Action>>,
+    history: web::Json<Vec<ActionRequest>>,
 ) -> impl Responder {
     let id = create(&data, history.into_inner());
     CreateResponse { id }
@@ -85,13 +85,13 @@ pub async fn delete_last_action(
     .finish()
 }
 
-fn action_to_http_builder(result: &Result<(), InvalidMove>) -> HttpResponseBuilder {
+fn action_to_http_builder(result: &Option<InvalidMove>) -> HttpResponseBuilder {
     match result {
-        Ok(_) => HttpResponse::NoContent(),
-        Err(e) => match e {
+        Some(e) => match e {
             InvalidMove::WrongTurn => HttpResponse::Forbidden(),
             _ => HttpResponse::BadRequest(),
         },
+        _ => HttpResponse::NoContent(),
     }
 }
 
@@ -100,12 +100,12 @@ fn action_to_http_builder(result: &Result<(), InvalidMove>) -> HttpResponseBuild
 pub async fn test_action(
     data: web::Data<GameData>,
     web::Path(game_id): web::Path<GameId>,
-    action: web::Json<Action>,
+    action: web::Json<ActionRequest>,
 ) -> impl Responder {
     let action = action.into_inner();
     let game_option = data.get(&game_id);
     match game_option {
-        Some(game) => action_to_http_builder(&game.is_move_valid(&action)),
+        Some(game) => action_to_http_builder(&game.is_move_valid(&action).err()),
         None => HttpResponse::NotFound(),
     }
     .finish()
@@ -116,7 +116,7 @@ pub async fn test_action(
 pub async fn add_action(
     data: web::Data<GameData>,
     web::Path(game_id): web::Path<GameId>,
-    action: web::Json<Action>,
+    action: web::Json<ActionRequest>,
 ) -> impl Responder {
     let action = action.into_inner();
     let game_option = data.get_mut(&game_id);

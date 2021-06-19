@@ -219,6 +219,14 @@ const INITIAL_BOARD: [[Option<BoardPiece>; 8]; 8] = [
     ],
 ];
 
+/// Action defined by source and destination cells
+#[derive(Serialize, Deserialize)]
+pub struct ActionRequest {
+    pub from: Cell,
+    pub to: Cell,
+    pub piece: Option<char>,
+}
+
 #[derive(Serialize, Deserialize)]
 pub enum Action {
     Standard(StandardAction),
@@ -433,6 +441,16 @@ impl From<Vec<Action>> for Game {
     }
 }
 
+impl From<Vec<ActionRequest>> for Game {
+    fn from(history: Vec<ActionRequest>) -> Self {
+        let mut game = Game::new();
+        for action in history {
+            game.push_move(action);
+        }
+        game
+    }
+}
+
 impl Game {
     pub fn new() -> Self {
         Game {
@@ -455,9 +473,9 @@ impl Game {
     }
 
     /// Returns whether a move is valid
-    pub fn is_move_valid(&self, planned_action: &Action) -> Result<(), InvalidMove> {
-        let from = planned_action.from();
-        let to = planned_action.to();
+    pub fn is_move_valid(&self, planned_action: &ActionRequest) -> Result<Action, InvalidMove> {
+        let from = planned_action.from;
+        let to = planned_action.to;
 
         // get piece corresponding to original cell
         let original_piece = match self.get_piece_at(from) {
@@ -589,7 +607,11 @@ impl Game {
         }
 
         // accept move
-        Ok(())
+        let action = Action::Standard(StandardAction {
+            from: planned_action.from,
+            to: planned_action.to,
+        });
+        Ok(action)
     }
 
     /// Returns piece at the given location
@@ -612,12 +634,14 @@ impl Game {
     }
 
     /// Process action and add it to action history if it is valid
-    pub fn push_move(&mut self, planned_action: Action) -> Result<(), InvalidMove> {
+    pub fn push_move(&mut self, planned_action: ActionRequest) -> Option<InvalidMove> {
         let res = self.is_move_valid(&planned_action);
         if res.is_ok() {
-            self.history.push(planned_action);
+            self.history.push(res.ok().unwrap());
+            None
+        } else {
+            res.err()
         }
-        res
     }
 
     /// Remove the last action if any
