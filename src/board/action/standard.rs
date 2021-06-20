@@ -1,5 +1,4 @@
-use crate::board::Cell;
-use crate::board::Move;
+use crate::board::{Cell, Move};
 use serde::{Deserialize, Serialize};
 
 /// Standard action

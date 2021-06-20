@@ -1,21 +1,15 @@
 pub mod action;
 pub mod cell;
-pub mod data;
+pub mod constants;
 pub mod piece;
 
-use action::castling::CastlingAction;
-use action::castling::CastlingSide;
-use action::promotion::Direction;
-use action::promotion::PromotionAction;
+use action::castling::{CastlingAction, CastlingSide};
+use action::promotion::{Direction, PromotionAction};
 use action::standard::StandardAction;
-use action::Action;
-use action::ActionRequest;
-use action::Move;
+use action::{Action, ActionRequest, Move};
 use cell::Cell;
-use data::INITIAL_BOARD;
-use piece::BoardPiece;
-use piece::Color;
-use piece::Piece;
+use constants::INITIAL_BOARD;
+use piece::{BoardPiece, Color, Piece};
 use serde::{Deserialize, Serialize};
 use std::vec::Vec;
 

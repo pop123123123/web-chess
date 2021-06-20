@@ -1,8 +1,5 @@
 use crate::board::piece::PromotePiece;
-use crate::board::Cell;
-use crate::board::Color;
-use crate::board::Move;
-use crate::board::Piece;
+use crate::board::{Cell, Color, Move, Piece};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Copy, Clone, Serialize, Deserialize)]

@@ -1,6 +1,4 @@
-use crate::board::Cell;
-use crate::board::Color;
-use crate::board::Move;
+use crate::board::{Cell, Color, Move};
 use serde::{Deserialize, Serialize};
 
 /// Castling side (kingside or queenside)
