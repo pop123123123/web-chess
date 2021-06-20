@@ -1,10 +1,12 @@
-use crate::board::{ActionRequest, InvalidMove};
+use crate::board::action::ActionRequest;
+use crate::board::InvalidMove;
 use crate::data::{create, GameData, GameId};
 use actix_web::dev::HttpResponseBuilder;
 use actix_web::{delete, get, patch, post, put, web, Error, HttpRequest, HttpResponse, Responder};
 use futures::future::{ready, Ready};
 use serde::{Deserialize, Serialize};
 
+// Response to the create game request
 #[derive(Serialize, Deserialize)]
 pub struct CreateResponse {
     pub id: GameId,

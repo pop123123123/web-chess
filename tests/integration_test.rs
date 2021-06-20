@@ -5,7 +5,7 @@ mod tests {
         add_action, create_game, delete_last_action, get_game_info, reset_game, test_action,
         CreateResponse,
     };
-    use web_chess::board::Action;
+    use web_chess::board::action::Action;
     use web_chess::data::GameData;
 
     /// App setup

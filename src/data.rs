@@ -1,4 +1,5 @@
-use crate::board::{ActionRequest, Game};
+use crate::board::action::ActionRequest;
+use crate::board::Game;
 use chashmap::CHashMap;
 use rand::RngCore;
 
