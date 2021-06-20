@@ -1,6 +1,7 @@
 pub mod action;
 pub mod cell;
 pub mod constants;
+pub mod error;
 pub mod piece;
 
 use action::castling::{CastlingAction, CastlingSide};
@@ -9,24 +10,10 @@ use action::standard::StandardAction;
 use action::{Action, ActionRequest, Move};
 use cell::Cell;
 use constants::INITIAL_BOARD;
+use error::InvalidMove;
 use piece::{BoardPiece, Color, Piece};
 use serde::{Deserialize, Serialize};
 use std::vec::Vec;
-
-pub enum Error {
-    CellWrongArguments,
-}
-
-pub enum InvalidMove {
-    WrongTurn,
-    EmptySourceCell,
-    OutOfBounds,
-    OutOfRange,
-    OutOfSight,
-    ProvokeCheck,
-    FriendlyFire,
-    InvalidPromotionPiece,
-}
 
 #[derive(Serialize, Deserialize)]
 pub struct Game {

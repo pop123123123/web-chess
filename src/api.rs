@@ -1,5 +1,5 @@
 use crate::board::action::ActionRequest;
-use crate::board::InvalidMove;
+use crate::board::error::InvalidMove;
 use crate::data::{create, GameData, GameId};
 use actix_web::dev::HttpResponseBuilder;
 use actix_web::{delete, get, patch, post, put, web, Error, HttpRequest, HttpResponse, Responder};
