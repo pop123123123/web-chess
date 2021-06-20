@@ -412,6 +412,28 @@ impl CastlingAction {
         };
         let column = match self.side {
             CastlingSide::King => 5,
+            CastlingSide::Queen => 3,
+        };
+        Cell::new(row, column)
+    }
+}
+
+impl Move for CastlingAction {
+    fn from(&self) -> Cell {
+        let row = match self.color {
+            Color::White => 0,
+            Color::Black => 7,
+        };
+        Cell::new(row, 4)
+    }
+
+    fn to(&self) -> Cell {
+        let row = match self.color {
+            Color::White => 0,
+            Color::Black => 7,
+        };
+        let column = match self.side {
+            CastlingSide::King => 6,
             CastlingSide::Queen => 2,
         };
         Cell::new(row, column)
@@ -521,6 +543,7 @@ impl Game {
     pub fn is_move_valid(&self, planned_action: &ActionRequest) -> Result<Action, InvalidMove> {
         let from = planned_action.from;
         let to = planned_action.to;
+        let mut castling_action: Option<CastlingAction> = None;
 
         // get piece corresponding to original cell
         let original_piece = match self.get_piece_at(from) {
@@ -592,11 +615,32 @@ impl Game {
                     .collect()
             }
             Piece::King => {
-                // move to closest squares only
-                if row_distance > 1 || col_distance > 1 {
-                    return Err(InvalidMove::OutOfRange);
+                let tmp_castling_action = CastlingAction {
+                    side: match direction_col {
+                        -1 => CastlingSide::Queen,
+                        _ => CastlingSide::King,
+                    },
+                    color: original_piece.color,
+                };
+                if from == tmp_castling_action.from() && to == tmp_castling_action.to() {
+                    // castling action
+                    // TODO: check that king and rook haven't moved
+                    // TODO: check that king is not in check
+                    let tower_from_col = tmp_castling_action.tower_from().col();
+                    castling_action = Some(tmp_castling_action);
+                    (1..(from.col() - tower_from_col).abs())
+                        .map(|i| {
+                            Cell::new(from.row() as u8, (from.col() + i * direction_col) as u8)
+                        })
+                        .collect()
+                } else {
+                    // move to closest squares only
+                    if row_distance > 1 || col_distance > 1 {
+                        return Err(InvalidMove::OutOfRange);
+                    }
+                    // no squares to check for emptiness
+                    Vec::new()
                 }
-                Vec::new()
             }
             Piece::Queen => {
                 // diagonal, horizontal or vertical moves only
@@ -675,6 +719,8 @@ impl Game {
                 Direction::from(direction_col),
                 promote_piece,
             ))
+        } else if castling_action.is_some() {
+            Action::Castling(castling_action.unwrap())
         } else {
             // standard action
             Action::Standard(StandardAction { from, to })
@@ -689,7 +735,12 @@ impl Game {
         let mut board_piece: Option<BoardPiece> = None;
         let original_cell = self.history.iter().rev().try_fold(cell, |cell, action| {
             // standard move
-            if action.from() == cell {
+            if action.from() == cell
+                || match action {
+                    Action::Castling(action) => action.tower_from() == cell,
+                    _ => false,
+                }
+            {
                 // piece has moved away, cell is empty
                 None
             } else if action.to() == cell {
@@ -705,6 +756,14 @@ impl Game {
                     }
                     // other actions
                     action => Some(action.from()),
+                }
+            } else if match action {
+                Action::Castling(action) => action.tower_to() == cell,
+                _ => false,
+            } {
+                match action {
+                    Action::Castling(action) => Some(action.tower_from()),
+                    _ => None,
                 }
             } else {
                 // no change

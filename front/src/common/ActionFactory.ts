@@ -1,4 +1,5 @@
 import { Action, ActionInterface } from './Action';
+import CastlingAction from './CastlingAction';
 import Cell from './Cell';
 import { PieceType } from './Piece';
 import PromotionAction from './PromotionAction';
@@ -28,6 +29,15 @@ export default class ActionFactory {
         Queen: PieceType.Queen,
       };
       return new PromotionAction(from, to, pieces[data.promote_piece]);
+    }
+    if (ai.Castling) {
+      const data = ai.Castling;
+      const row = data.color === 'Black' ? 7 : 0;
+      const from = new Cell(row, 4);
+      const to = new Cell(row, data.side === 'King' ? 6 : 2);
+      const towerFrom = new Cell(row, data.side === 'King' ? 7 : 0);
+      const towerTo = new Cell(row, data.side === 'King' ? 5 : 3);
+      return new CastlingAction(from, to, towerFrom, towerTo);
     }
     throw new Error('not implemented');
   }

@@ -19,6 +19,11 @@ type ActionInterface = {
     direction: 'Straight' | 'Left' | 'Right',
     promote_piece: 'Knight' | 'Rook' | 'Bishop' | 'Queen',
   }
+} & {
+  Castling: {
+    side: 'King' | 'Queen',
+    color: 'Black' | 'White',
+  }
 };
 
 abstract class Action {

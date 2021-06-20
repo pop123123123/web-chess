@@ -3,6 +3,7 @@ import Piece, { PieceColor, PieceType } from './Piece';
 import { BASE64_ENCODE } from './b64';
 import ActionFactory from './ActionFactory';
 import PromotionAction from './PromotionAction';
+import CastlingAction from './CastlingAction';
 
 export type GameId = number;
 
@@ -24,12 +25,15 @@ export default class Game {
 
   lastPieceToMove: string;
 
+  lastPieceToMoveTower: string;
+
   lastPieceToDie: Piece | undefined;
 
   constructor(id: GameId, history: ActionInterface[]) {
     this.id = id;
     this.history = history.map((ai) => ActionFactory.fromActionInterface(ai));
     this.lastPieceToMove = '';
+    this.lastPieceToMoveTower = '';
     this.lastPieceToDie = undefined;
   }
 
@@ -48,6 +52,14 @@ export default class Game {
 
       board[action.to.row][action.to.column] = piece;
       board[action.from.row][action.from.column] = '   ';
+
+      if (action instanceof CastlingAction) {
+        this.lastPieceToMoveTower = board[action.tower_from.row][action.tower_from.column];
+        board[action.tower_to.row][action.tower_to.column] = this.lastPieceToMoveTower;
+        board[action.tower_from.row][action.tower_from.column] = '   ';
+      } else {
+        this.lastPieceToMoveTower = '';
+      }
 
       this.lastPieceToMove = piece;
       this.lastPieceToDie = /^[bknpqr][dl]/.test(lastPieceToDieId) ? {
@@ -75,7 +87,7 @@ export default class Game {
             color: square[1] as PieceColor,
             row: rowIndex,
             column: colIndex,
-            moving: square === this.lastPieceToMove,
+            moving: [this.lastPieceToMove, this.lastPieceToMoveTower].includes(square),
             dead: false,
           });
         }
