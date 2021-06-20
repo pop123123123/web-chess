@@ -734,40 +734,23 @@ impl Game {
         // rewind game to find original cell
         let mut board_piece: Option<BoardPiece> = None;
         let original_cell = self.history.iter().rev().try_fold(cell, |cell, action| {
-            // standard move
-            if action.from() == cell
-                || match action {
-                    Action::Castling(action) => action.tower_from() == cell,
-                    _ => false,
-                }
-            {
+            match action {
                 // piece has moved away, cell is empty
-                None
-            } else if action.to() == cell {
+                Action::Castling(action) if action.tower_from() == cell => None,
+                action if action.from() == cell => None,
+                // promotion: board piece is the one set by the promotion
+                Action::Promotion(action) if action.to() == cell => {
+                    board_piece = Some(BoardPiece {
+                        color: action.color,
+                        piece: Piece::from(action.promote_piece),
+                    });
+                    None
+                }
                 // piece enters the cell, capturing piece origin
-                match action {
-                    // promotion: board piece is the one set by the promotion
-                    Action::Promotion(action) => {
-                        board_piece = Some(BoardPiece {
-                            color: action.color,
-                            piece: Piece::from(action.promote_piece),
-                        });
-                        None
-                    }
-                    // other actions
-                    action => Some(action.from()),
-                }
-            } else if match action {
-                Action::Castling(action) => action.tower_to() == cell,
-                _ => false,
-            } {
-                match action {
-                    Action::Castling(action) => Some(action.tower_from()),
-                    _ => None,
-                }
-            } else {
+                Action::Castling(action) if action.tower_to() == cell => Some(action.tower_from()),
+                action if action.to() == cell => Some(action.from()),
                 // no change
-                Some(cell)
+                _ => Some(cell),
             }
         });
 
