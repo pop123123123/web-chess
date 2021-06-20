@@ -1,5 +1,4 @@
-use crate::board::piece::{Color, Piece};
-use crate::board::BoardPiece;
+use super::piece::{BoardPiece, Color, Piece};
 
 /// Board in its initial state
 pub const INITIAL_BOARD: [[Option<BoardPiece>; 8]; 8] = [
