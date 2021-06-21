@@ -24,6 +24,11 @@ type ActionInterface = {
     side: 'King' | 'Queen',
     color: 'Black' | 'White',
   }
+} & {
+  EnPassant: {
+    from: Cell,
+    to: Cell,
+  }
 };
 
 abstract class Action {

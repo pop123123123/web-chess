@@ -1,6 +1,7 @@
 import { Action, ActionInterface } from './Action';
 import CastlingAction from './CastlingAction';
 import Cell from './Cell';
+import EnPassantAction from './EnPassantAction';
 import PromotionAction from './PromotionAction';
 import StandardAction from './StandardAction';
 
@@ -14,6 +15,9 @@ export default class ActionFactory {
     }
     if ('Castling' in ai) {
       return CastlingAction.fromActionInterface(ai);
+    }
+    if ('EnPassant' in ai) {
+      return EnPassantAction.fromActionInterface(ai);
     }
     throw new Error('not implemented');
   }

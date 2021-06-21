@@ -4,6 +4,7 @@ import { BASE64_ENCODE } from './b64';
 import ActionFactory from './ActionFactory';
 import PromotionAction from './PromotionAction';
 import CastlingAction from './CastlingAction';
+import EnPassantAction from './EnPassantAction';
 
 export type GameId = number;
 
@@ -44,7 +45,7 @@ export default class Game {
     // apply actions
     this.history.forEach((action) => {
       let piece = board[action.from.row][action.from.column];
-      const lastPieceToDieId = board[action.to.row][action.to.column];
+      let lastPieceToDieId = board[action.to.row][action.to.column];
 
       if (action instanceof PromotionAction) {
         piece = `${action.piece}${piece[1]}_${piece}`;
@@ -59,6 +60,12 @@ export default class Game {
         board[action.tower_from.row][action.tower_from.column] = '   ';
       } else {
         this.lastPieceToMoveTower = '';
+      }
+
+      if (action instanceof EnPassantAction) {
+        const targetCell = action.getTargetCell();
+        lastPieceToDieId = board[targetCell.row][targetCell.column];
+        board[targetCell.row][targetCell.column] = '   ';
       }
 
       this.lastPieceToMove = piece;
