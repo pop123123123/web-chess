@@ -73,7 +73,7 @@ export default class Game {
         id: lastPieceToDieId.slice(-3),
         type: lastPieceToDieId[0] as PieceType,
         color: lastPieceToDieId[1] as PieceColor,
-        row: action.to.row,
+        row: action instanceof EnPassantAction ? action.from.row : action.to.row,
         column: action.to.column,
         moving: false,
         dead: true,
