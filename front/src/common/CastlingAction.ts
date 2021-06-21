@@ -1,4 +1,4 @@
-import { Action, ActionRequestInterface } from './Action';
+import { Action, ActionInterface, ActionRequestInterface } from './Action';
 import Cell from './Cell';
 
 export default class CastlingAction extends Action {
@@ -10,6 +10,16 @@ export default class CastlingAction extends Action {
     super(from, to);
     this.tower_from = tower_from;
     this.tower_to = tower_to;
+  }
+
+  static fromActionInterface(ai: ActionInterface): CastlingAction {
+    const data = ai.Castling;
+    const row = data.color === 'Black' ? 7 : 0;
+    const from = new Cell(row, 4);
+    const to = new Cell(row, data.side === 'King' ? 6 : 2);
+    const towerFrom = new Cell(row, data.side === 'King' ? 7 : 0);
+    const towerTo = new Cell(row, data.side === 'King' ? 5 : 3);
+    return new CastlingAction(from, to, towerFrom, towerTo);
   }
 
   serialize(): ActionRequestInterface {
