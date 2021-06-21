@@ -6,6 +6,7 @@ use super::cell::Cell;
 use super::constants::INITIAL_BOARD;
 use super::error::InvalidMove;
 use super::piece::{BoardPiece, Color, Piece};
+use crate::board::action::en_passant::EnPassantAction;
 use serde::{Deserialize, Serialize};
 use std::vec::Vec;
 
@@ -63,6 +64,7 @@ impl Game {
         let from = planned_action.from;
         let to = planned_action.to;
         let mut castling_action: Option<CastlingAction> = None;
+        let mut en_passant_action: bool = false;
 
         // get piece corresponding to original cell
         let original_piece = match self.get_piece_at(from) {
@@ -197,8 +199,27 @@ impl Game {
                     if col_distance == 0 && dest_piece.is_some()
                         || col_distance == 1 && dest_piece.is_none()
                     {
-                        return Err(InvalidMove::OutOfRange);
+                        // en passant
+                        let last_action = match self.history.last() {
+                            Some(a) => a,
+                            None => return Err(InvalidMove::OutOfRange),
+                        };
+                        let is_last_moved_piece_pawn =
+                            self.get_piece_at(last_action.to()).unwrap().piece == Piece::Pawn;
+                        let last_opponent_move_is_double =
+                            (last_action.to().row() - last_action.from().row()).abs() == 2;
+                        let is_same_column = to.col() == last_action.to().col();
+
+                        if is_last_moved_piece_pawn
+                            && last_opponent_move_is_double
+                            && is_same_column
+                        {
+                            en_passant_action = true;
+                        } else {
+                            return Err(InvalidMove::OutOfRange);
+                        }
                     }
+
                     Vec::new()
                 } else {
                     return Err(InvalidMove::OutOfRange);
@@ -240,6 +261,8 @@ impl Game {
             ))
         } else if castling_action.is_some() {
             Action::Castling(castling_action.unwrap())
+        } else if en_passant_action {
+            Action::EnPassant(EnPassantAction { from, to })
         } else {
             // standard action
             Action::Standard(StandardAction { from, to })
@@ -265,6 +288,8 @@ impl Game {
                     });
                     None
                 }
+                // en passant: target cell is empty
+                Action::EnPassant(action) if action.target_cell() == cell => None,
                 // piece enters the cell, capturing piece origin
                 Action::Castling(action) if action.tower_to() == cell => Some(action.tower_from()),
                 action if action.to() == cell => Some(action.from()),
