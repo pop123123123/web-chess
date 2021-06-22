@@ -3,7 +3,7 @@
     <div ref="wrapper" class="history-list-wrapper">
       <transition-group ref="list" name="list-complete" tag="ul" class="history-list">
         <li v-for="(s, i) in history" :key="i" :ref="setItemRef" class="list-complete-item">
-          {{i+1}}. {{s}}
+          {{i % 2 === 0 ? Math.floor(i/2)+1 : '..'}}. {{s}}
         </li>
       </transition-group>
       <div class="show-more">
