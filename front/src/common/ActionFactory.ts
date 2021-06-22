@@ -24,6 +24,8 @@ export default class ActionFactory {
 
   static fromArray(a: number[]): Action {
     const [from, to] = a;
-    return new StandardAction(Cell.fromUint(from), Cell.fromUint(to));
+    // return promotion action if it can be resolved, standard action otherwise
+    return PromotionAction.fromArray(a)
+    ?? new StandardAction(Cell.fromUint(from), Cell.fromUint(to));
   }
 }
