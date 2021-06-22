@@ -16,4 +16,8 @@ export default class EnPassantAction extends Action {
   getTargetCell(): Cell {
     return new Cell(this.from.row, this.to.column);
   }
+
+  toAlgebraicNotation(): string {
+    return `${this.from.toCellName()[0]}×${this.getTargetCell().toCellName()} e.p.`;
+  }
 }

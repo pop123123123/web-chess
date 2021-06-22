@@ -44,7 +44,7 @@ abstract class Action {
   toAlgebraicNotation(): string {
     const fromName = this.from.toCellName();
     const toName = this.to.toCellName();
-    return `${fromName}-${toName}`;
+    return `${fromName}${toName}`;
   }
 
   asArray(): number[] {

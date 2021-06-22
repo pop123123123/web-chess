@@ -82,4 +82,11 @@ export default class PromotionAction extends Action {
   serialize(): ActionRequestInterface {
     return { from: this.from, to: this.to, piece: this.piece };
   }
+
+  toAlgebraicNotation(): string {
+    if (this.from.column === this.to.column) {
+      return `${this.to.toCellName()}${this.piece.toUpperCase()}`;
+    }
+    return `${this.from.toCellName()[0]}×${this.to.toCellName()}${this.piece.toUpperCase()}`;
+  }
 }

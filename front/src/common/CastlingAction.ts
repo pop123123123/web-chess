@@ -25,4 +25,11 @@ export default class CastlingAction extends Action {
   serialize(): ActionRequestInterface {
     return { from: this.from, to: this.to };
   }
+
+  toAlgebraicNotation(): string {
+    if (this.tower_from.column > this.from.column) {
+      return '0-0';
+    }
+    return '0-0-0';
+  }
 }
