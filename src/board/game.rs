@@ -209,10 +209,12 @@ impl Game {
                         let last_opponent_move_is_double =
                             (last_action.to().row() - last_action.from().row()).abs() == 2;
                         let is_same_column = to.col() == last_action.to().col();
+                        let is_now_same_row = from.row() == last_action.to().row();
 
                         if is_last_moved_piece_pawn
                             && last_opponent_move_is_double
                             && is_same_column
+                            && is_now_same_row
                         {
                             en_passant_action = true;
                         } else {
