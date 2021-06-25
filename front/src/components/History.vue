@@ -1,8 +1,20 @@
 <template>
   <div class="history" :class="{ expand: showMore }">
     <div ref="wrapper" class="history-list-wrapper">
-      <transition-group ref="list" name="list-complete" tag="ul" class="history-list">
-        <li v-for="(s, i) in history" :key="i" :ref="setItemRef" class="list-complete-item">
+      <transition-group
+        ref="list"
+        name="list-complete"
+        tag="ul"
+        class="history-list"
+        @mouseleave="clearHoveredAction"
+      >
+        <li
+          v-for="(s, i) in history"
+          :key="i"
+          :ref="setItemRef"
+          class="list-complete-item"
+          @mouseenter="setHoveredAction(i)"
+        >
           {{i % 2 === 0 ? Math.floor(i/2)+1 : '..'}}. {{s}}
         </li>
       </transition-group>
@@ -14,23 +26,30 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
+<script lang="ts">
+import { defineComponent, PropType } from 'vue';
+import { Action } from '@/common/Action';
 
 export default defineComponent({
   name: 'History',
   props: {
-    history: {
-      type: Array,
-      default: () => [],
+    actions: {
+      type: Array as PropType<Array<Action>>,
+      required: true,
     },
   },
+  emits: ['update:hoveredAction'],
   data() {
     return {
       showMore: false,
       itemRefs: [],
       lastLength: 0,
     };
+  },
+  computed: {
+    history(): string[] {
+      return this.actions.map((a) => a.toAlgebraicNotation());
+    },
   },
   methods: {
     setItemRef(el) {
@@ -44,6 +63,12 @@ export default defineComponent({
 
       const el2 = this.$refs.list.$el;
       el2.scrollTop = el2.scrollHeight;
+    },
+    setHoveredAction(action: number) {
+      this.$emit('update:hoveredAction', this.actions[action]);
+    },
+    clearHoveredAction() {
+      this.$emit('update:hoveredAction', undefined);
     },
   },
   watch: {

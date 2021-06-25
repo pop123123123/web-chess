@@ -80,6 +80,10 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
+    previewedAction: {
+      type: Object as PropType<Action>,
+      default: undefined,
+    },
   },
   methods: {
     getPieceImage(name: string) {
@@ -131,8 +135,8 @@ export default defineComponent({
       if (this.actions.length < 1) {
         return '';
       }
-      const lastAction = this.actions[this.actions.length - 1];
-      const squares = [lastAction.from.toCellName(), lastAction.to.toCellName()];
+      const action = this.previewedAction ?? this.actions[this.actions.length - 1];
+      const squares = [action.from.toCellName(), action.to.toCellName()];
       return squares.map((square) => `highlight-${square}`).join(' ');
     },
   },

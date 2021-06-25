@@ -11,13 +11,14 @@
   <div v-else class="wrapper">
     <div class="view game">
       <aside>
-        <History :history="history"/>
+        <History :actions="actions" v-model:hovered-action="previewedAction"/>
       </aside>
       <div class="board-container">
         <Board
           :pieces="state.pieces"
           :rotated="rotatedBoard"
           :white-turn="whiteTurn"
+          :previewed-action="previewedAction"
           @movePiece="movePiece"
           @confirmPromotion="confirmPromotion"
         />
@@ -89,6 +90,7 @@ export default defineComponent({
         pieces: [] as Piece[],
       },
       rotatedBoard: false,
+      previewedAction: undefined as Action | undefined,
     };
   },
   computed: {
@@ -109,6 +111,9 @@ export default defineComponent({
     },
     game(): Game | undefined {
       return this.$store.state.game;
+    },
+    actions(): Action[] {
+      return this.game?.history ?? [];
     },
   },
   methods: {
