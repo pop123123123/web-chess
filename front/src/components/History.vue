@@ -147,6 +147,10 @@ $list-expanded-height: $list-item-height * 3.5;
       border-bottom: 1px solid theme.$background-main;
       left: 0;
 
+      &:hover {
+        background: #ffdd1111;
+      }
+
       &:first-child {
         border-top: 1px solid theme.$background-main;
       }
