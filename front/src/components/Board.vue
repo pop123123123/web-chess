@@ -8,7 +8,7 @@
       'reverse-animation': reverseAnimation
     }"
   >
-    <div class="background">
+    <div class="background" :class="highlightClasses">
       <div
         class="row"
         v-for="row in 8"
@@ -127,6 +127,14 @@ export default defineComponent({
     promotion(): Promotion | undefined {
       return this.$store.state.promotion;
     },
+    highlightClasses(): string {
+      if (this.actions.length < 1) {
+        return '';
+      }
+      const lastAction = this.actions[this.actions.length - 1];
+      const squares = [lastAction.from.toCellName(), lastAction.to.toCellName()];
+      return squares.map((square) => `highlight-${square}`).join(' ');
+    },
   },
   watch: {
     pieces(pieces, oldPieces) {
@@ -151,6 +159,8 @@ $squareSize: 12.5%;
 $max-board-size: 512px;
 $border-width: 32px;
 $border-width-small: 16px;
+
+$letters: 'abcdefgh';
 
 .no-transition {
   &, * {
@@ -214,6 +224,19 @@ $border-width-small: 16px;
     display: grid;
     grid-template-rows: repeat(8, 1fr);
 
+    @for $r from 1 through 8 {
+      @for $c from 1 through 8 {
+        &.highlight-#{string.slice($letters, $c, $c)}#{$r} {
+          .row:nth-child(#{9-$r}) {
+            .square:nth-child(#{$c})::after {
+              display: block;
+              background: #eecc4488;
+            }
+          }
+        }
+      }
+    }
+
     .row {
       display: grid;
       grid-template-columns: repeat(8, 1fr);
@@ -255,7 +278,6 @@ $border-width-small: 16px;
       }
 
       &:first-child, &:last-child {
-        $letters: 'abcdefgh';
         @for $i from 1 through 8 {
           .square:nth-child(#{$i})::before {
             content: string.slice($letters, $i, $i);
