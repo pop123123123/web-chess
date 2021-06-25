@@ -31,7 +31,7 @@
             v-model:value="rotatedBoard"
           /></li>
           <li><Button class="success" icon="trash" @click="resetGame">Reset game</Button></li>
-          <li><Button class="success" icon="handshake">Offer draw</Button></li>
+          <!-- <li><Button class="success" icon="handshake">Offer draw</Button></li> -->
           <li><Button class="success" icon="undo-alt" @click="deleteLastAction">Undo</Button></li>
         </ul>
         <div class="buttons-bottom">
