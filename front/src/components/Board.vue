@@ -264,16 +264,16 @@ $letters: 'abcdefgh';
 
         &:hover::after {
           display: block;
-          background: #1199dd33;
+          background: #1199dd33 !important;
         }
 
         &.selected::after {
           display: block;
-          background: #11ee1166;
+          background: #11ee1166 !important;
         }
 
         &.selected:hover::after {
-          background: #11ee1144;
+          background: #11ee1133 !important;
         }
       }
 
