@@ -144,9 +144,10 @@ export default defineComponent({
       && piece.color === PieceColor.Dark))
       && Math.abs(action.from.column - action.to.column) <= 1) {
         // promotion, check if move is valid
-        await this.sendAction(action, true);
-        // start promotion phase
-        this.startPromotion(action, piece.color);
+        if (await this.sendAction(action, true)) {
+          // start promotion phase
+          this.startPromotion(action, piece.color);
+        }
       } else {
         // other cases
         await this.sendAction(action);
@@ -158,8 +159,8 @@ export default defineComponent({
     startPromotion(action: Action, color: PieceColor) {
       this.$store.commit('SET_PROMOTION', { action, color });
     },
-    async sendAction(action: Action, dryRun = false, promotion: PieceType | undefined = undefined) {
-      if (this.game === undefined) { return; }
+    async sendAction(action: Action, dryRun = false, promotion?: PieceType): Promise<boolean> {
+      if (this.game === undefined) { return false; }
       try {
         if (promotion) {
           const payload = { gameId: this.game.id, action, pieceType: promotion };
@@ -189,7 +190,9 @@ export default defineComponent({
             type: 'error',
           });
         }
+        return false;
       }
+      return true;
     },
     async resetGame() {
       if (this.game === undefined) { return; }
