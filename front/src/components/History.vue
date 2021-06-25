@@ -42,7 +42,7 @@ export default defineComponent({
   data() {
     return {
       showMore: false,
-      itemRefs: [],
+      itemRefs: [] as HTMLElement[],
       lastLength: 0,
     };
   },
@@ -52,16 +52,17 @@ export default defineComponent({
     },
   },
   methods: {
-    setItemRef(el) {
+    setItemRef(el: HTMLElement) {
       if (el) {
         this.itemRefs.push(el);
       }
     },
     scrollToBottom() {
-      const el = this.$refs.wrapper;
+      const el = (this.$refs.wrapper as HTMLElement);
       el.scrollTop = el.scrollHeight;
 
-      const el2 = this.$refs.list.$el;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const el2 = (this.$refs.list as any).$el as HTMLElement;
       el2.scrollTop = el2.scrollHeight;
     },
     setHoveredAction(action: number) {
