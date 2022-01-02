@@ -79,7 +79,7 @@ impl Move for PromotionAction {
                 Color::Black => 0,
                 Color::White => 7,
             },
-            self.start_column + self.direction as u8,
+            (self.start_column as i8 + i8::from(self.direction)) as u8,
         )
     }
 }
