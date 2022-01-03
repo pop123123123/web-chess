@@ -1,10 +1,14 @@
 {
-  "name": "tp_ttt",
+  "name": "web-chess",
   "version": "0.1.0",
   "author": "Louis MOUHAT <louis.mouhat@gmail.com>",
-  "license": "ISC",
+  "contributors": [
+    "Antoine BRÛLÉ <antoine.brule@netc.eu>",
+    "Nicolas BUSSER <nicolas.bubsser67@gmail.com>",
+  ],
+  "license": "MIT",
   "engines": {
-    "node": ">= 16.1.0",
+    "node": "~16.1",
     "npm": ">= 7.12.0"
   },
   "scripts": {
